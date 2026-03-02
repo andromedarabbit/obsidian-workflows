@@ -1,7 +1,8 @@
 # obsidian-workflows
 
-![Validate](https://github.com/kepano/obsidian-workflows/workflows/Validate%20Commands/badge.svg)
-![Lint](https://github.com/kepano/obsidian-workflows/workflows/Lint/badge.svg)
+[![Validate Commands](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/validate.yml/badge.svg)](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/validate.yml)
+[![Lint](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/lint.yml/badge.svg)](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/lint.yml)
+[![Generate Documentation](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/generate-docs.yml/badge.svg)](https://github.com/andromedarabbit/obsidian-workflows/actions/workflows/generate-docs.yml)
 
 Obsidian writing workflows plugin for Claude Code.
 
@@ -9,7 +10,7 @@ Obsidian writing workflows plugin for Claude Code.
 
 This repository is the dedicated home for the plugin core:
 
-- Claude command definitions (`.claude/commands/...`)
+- Claude command definitions (`commands/...`)
 - Claude skill definitions (`.claude/skills/...`)
 - Plugin metadata (`.claude-plugin/...`)
 - Migration/runtime/contracts docs (`docs/...`)
@@ -52,7 +53,7 @@ See `docs/migration/` for checklists and rollout details.
 
 ```bash
 /plugin marketplace add andromedarabbit/obsidian-workflows
-/plugin install obsidian@obsidian-workflows
+/plugin install obsidian-workflows@andromedarabbit
 ```
 
 ### Install via npx skills
@@ -250,7 +251,7 @@ docs(hooks): add hook patterns documentation
 From [CLAUDE.md](CLAUDE.md):
 
 1. **Fail fast over silent fallback** - Exit immediately on critical errors
-2. **Enforce path safety consistently** - All hook paths must start with `.claude/commands/`
+2. **Enforce path safety consistently** - All hook paths must start with `commands/`
 3. **Keep command discovery deterministic** - Single canonical source per command name
 4. **Preserve PASS|SKIP|FAIL status semantics** - Consistent status reporting
 5. **No absolute path assumptions** - Use relative paths in contracts

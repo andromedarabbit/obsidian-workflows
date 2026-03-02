@@ -22,7 +22,7 @@ updated: 2026-03-02T01:34
 
 ## Preflight Gate (fail-fast)
 
-The canonical source for initialization targets is the `초기화 대상` section in `.claude/commands/obsidian:write.init.md`.
+The canonical source for initialization targets is the `초기화 대상` section in `commands/obsidian-write/obsidian:write.init.md`.
 
 1. At execution start, verify existence of `obsidian:write.init` initialization target files:
    - `writing-config.md`

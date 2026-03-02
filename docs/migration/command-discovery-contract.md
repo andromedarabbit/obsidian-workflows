@@ -6,7 +6,7 @@ Define deterministic command discovery rules for this plugin repository.
 
 ## Canonical Sources
 
-- Canonical command definitions live in `.claude/commands/`.
+- Canonical command definitions live in `commands/`.
 - `name` in frontmatter is the canonical command identity.
 - One command name must map to one canonical file.
 
@@ -22,5 +22,5 @@ Define deterministic command discovery rules for this plugin repository.
 ## Validation Checklist
 
 - [ ] Every command file has frontmatter: `name`, `description`, `argument-hint`, `allowed-tools`, `created`, `updated`
-- [ ] Every canonical `name` appears exactly once under `.claude/commands`
+- [ ] Every canonical `name` appears exactly once under `commands`
 - [ ] No stale alternate command roots remain undocumented

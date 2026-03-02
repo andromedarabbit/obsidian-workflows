@@ -53,10 +53,10 @@ function findCommandFiles(dir) {
 }
 
 function main() {
-  const commandsDir = '.claude/commands';
+  const commandsDir = 'commands';
 
   if (!fs.existsSync(commandsDir)) {
-    console.error('ERROR: .claude/commands directory not found');
+    console.error('ERROR: commands directory not found');
     process.exit(1);
   }
 

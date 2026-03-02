@@ -18,7 +18,7 @@ Scope Guard (repo-only):
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
 Preflight Gate (fail-fast):
-- 초기화 대상 목록의 canonical source는 `.claude/commands/obsidian:write.init.md`의 `초기화 대상` 섹션입니다.
+- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상` 섹션입니다.
 1. 실행 시작 시 `obsidian:write.init`의 초기화 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/policy/writing-policy.blog.md`
@@ -55,10 +55,10 @@ Intent Gate:
      - `output_verbosity` 설정에 따라 형식 선택 (minimal/verbose)
      - `idea_detail_lines` 설정에 따라 아이디어 상세도 조정 (1/3/5줄)
      - proposal 파일에서 추출한 내용:
-       * 제목 (항상 표시)
-       * 핵심 논지 (idea_detail_lines >= 3)
-       * 추천 policy (idea_detail_lines >= 3)
-       * 근거 wikilink (idea_detail_lines >= 5, show_wikilinks=true)
+       - 제목 (항상 표시)
+       - 핵심 논지 (idea_detail_lines >= 3)
+       - 추천 policy (idea_detail_lines >= 3)
+       - 근거 wikilink (idea_detail_lines >= 5, show_wikilinks=true)
      - 다음 단계: `/obsidian-workflows:work proposal="..." idea=N`
 
 상태/출력 규칙:

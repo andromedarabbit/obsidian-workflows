@@ -59,14 +59,14 @@ obsidian-workflows:work
 Command definition files follow the pattern:
 
 ```
-.claude/commands/<namespace>/<name>.md
+commands/<namespace>/<name>.md
 ```
 
 **Examples**:
 ```
-.claude/commands/obsidian:write.active.md
-.claude/commands/obsidian-workflows/work.md
-.claude/commands/obsidian-workflows/plan.md
+commands/obsidian:write.active.md
+commands/obsidian-workflows/work.md
+commands/obsidian-workflows/plan.md
 ```
 
 ### Hook Scripts
@@ -74,13 +74,13 @@ Command definition files follow the pattern:
 Hook scripts follow the pattern:
 
 ```
-.claude/commands/<namespace>/hooks/<name>.sh
+commands/<namespace>/hooks/<name>.sh
 ```
 
 **Examples**:
 ```
-.claude/commands/obsidian-workflows/hooks/scan.sh
-.claude/commands/obsidian-workflows/hooks/validate.sh
+commands/obsidian-workflows/hooks/scan.sh
+commands/obsidian-workflows/hooks/validate.sh
 ```
 
 ### Documentation Files

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # generate-index.sh - Auto-generate COMMANDS.md index from frontmatter
-# Scans .claude/commands/ and creates categorized command list
+# Scans commands/ and creates categorized command list
 
 set -euo pipefail
+set -x
 
 # Colors
 GREEN='\033[0;32m'
@@ -62,7 +63,7 @@ EOF
             # Store command data: category|name|file|description|argument_hint
             echo "${category}|${name}|${file}|${description}|${argument_hint}" >> "$temp_data"
         fi
-    done < <(find .claude/commands -type f -name "*.md" -print0 | sort -z)
+    done < <(find commands -type f -name "*.md" -print0 | sort -z)
 
     # Get unique categories
     local categories
@@ -108,8 +109,8 @@ EOF
 
 # Main execution
 main() {
-    if [[ ! -d ".claude/commands" ]]; then
-        echo -e "${YELLOW}WARNING${NC}: .claude/commands directory not found"
+    if [[ ! -d "commands" ]]; then
+        echo -e "${YELLOW}WARNING${NC}: commands directory not found"
         exit 1
     fi
 

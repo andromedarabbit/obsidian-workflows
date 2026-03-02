@@ -3,6 +3,7 @@
 # Validates required files, path safety, status semantics, and hook permissions
 
 set -euo pipefail
+set -x
 
 # Colors
 RED='\033[0;31m'
@@ -39,7 +40,9 @@ check_path_safety() {
     # Check for ~/.claude/* references, but exclude documentation/examples
     if echo "$content" | grep -qE '~/.claude/'; then
         # Check if it's in a documentation context (preceded by "not", "don't", "avoid", etc.)
-        if ! echo "$content" | grep -B2 -A2 '~/.claude/' | grep -qiE '(not|don'\''t|avoid|never|같은.*상태를|해결책으로 사용하지)'; then
+        local context_check
+        context_check=$(echo "$content" | grep -B2 -A2 '~/.claude/' 2>/dev/null || true)
+        if [[ -n "$context_check" ]] && ! echo "$context_check" | grep -qiE '(not|don'\''t|avoid|never|같은.*상태를|해결책으로 사용하지)'; then
             echo -e "${RED}ERROR${NC}: $file - Contains reference to global runtime state (~/.claude/*)"
             ((ERRORS++))
             return 1
@@ -83,10 +86,10 @@ check_hook_scripts() {
 
         # Run ShellCheck if available
         if ensure_shellcheck; then
-            if ! shellcheck -x "$hook" 2>/dev/null; then
+            shellcheck -x "$hook" 2>/dev/null || {
                 echo -e "${YELLOW}WARNING${NC}: $hook - ShellCheck found issues"
                 ((WARNINGS++))
-            fi
+            }
         fi
     done < <(find "$dir" -maxdepth 1 -type f -name "*.sh" -print0 2>/dev/null)
 
@@ -118,15 +121,15 @@ validate_command() {
 main() {
     echo "Validating command structure..."
 
-    if [[ ! -d ".claude/commands" ]]; then
-        echo -e "${RED}ERROR${NC}: .claude/commands directory not found"
+    if [[ ! -d "commands" ]]; then
+        echo -e "${RED}ERROR${NC}: commands directory not found"
         exit 1
     fi
 
     # Process all command files
     while IFS= read -r -d '' file; do
-        validate_command "$file"
-    done < <(find .claude/commands -type f -name "*.md" -print0)
+        validate_command "$file" || true
+    done < <(find commands -type f -name "*.md" -print0)
 
     # Summary
     echo ""

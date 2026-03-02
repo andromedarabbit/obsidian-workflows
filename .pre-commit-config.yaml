@@ -17,21 +17,21 @@ repos:
         entry: tools/generate-index.sh
         language: script
         pass_filenames: false
-        files: '^\.claude/commands/.*\.md$'
+        files: '^commands/.*\.md$'
 
       - id: check-command-frontmatter
         name: Check command frontmatter
         entry: tools/check-frontmatter.sh
         language: script
         pass_filenames: false
-        files: '^\.claude/commands/.*\.md$'
+        files: '^commands/.*\.md$'
 
       - id: validate-command
         name: Validate command structure
         entry: tools/validate-command.sh
         language: script
         pass_filenames: false
-        files: '^\.claude/commands/.*\.md$'
+        files: '^commands/.*\.md$'
 
       - id: fix-shell-permissions
         name: Fix shell script permissions

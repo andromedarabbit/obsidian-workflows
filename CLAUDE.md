@@ -17,7 +17,7 @@ This repository contains the **plugin core** for Obsidian writing workflows.
 
 ## Structure
 
-- `.claude/commands/`: command definitions (canonical source)
+- `commands/`: command definitions (canonical source)
 - `.claude/skills/`: skills and entrypoint guidance
 - `.claude-plugin/`: plugin metadata
 - `config/`: example configuration templates
@@ -64,7 +64,7 @@ See [Validation Guide](docs/validation-guide.md) for details.
 - No absolute path assumptions in command contracts.
 - No dependency on global runtime state (`~/.claude/*`) for correctness.
 - No duplicate command definitions with the same canonical `name`.
-- All hook paths must start with `.claude/commands/`.
+- All hook paths must start with `commands/`.
 
 ## Documentation
 

@@ -8,10 +8,10 @@ Commands are the core building blocks of the obsidian-workflows plugin. Each com
 
 ## File Structure
 
-Commands are stored in `.claude/commands/` with the following structure:
+Commands are stored in `commands/` with the following structure:
 
 ```
-.claude/commands/
+commands/
 ├── obsidian:write.active.md
 ├── obsidian:write.draft.md
 ├── obsidian-workflows/
@@ -91,7 +91,7 @@ Commands may reference hook scripts that execute specific functionality:
 
 ### Hook Path Requirements
 
-- All hook paths MUST start with `.claude/commands/`
+- All hook paths MUST start with `commands/`
 - Hooks MUST be executable (`chmod +x`)
 - Hooks SHOULD be shell scripts (`.sh`) or other executable formats
 
@@ -129,7 +129,7 @@ Commands MUST follow these path safety rules:
 
 All paths referenced in commands are validated to ensure:
 
-- They start with `.claude/commands/` (for hooks)
+- They start with `commands/` (for hooks)
 - They are relative to the repository root
 - They don't reference global state
 

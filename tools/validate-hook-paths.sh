@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# validate-hook-paths.sh - Verify hook paths start with .claude/commands/
+# validate-hook-paths.sh - Verify hook paths start with commands/
 # Validates that all hook references in command definitions use correct paths
 
 set -euo pipefail
+set -x
 
 # Colors
 RED='\033[0;31m'
@@ -19,10 +20,10 @@ extract_hook_references() {
     local file="$1"
 
     # Look for common hook patterns:
-    # - .claude/commands/path/to/hook.sh
+    # - commands/path/to/hook.sh
     # - Skill tool references
     # - File references in markdown
-    grep -oE '\.(claude/commands/[a-zA-Z0-9/_.-]+\.(sh|md))' "$file" 2>/dev/null || true
+    grep -oE 'commands/[a-zA-Z0-9/:_.-]+\.(sh|md)' "$file" 2>/dev/null || true
 }
 
 # Validate hook path
@@ -30,9 +31,9 @@ validate_hook_path() {
     local file="$1"
     local hook_path="$2"
 
-    # Check if path starts with .claude/commands/
-    if [[ ! "$hook_path" =~ ^\.claude/commands/ ]]; then
-        echo -e "${RED}ERROR${NC}: $file - Hook path '$hook_path' does not start with .claude/commands/"
+    # Check if path starts with commands/
+    if [[ ! "$hook_path" =~ ^commands/ ]]; then
+        echo -e "${RED}ERROR${NC}: $file - Hook path '$hook_path' does not start with commands/"
         ((ERRORS++))
         return 1
     fi
@@ -63,7 +64,7 @@ check_command_hooks() {
     # Validate each hook
     while IFS= read -r hook; do
         if [[ -n "$hook" ]]; then
-            validate_hook_path "$file" "$hook"
+            validate_hook_path "$file" "$hook" || true
         fi
     done <<< "$hooks"
 
@@ -74,15 +75,15 @@ check_command_hooks() {
 main() {
     echo "Validating hook paths..."
 
-    if [[ ! -d ".claude/commands" ]]; then
-        echo -e "${RED}ERROR${NC}: .claude/commands directory not found"
+    if [[ ! -d "commands" ]]; then
+        echo -e "${RED}ERROR${NC}: commands directory not found"
         exit 1
     fi
 
     # Process all command files
     while IFS= read -r -d '' file; do
-        check_command_hooks "$file"
-    done < <(find .claude/commands -type f -name "*.md" -print0)
+        check_command_hooks "$file" || true
+    done < <(find commands -type f -name "*.md" -print0)
 
     # Summary
     echo ""

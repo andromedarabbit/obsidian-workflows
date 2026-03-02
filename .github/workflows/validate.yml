@@ -3,14 +3,14 @@ name: Validate Commands
 on:
   pull_request:
     paths:
-      - '.claude/commands/**'
+      - 'commands/**'
       - 'tools/**'
       - '.github/workflows/validate.yml'
   push:
     branches:
       - main
     paths:
-      - '.claude/commands/**'
+      - 'commands/**'
       - 'tools/**'
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: Run frontmatter validation
         run: |
           chmod +x tools/check-frontmatter.sh
-          ./tools/check-frontmatter.sh
+          bash -x tools/check-frontmatter.sh || { echo "Frontmatter validation failed"; exit 1; }
 
       - name: Upload validation errors
         if: failure()
@@ -48,7 +48,7 @@ jobs:
       - name: Run structure validation
         run: |
           chmod +x tools/validate-command.sh
-          ./tools/validate-command.sh
+          bash -x tools/validate-command.sh
 
       - name: Upload validation errors
         if: failure()
@@ -69,7 +69,7 @@ jobs:
       - name: Run hook path validation
         run: |
           chmod +x tools/validate-hook-paths.sh
-          ./tools/validate-hook-paths.sh
+          bash -x tools/validate-hook-paths.sh
 
       - name: Upload validation errors
         if: failure()

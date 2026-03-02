@@ -12,8 +12,8 @@
 
 ### Commands
 
-- `.claude/commands/obsidian-workflows/*.md` -> `.claude/commands/obsidian-workflows/*.md`
-- `.claude/commands/obsidian:write.*.md` -> `.claude/commands/obsidian:write.*.md`
+- `commands/obsidian-workflows/*.md` -> `commands/obsidian-workflows/*.md`
+- `commands/obsidian:write.*.md` -> `commands/obsidian:write.*.md`
 
 ### Skills
 

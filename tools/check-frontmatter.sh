@@ -68,7 +68,9 @@ check_command() {
     ((CHECKED++))
 
     # Check if file has frontmatter
-    if ! head -n 1 "$file" | grep -q "^---$"; then
+    local first_line
+    first_line=$(head -n 1 "$file" 2>/dev/null || true)
+    if [[ "$first_line" != "---" ]]; then
         echo -e "${RED}ERROR${NC}: $file - Missing frontmatter"
         ((ERRORS++))
         return 1
@@ -111,8 +113,8 @@ main() {
     echo "Checking command frontmatter..."
 
     # Find all command markdown files
-    if [[ ! -d ".claude/commands" ]]; then
-        echo -e "${RED}ERROR${NC}: .claude/commands directory not found"
+    if [[ ! -d "commands" ]]; then
+        echo -e "${RED}ERROR${NC}: commands directory not found"
         exit 1
     fi
 
@@ -122,7 +124,7 @@ main() {
     trap "rm -f $temp_names" EXIT
 
     while IFS= read -r -d '' file; do
-        check_command "$file"
+        check_command "$file" || true
 
         # Extract name for duplicate checking
         local name
@@ -140,7 +142,7 @@ main() {
                 echo "${name}|${file}" >> "$temp_names"
             fi
         fi
-    done < <(find .claude/commands -type f -name "*.md" -print0)
+    done < <(find commands -type f -name "*.md" -print0)
 
     # Summary
     echo ""

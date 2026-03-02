@@ -11,7 +11,7 @@ NC='\033[0m'
 
 # Template directory
 TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-COMMANDS_DIR=".claude/commands"
+COMMANDS_DIR="commands"
 
 # Validate kebab-case
 validate_name() {

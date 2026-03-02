@@ -12,7 +12,7 @@
 
 - [ ] Point plugin source/install workflow to dedicated repo
 - [ ] Apply updated local settings from `.claude/settings.local.json.example`
-- [ ] Verify command discovery from `.claude/commands`
+- [ ] Verify command discovery from `commands`
 - [ ] Execute smoke flows: plan passive, work draft, review
 
 ## Post-cutover validation window

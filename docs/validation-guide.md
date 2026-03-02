@@ -59,14 +59,14 @@ Validates command structure and path safety:
 
 #### Hook Path Validation
 
-Verifies hook paths start with `.claude/commands/`:
+Verifies hook paths start with `commands/`:
 
 ```bash
 ./tools/validate-hook-paths.sh
 ```
 
 **What it checks**:
-- Hook paths start with `.claude/commands/`
+- Hook paths start with `commands/`
 - Referenced files exist
 
 #### Generate Index
@@ -80,6 +80,11 @@ Creates COMMANDS.md from frontmatter:
 **Output**: `COMMANDS.md` with categorized command list
 
 ### Node.js Validators
+
+Markdown lint config source of truth:
+
+- Rule config (`MDxxx`) is managed in `.markdownlint.json`.
+- `.markdownlint-cli2.jsonc` is used only for CLI2 runner options like `globs` and `ignores`.
 
 Install dependencies first:
 
@@ -125,7 +130,7 @@ pre-commit install
 Hooks run automatically on `git commit`:
 
 ```bash
-git add .claude/commands/my-command.md
+git add commands/my-command.md
 git commit -m "Add new command"
 # Hooks run automatically
 ```
@@ -197,7 +202,7 @@ Jobs:
 
 **Error**:
 ```
-ERROR: .claude/commands/my-command.md - Missing required field: name
+ERROR: commands/my-command.md - Missing required field: name
 ```
 
 **Fix**: Add the missing field to frontmatter:
@@ -216,7 +221,7 @@ updated: 2026-03-02T19:00
 
 **Error**:
 ```
-ERROR: .claude/commands/my-command.md - created '2026-03-01' is not valid ISO 8601 format
+ERROR: commands/my-command.md - created '2026-03-01' is not valid ISO 8601 format
 ```
 
 **Fix**: Include time component:
@@ -228,7 +233,7 @@ created: 2026-03-01T14:30
 
 **Error**:
 ```
-WARNING: .claude/commands/my-command.md - name 'My_Command' should be kebab-case
+WARNING: commands/my-command.md - name 'My_Command' should be kebab-case
 ```
 
 **Fix**: Use kebab-case:
@@ -241,8 +246,8 @@ name: my-command
 **Error**:
 ```
 ERROR: Duplicate command name 'work' found in:
-  - .claude/commands/work.md
-  - .claude/commands/obsidian-workflows/work.md
+  - commands/work.md
+  - commands/obsidian-workflows/work.md
 ```
 
 **Fix**: Rename one command or use namespace:
@@ -254,7 +259,7 @@ name: obsidian-workflows:work
 
 **Error**:
 ```
-ERROR: .claude/commands/my-command.md - Contains reference to global runtime state (~/.claude/*)
+ERROR: commands/my-command.md - Contains reference to global runtime state (~/.claude/*)
 ```
 
 **Fix**: Use repository-relative paths:
@@ -270,24 +275,24 @@ ERROR: .claude/commands/my-command.md - Contains reference to global runtime sta
 
 **Error**:
 ```
-WARNING: .claude/commands/hooks/my-hook.sh - Missing execute permission
+WARNING: commands/hooks/my-hook.sh - Missing execute permission
 ```
 
 **Fix**: Add execute permission:
 ```bash
-chmod +x .claude/commands/hooks/my-hook.sh
+chmod +x commands/hooks/my-hook.sh
 ```
 
 ### ShellCheck Issues
 
 **Error**:
 ```
-WARNING: .claude/commands/hooks/my-hook.sh - ShellCheck found issues
+WARNING: commands/hooks/my-hook.sh - ShellCheck found issues
 ```
 
 **Fix**: Run ShellCheck to see specific issues:
 ```bash
-shellcheck .claude/commands/hooks/my-hook.sh
+shellcheck commands/hooks/my-hook.sh
 ```
 
 ### COMMANDS.md Out of Date
@@ -320,13 +325,13 @@ Test validation on a single file:
 
 ```bash
 # Extract frontmatter
-awk '/^---$/{if(++c==2)exit;next}c==1' .claude/commands/my-command.md
+awk '/^---$/{if(++c==2)exit;next}c==1' commands/my-command.md
 
 # Check with Node.js
 node -e "
 const matter = require('gray-matter');
 const fs = require('fs');
-const content = fs.readFileSync('.claude/commands/my-command.md', 'utf8');
+const content = fs.readFileSync('commands/my-command.md', 'utf8');
 console.log(matter(content).data);
 "
 ```
@@ -335,10 +340,10 @@ console.log(matter(content).data);
 
 ```bash
 # Using Python
-python3 -c "import yaml; yaml.safe_load(open('.claude/commands/my-command.md').read().split('---')[1])"
+python3 -c "import yaml; yaml.safe_load(open('commands/my-command.md').read().split('---')[1])"
 
 # Using Node.js
-node -e "const yaml = require('js-yaml'); console.log(yaml.load(require('fs').readFileSync('.claude/commands/my-command.md', 'utf8').split('---')[1]))"
+node -e "const yaml = require('js-yaml'); console.log(yaml.load(require('fs').readFileSync('commands/my-command.md', 'utf8').split('---')[1]))"
 ```
 
 ## Best Practices

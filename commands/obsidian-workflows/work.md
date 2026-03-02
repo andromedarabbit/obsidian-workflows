@@ -18,7 +18,7 @@ Scope Guard (repo-only):
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
 Preflight Gate (fail-fast):
-- 초기화 대상 목록의 canonical source는 `.claude/commands/obsidian:write.init.md`의 `초기화 대상` 섹션입니다.
+- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상` 섹션입니다.
 1. 실행 시작 시 `obsidian:write.init`의 초기화 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/policy/writing-policy.blog.md`
