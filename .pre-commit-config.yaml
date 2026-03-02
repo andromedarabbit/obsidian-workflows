@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+        exclude: ^\.github/workflows/
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+
+  - repo: local
+    hooks:
+      - id: generate-commands-index
+        name: Generate commands index
+        entry: tools/generate-index.sh
+        language: script
+        pass_filenames: false
+        files: '^\.claude/commands/.*\.md$'
+
+      - id: check-command-frontmatter
+        name: Check command frontmatter
+        entry: tools/check-frontmatter.sh
+        language: script
+        pass_filenames: false
+        files: '^\.claude/commands/.*\.md$'
+
+      - id: validate-command
+        name: Validate command structure
+        entry: tools/validate-command.sh
+        language: script
+        pass_filenames: false
+        files: '^\.claude/commands/.*\.md$'
+
+      - id: fix-shell-permissions
+        name: Fix shell script permissions
+        entry: bash -c 'find . -name "*.sh" -exec chmod +x {} \;'
+        language: system
+        pass_filenames: false

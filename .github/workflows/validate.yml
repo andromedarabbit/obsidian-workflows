@@ -1,0 +1,81 @@
+name: Validate Commands
+
+on:
+  pull_request:
+    paths:
+      - '.claude/commands/**'
+      - 'tools/**'
+      - '.github/workflows/validate.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '.claude/commands/**'
+      - 'tools/**'
+
+jobs:
+  validate-frontmatter:
+    name: Validate Frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run frontmatter validation
+        run: |
+          chmod +x tools/check-frontmatter.sh
+          ./tools/check-frontmatter.sh
+
+      - name: Upload validation errors
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-errors-frontmatter
+          path: |
+            tools/check-frontmatter.sh
+          retention-days: 7
+
+  validate-structure:
+    name: Validate Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run structure validation
+        run: |
+          chmod +x tools/validate-command.sh
+          ./tools/validate-command.sh
+
+      - name: Upload validation errors
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-errors-structure
+          path: |
+            tools/validate-command.sh
+          retention-days: 7
+
+  validate-hook-paths:
+    name: Validate Hook Paths
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run hook path validation
+        run: |
+          chmod +x tools/validate-hook-paths.sh
+          ./tools/validate-hook-paths.sh
+
+      - name: Upload validation errors
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-errors-hook-paths
+          path: |
+            tools/validate-hook-paths.sh
+          retention-days: 7

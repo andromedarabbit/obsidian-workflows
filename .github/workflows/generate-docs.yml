@@ -1,0 +1,40 @@
+name: Generate Documentation
+
+on:
+  pull_request:
+    paths:
+      - '.claude/commands/**/*.md'
+      - 'tools/generate-index.sh'
+  push:
+    branches:
+      - main
+    paths:
+      - '.claude/commands/**/*.md'
+      - 'tools/generate-index.sh'
+
+jobs:
+  generate-indices:
+    name: Generate Command Index
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate COMMANDS.md
+        run: |
+          chmod +x tools/generate-index.sh
+          ./tools/generate-index.sh
+
+      - name: Upload generated index
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-commands-index
+          path: COMMANDS.md
+          retention-days: 30
+
+      - name: Check for uncommitted changes
+        run: |
+          if ! git diff --exit-code COMMANDS.md; then
+            echo "::error::COMMANDS.md is out of date. Run 'tools/generate-index.sh' and commit the changes."
+            exit 1
+          fi

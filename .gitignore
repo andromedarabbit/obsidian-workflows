@@ -1,0 +1,17 @@
+# Node
+node_modules/
+
+# Tool caches
+.shellcheck/
+.markdownlint-cli2/
+
+# Generated artifacts
+COMMANDS.md.tmp
+
+# Pre-commit
+.pre-commit-config.yaml.bak
+
+# User-specific runtime files
+.claude/settings.local.json
+.claude/state/*.json
+!.claude/state/*.json.example

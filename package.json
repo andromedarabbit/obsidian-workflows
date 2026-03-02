@@ -1,0 +1,19 @@
+{
+  "name": "obsidian-workflows",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plugin core for Obsidian writing workflows",
+  "scripts": {
+    "validate:commands": "node scripts/validate-commands.js",
+    "validate:no-duplicates": "node scripts/check-duplicates.js",
+    "lint:markdown": "markdownlint-cli2 '**/*.md' '#node_modules'",
+    "lint:frontmatter": "node scripts/lint-frontmatter.js",
+    "generate:command-index": "bash tools/generate-index.sh",
+    "validate:all": "npm run validate:commands && npm run validate:no-duplicates && npm run lint:frontmatter"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.12.0",
+    "js-yaml": "^4.1.0",
+    "gray-matter": "^4.0.3"
+  }
+}
