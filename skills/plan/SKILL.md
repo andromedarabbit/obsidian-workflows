@@ -3,7 +3,7 @@ name: plan
 description: This skill should be used when the user wants to plan writing content, asks for "obsidian-workflows:plan", wants to start a writing workflow, or needs to choose between active writing (known topic) or passive discovery (scan for ideas). Use when user says "plan", "start writing", "writing workflow", "obsidian plan".
 version: 0.1.0
 created: 2026-03-02T01:34
-updated: 2026-03-02T01:34
+updated: 2026-03-03T19:00
 ---
 
 # PLAN Track Entry Point
@@ -22,19 +22,16 @@ updated: 2026-03-02T01:34
 
 ## Preflight Gate (fail-fast)
 
-The canonical source for initialization targets is the `초기화 대상` section in `commands/obsidian-write/obsidian:write.init.md`.
+The canonical source for initialization targets is the `초기화 대상(코어)` / `초기화 대상(동적 정책)` sections in `commands/obsidian-write/obsidian:write.init.md`.
 
-1. At execution start, verify existence of `obsidian:write.init` initialization target files:
+1. At execution start, verify existence of core target files:
    - `writing-config.md`
-   - `Workflows/policy/writing-policy.blog.md`
-   - `Workflows/policy/writing-policy.x-thread.md`
-   - `Workflows/policy/writing-policy.weekly-review.md`
-   - `Workflows/policy/writing-policy.newsletter.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
-2. If any are missing, run `/obsidian:write.init` first to start initialization.
-3. Re-check the same target list after init.
-4. If files are still missing after init, terminate with `FAIL` status and output missing file list.
+2. Read `enabled_policies` and `policy_dir` from `writing-config.md`, then verify `policy_dir/writing-policy.<policy>.md` exists for each enabled policy.
+3. If any targets are missing, run `/obsidian:write.init` first to start initialization.
+4. Re-check the same core/dynamic policy target set after init.
+5. If files are still missing after init, terminate with `FAIL` status and output missing file list.
 
 ## Intent Gate
 
@@ -48,9 +45,10 @@ The canonical source for initialization targets is the `초기화 대상` sectio
 ## Branch Execution Rules
 
 ### Active Branch:
-1. Check if `topic` is required.
-2. If `topic` is missing, immediately terminate (fail-fast).
-3. Explicitly handoff to next execution command:
+1. Apply selected policy's `topic_required` contract first.
+2. If `topic_required: true` and `topic` is missing, immediately terminate (fail-fast).
+3. Policies with `topic_required: false` (for example, daily-note) may proceed without `topic`.
+4. Explicitly handoff to next execution command:
    - `/obsidian-workflows:work mode=active topic="..." policy=...`
    - `/obsidian:write.active topic="..." policy=...`
 

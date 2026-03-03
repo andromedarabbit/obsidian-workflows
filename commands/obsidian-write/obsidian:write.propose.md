@@ -4,7 +4,7 @@ description: Passive 제안 생성. 스캔 결과를 아이디어 카드(3~5개)
 argument-hint: "[--from-scan] [--ideas N] [--draft idea-id]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-02T17:35
+updated: 2026-03-03T19:00
 ---
 
 동작:
@@ -13,14 +13,15 @@ updated: 2026-03-02T17:35
    - `/obsidian-workflows:plan` 실행 후 B(주제 제안 받기) 선택
    - `/obsidian-workflows:plan --intent passive --window-days 7` (필요 시 window/source 조정)
    - `writing-config.md`의 `source_paths`/`exclude_paths` 점검
-3. 후보 파일을 주제별로 묶어 아이디어 3~5개를 생성합니다.
-4. `proposal_path`에 제안 노트를 생성합니다.
+3. `writing-config.md`에서 `enabled_policies`, `proposal_policy_allowlist`를 읽고 제안 가능한 policy 집합을 확정합니다.
+4. 후보 파일을 주제별로 묶어 아이디어 3~5개를 생성합니다.
+5. `proposal_path`에 제안 노트를 생성합니다.
 
 아이디어 카드 형식(각 항목 필수):
 - 제목
 - 핵심 논지(1~2문장)
 - 근거 wikilink 목록
-- 추천 policy (`blog|x-thread|weekly-review|newsletter`)
+- 추천 policy (`proposal_policy_allowlist` 우선, 없으면 `enabled_policies`에서 선택)
 
 기본 원칙:
 - 시작/종료 시 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)를 출력합니다.
@@ -29,3 +30,7 @@ updated: 2026-03-02T17:35
 - 기본값은 제안 노트 생성까지만 수행합니다.
 - `--draft`로 명시된 아이디어만 `obsidian:write.draft` 흐름으로 이어갈 수 있습니다.
 - 자동 실행에서도 제안 노트까지만 생성합니다.
+
+Daily Note 정책 가이드:
+- `daily-note`가 제안 가능 policy 집합에 포함되어 있으면 추천 policy로 사용할 수 있습니다.
+- `daily-note` 카드는 가능한 경우 직전 노트 기반 요약 컨텍스트를 우선 반영합니다.

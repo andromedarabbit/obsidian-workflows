@@ -1,6 +1,6 @@
 ---
 created: 2026-03-02T00:00
-updated: 2026-03-02T00:00
+updated: 2026-03-03T19:00
 tags:
   - writing
   - config
@@ -17,6 +17,11 @@ exclude_paths:
   - .claude/
 workflow_base_path: Workflows
 policy_dir: Workflows/policy
+enabled_policies:
+  - daily-note
+default_policy: daily-note
+proposal_policy_allowlist:
+  - daily-note
 soul_path: Workflows/SOUL.md
 path_safety:
   enforce_vault_root: true
@@ -28,6 +33,11 @@ draft_path: Workflows/Drafts
 archive_path: Workflows/Archive
 final_path: Workflows/Notes
 proposal_path: Workflows/Proposals/passive-proposals
+daily_notes_path: Daily Notes
+daily_note_template: 템플릿/Daily.md
+note_creation_engine: obsidian-cli
+templater_required: true
+fallback_recent_files_limit: 5
 passive_window_days: 30
 passive_schedule: daily
 last_written_strategy: final-folder-latest-file
@@ -35,6 +45,7 @@ soul_enforced: true
 default_idea: 1
 proposal_auto_select: true
 filename_rule:
+  daily-note: "{{date}}"
   blog: "{{date}}-{{slug}}"
   x-thread: "{{date}}-{{slug}}-thread"
   weekly-review: "{{iso_week}}-weekly-review"

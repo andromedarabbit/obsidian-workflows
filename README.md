@@ -48,22 +48,34 @@ See the [official Claude Skills documentation](https://code.claude.com/docs) for
 
 Create `writing-config.md` in your Obsidian vault root:
 
-```markdown
-# Writing Configuration
-
+```yaml
 source_paths:
-  - /path/to/vault/sources
+  - .
+policy_dir: Workflows/policy
+enabled_policies:
+  - daily-note
+default_policy: daily-note
+proposal_policy_allowlist:
+  - daily-note
 
-draft_path: /path/to/vault/drafts
-final_path: /path/to/vault/finals
-proposal_path: /path/to/vault/proposals
+daily_notes_path: Daily Notes
+daily_note_template: 템플릿/Daily.md
+note_creation_engine: obsidian-cli
+templater_required: true
+fallback_recent_files_limit: 5
+
+draft_path: Workflows/Drafts
+final_path: Workflows/Notes
+proposal_path: Workflows/Proposals/passive-proposals
 ```
+
+Policy resolution is config-driven: `policy` is valid only when it is included in `enabled_policies` and `policy_dir/writing-policy.<policy>.md` exists.
 
 ### Configuration Files
 
 - `config/writing-config.example.md` - Example vault configuration
-- `assets/SOUL.md` - Writing style template
-- `assets/policy.md` - Channel-specific policies
+- `assets/Workflows/SOUL.md` - Writing style template asset
+- `assets/Workflows/policy/writing-policy.*.md` - Policy templates (config-driven)
 
 ## Usage
 
@@ -77,13 +89,16 @@ Plan your writing workflow before execution.
 
 **Usage:**
 ```bash
-/obsidian-workflows:plan [topic or note reference]
+/obsidian-workflows:plan [--intent active|passive] [topic=...] [policy=<policy-name>]
 ```
 
-**Example:**
+**Examples:**
 ```bash
-/obsidian-workflows:plan Write a technical blog post about Kubernetes operators
+/obsidian-workflows:plan --intent passive
+/obsidian-workflows:plan --intent active topic="Daily operations summary" policy=daily-note
 ```
+
+Daily-note behavior is policy-driven. With `source_strategy: previous-note`, it reads the previous daily note from `daily_notes_path`. If previous note is missing and policy requires `missing_source_behavior: skip-and-prompt-recent`, it returns `SKIP` and suggests up to `fallback_recent_files_limit` recent files for manual selection.
 
 ### 2. Work (`/obsidian-workflows:work`)
 
@@ -98,14 +113,14 @@ Execute writing tasks and create content.
 
 **Usage:**
 ```bash
-/obsidian-workflows:work [mode] [context]
+/obsidian-workflows:work mode=<active|passive|draft|refine|route> [args...]
 ```
 
 **Examples:**
 ```bash
-/obsidian-workflows:work draft "Introduction to Kubernetes operators"
-/obsidian-workflows:work refine drafts/k8s-operators.md
-/obsidian-workflows:work active "Add code examples section"
+/obsidian-workflows:work mode=passive
+/obsidian-workflows:work mode=draft proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
+/obsidian-workflows:work mode=active policy=daily-note
 ```
 
 ### 3. Review (`/obsidian-workflows:review`)
@@ -113,8 +128,8 @@ Execute writing tasks and create content.
 Review content quality against style guide and policies.
 
 **Checks:**
-- Policy compliance (`assets/policy.md`)
-- Style consistency (`assets/SOUL.md`)
+- Policy compliance (`Workflows/policy/writing-policy.<policy>.md`)
+- Style consistency (`Workflows/SOUL.md`)
 - Grammar, clarity, structure, technical accuracy
 
 **Usage:**
@@ -150,20 +165,20 @@ Capture learning points from completed work.
 ### Complete Workflow Example
 
 ```bash
-# 1. Plan the post
-/obsidian-workflows:plan Write about Kubernetes operator patterns
+# 1. Plan ideas from recent changes
+/obsidian-workflows:plan --intent passive
 
-# 2. Create initial draft
-/obsidian-workflows:work draft "Kubernetes operator patterns"
+# 2. Create draft from selected proposal idea
+/obsidian-workflows:work mode=draft proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
 
 # 3. Refine the content
-/obsidian-workflows:work refine drafts/k8s-operator-patterns.md
+/obsidian-workflows:work mode=refine file="Workflows/Drafts/2026-03-03.md" policy=daily-note
 
 # 4. Review for quality
-/obsidian-workflows:review drafts/k8s-operator-patterns.md
+/obsidian-workflows:review file="Workflows/Drafts/2026-03-03.md" policy=daily-note
 
-# 5. After publishing, capture learnings
-/obsidian-workflows:compound finals/k8s-operator-patterns.md
+# 5. Capture learnings
+/obsidian-workflows:compound file="Workflows/Notes/2026-03-03.md"
 ```
 
 ## Documentation

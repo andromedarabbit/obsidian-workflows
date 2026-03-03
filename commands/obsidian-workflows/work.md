@@ -4,7 +4,7 @@ description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/
 argument-hint: mode=<active|passive|draft|refine|route> [args...]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-02T17:38
+updated: 2026-03-03T19:00
 ---
 
 `obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
@@ -18,21 +18,18 @@ Scope Guard (repo-only):
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
 Preflight Gate (fail-fast):
-- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상` 섹션입니다.
-1. 실행 시작 시 `obsidian:write.init`의 초기화 대상 파일 존재를 먼저 검증합니다.
+- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
+1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
-   - `Workflows/policy/writing-policy.blog.md`
-   - `Workflows/policy/writing-policy.x-thread.md`
-   - `Workflows/policy/writing-policy.weekly-review.md`
-   - `Workflows/policy/writing-policy.newsletter.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
-2. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
-3. 초기화 후 동일 목록을 재검증합니다.
-4. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
+2. `writing-config.md`에서 `enabled_policies`, `policy_dir`를 읽고 각 policy에 대해 `policy_dir/writing-policy.<policy>.md` 존재를 검증합니다.
+3. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
+4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
+5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
 
 모드 매핑(mode 지정 시 질문 없는 deterministic 실행):
-- `mode=active` -> `obsidian:write.active`
+- `mode=active` -> `obsidian:write.active` (policy의 `source_strategy`/`missing_source_behavior` 계약을 따름; 예: daily-note에서 직전 노트가 없으면 `SKIP` + 최근 파일 후보 제시)
 - `mode=passive` -> `obsidian-workflows:plan --intent passive` (`scan -> propose`)
 - `mode=draft` -> `obsidian:write.draft`
 - `mode=refine` -> `obsidian:write.refine`

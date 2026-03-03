@@ -24,6 +24,16 @@ All runtime paths are resolved through vault-side configuration, not hardcoded r
 - `final_path`
 - `proposal_path`
 
+## Policy-driven path keys (optional but required by selected policy)
+
+When a selected policy template requires specific runtime keys, those keys become required at execution time.
+
+Examples:
+- `daily_notes_path` (used when `source_strategy: previous-note`)
+- `daily_note_template` (used when `template_engine: templater`)
+
+The command layer must fail fast if a policy-required path key is missing.
+
 ## Guardrails
 
 - No absolute path assumptions in command contracts
