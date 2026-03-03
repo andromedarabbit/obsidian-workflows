@@ -6,48 +6,21 @@
 
 Obsidian writing workflows plugin for Claude Code.
 
-## Purpose
+## What is this?
 
-This repository is the dedicated home for the plugin core:
+A structured 4-stage workflow system for writing projects in Obsidian with Claude Code:
 
-- Claude command definitions (`commands/...`)
-- Claude skill definitions (`.claude/skills/...`)
-- Plugin metadata (`.claude-plugin/...`)
-- Migration/runtime/contracts docs (`docs/...`)
-- Validation infrastructure (`tools/`, `.github/workflows/`)
-
-Vault content (notes, drafts, proposals, archives) stays in your Obsidian vault and is resolved via `writing-config.md` path contracts.
-
-## Repository Layout
-
-```text
-.claude/
-  commands/
-  skills/
-  state/
-.claude-plugin/
-config/
-assets/
-docs/
-```
-
-## Migration Goal
-
-Move plugin implementation from vault-coupled layout into this dedicated repository while preserving:
-
-- fail-fast behavior
-- path safety contracts
-- deterministic workflow routing
-- runtime state continuity
-
-See `docs/migration/` for checklists and rollout details.
+1. **Plan** - Organize thoughts and define scope
+2. **Work** - Create and refine content
+3. **Review** - Quality check against style guides
+4. **Compound** - Capture learnings for future reference
 
 ## Installation
 
 ### Prerequisites
 
 - [Claude Code](https://claude.ai/code) CLI installed
-- Obsidian vault with writing workflow setup
+- Obsidian vault
 
 ### Install via Marketplace (Recommended)
 
@@ -59,23 +32,21 @@ See `docs/migration/` for checklists and rollout details.
 ### Install via npx skills
 
 ```bash
-npx skills add git@github.com:kepano/obsidian-workflows.git
+npx skills add git@github.com:andromedarabbit/obsidian-workflows.git
 ```
 
 ### Manual Installation
 
-Add the contents of this repository to a `/.claude` folder in the root of your Obsidian vault (or whichever folder you're using with Claude Code).
-
 ```bash
 cd /path/to/your/obsidian-vault
-git clone https://github.com/kepano/obsidian-workflows.git .claude
+git clone https://github.com/andromedarabbit/obsidian-workflows.git .claude
 ```
 
 See the [official Claude Skills documentation](https://code.claude.com/docs) for more details.
 
-### Configuration
+## Configuration
 
-Configure vault paths in your Obsidian vault's `writing-config.md`:
+Create `writing-config.md` in your Obsidian vault root:
 
 ```markdown
 # Writing Configuration
@@ -88,167 +59,128 @@ final_path: /path/to/vault/finals
 proposal_path: /path/to/vault/proposals
 ```
 
-### Available Skills
-
-- `/plan` - Plan writing workflow (active/passive modes)
-- `/work` - Execute writing tasks (active/passive/draft/refine/route)
-- `/review` - Review content quality (policy/style checks)
-- `/compound` - Capture learning points from completed work
-
 ### Configuration Files
 
 - `config/writing-config.example.md` - Example vault configuration
 - `assets/SOUL.md` - Writing style template
 - `assets/policy.md` - Channel-specific policies
 
-## Development
+## Usage
 
-### Prerequisites
+### 1. Plan (`/obsidian-workflows:plan`)
 
-- Node.js 20+ (for validation scripts)
-- Python 3.8+ (for pre-commit hooks)
-- Bash 3.2+ (for shell scripts)
+Plan your writing workflow before execution.
 
-### Setup
+**Modes:**
+- **Active mode**: Interactive planning with Claude
+- **Passive mode**: Claude analyzes notes and suggests a plan
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/kepano/obsidian-workflows.git
-   cd obsidian-workflows
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Install pre-commit hooks** (optional but recommended):
-   ```bash
-   pip install pre-commit
-   pre-commit install
-   ```
-
-### Validation
-
-Run validators locally before committing:
-
+**Usage:**
 ```bash
-# Shell validators
-./tools/check-frontmatter.sh      # Check frontmatter fields
-./tools/validate-command.sh       # Validate command structure
-./tools/validate-hook-paths.sh    # Verify hook paths
-
-# Node.js validators
-npm run validate:commands         # Validate frontmatter
-npm run validate:no-duplicates    # Check for duplicate names
-npm run lint:frontmatter          # Lint YAML syntax
-npm run lint:markdown             # Lint markdown files
-
-# Run all validations
-npm run validate:all
+/obsidian-workflows:plan [topic or note reference]
 ```
 
-### Generate Documentation
-
-Update the command index:
-
+**Example:**
 ```bash
-./tools/generate-index.sh
+/obsidian-workflows:plan Write a technical blog post about Kubernetes operators
 ```
 
-This generates `COMMANDS.md` from command frontmatter.
+### 2. Work (`/obsidian-workflows:work`)
 
-### Creating New Commands
+Execute writing tasks and create content.
 
-Use the interactive command generator:
+**Modes:**
+- **Active mode**: Collaborative writing with suggestions
+- **Passive mode**: Claude writes based on plan and sources
+- **Draft mode**: Create initial draft
+- **Refine mode**: Improve existing draft
+- **Route mode**: Determine next workflow step
 
+**Usage:**
 ```bash
-./template/create-command.sh
+/obsidian-workflows:work [mode] [context]
 ```
 
-This will:
-1. Prompt for command metadata
-2. Validate name format and check for duplicates
-3. Generate command file with proper frontmatter
-4. Set correct permissions
-
-### Pre-commit Hooks
-
-Pre-commit hooks automatically run validation before commits:
-
-- Check YAML syntax
-- Fix trailing whitespace
-- Validate command frontmatter
-- Validate command structure
-- Generate command index
-- Fix shell script permissions
-
-To run manually:
-
+**Examples:**
 ```bash
-pre-commit run --all-files
+/obsidian-workflows:work draft "Introduction to Kubernetes operators"
+/obsidian-workflows:work refine drafts/k8s-operators.md
+/obsidian-workflows:work active "Add code examples section"
 ```
 
-### CI/CD
+### 3. Review (`/obsidian-workflows:review`)
 
-GitHub Actions workflows validate all changes:
+Review content quality against style guide and policies.
 
-- **Validate Commands** - Runs on PR and push to main
-  - Validates frontmatter fields
-  - Checks command structure
-  - Verifies hook paths
+**Checks:**
+- Policy compliance (`assets/policy.md`)
+- Style consistency (`assets/SOUL.md`)
+- Grammar, clarity, structure, technical accuracy
 
-- **Lint** - Runs on PR and push to main
-  - Lints markdown files
-  - Lints YAML files
-  - Validates frontmatter YAML
+**Usage:**
+```bash
+/obsidian-workflows:review [file or draft reference]
+```
 
-- **Generate Documentation** - Runs on PR and push to main
-  - Generates COMMANDS.md
-  - Checks for uncommitted changes
+**Example:**
+```bash
+/obsidian-workflows:review drafts/k8s-operators.md
+```
+
+### 4. Compound (`/obsidian-workflows:compound`)
+
+Capture learning points from completed work.
+
+**Purpose:**
+- Document solutions to problems
+- Extract reusable patterns
+- Build institutional knowledge
+- Create reference material
+
+**Usage:**
+```bash
+/obsidian-workflows:compound [completed work reference]
+```
+
+**Example:**
+```bash
+/obsidian-workflows:compound finals/k8s-operators-published.md
+```
+
+### Complete Workflow Example
+
+```bash
+# 1. Plan the post
+/obsidian-workflows:plan Write about Kubernetes operator patterns
+
+# 2. Create initial draft
+/obsidian-workflows:work draft "Kubernetes operator patterns"
+
+# 3. Refine the content
+/obsidian-workflows:work refine drafts/k8s-operator-patterns.md
+
+# 4. Review for quality
+/obsidian-workflows:review drafts/k8s-operator-patterns.md
+
+# 5. After publishing, capture learnings
+/obsidian-workflows:compound finals/k8s-operator-patterns.md
+```
 
 ## Documentation
 
 - [Command Specification](docs/command-specification.md) - Command contract definition
-- [Frontmatter Reference](docs/frontmatter-reference.md) - Field specifications and validation rules
-- [Hook Patterns](docs/hook-patterns.md) - Best practices for hook scripts
-- [Naming Conventions](docs/naming-conventions.md) - Naming standards for commands, files, and commits
-- [Validation Guide](docs/validation-guide.md) - How to run validators and fix common issues
+- [Repository Structure](docs/repository-structure.md) - Directory layout and organization
+- [Migration Guide](docs/migration/README.md) - Migration from vault-coupled layout
+- [Frontmatter Reference](docs/frontmatter-reference.md) - Field specifications
+- [Hook Patterns](docs/hook-patterns.md) - Best practices for hooks
+- [Naming Conventions](docs/naming-conventions.md) - Naming standards
+- [Validation Guide](docs/validation-guide.md) - Validation and troubleshooting
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes
-4. Run validation (`npm run validate:all`)
-5. Commit your changes (`git commit -m 'feat: add new feature'`)
-6. Push to the branch (`git push origin feature/my-feature`)
-7. Open a Pull Request
-
-### Commit Message Format
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-<type>(<scope>): <description>
-
-[optional body]
-
-[optional footer]
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`
-
-Examples:
-```
-feat(commands): add obsidian:write.scan command
-fix(validation): handle missing frontmatter gracefully
-docs(hooks): add hook patterns documentation
-```
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, validation workflow, and contribution guidelines.
 
 ## Core Principles
-
-From [CLAUDE.md](CLAUDE.md):
 
 1. **Fail fast over silent fallback** - Exit immediately on critical errors
 2. **Enforce path safety consistently** - All hook paths must start with `commands/`
@@ -257,3 +189,7 @@ From [CLAUDE.md](CLAUDE.md):
 5. **No absolute path assumptions** - Use relative paths in contracts
 6. **No global runtime state dependencies** - Don't rely on `~/.claude/*` for correctness
 7. **No duplicate command definitions** - Enforce unique command names
+
+## License
+
+MIT
