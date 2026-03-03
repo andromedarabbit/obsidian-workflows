@@ -13,7 +13,7 @@ COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 **Usage:** `"[file=path] [latest]"`
 
-**Source:** [`commands/obsidian-workflows/compound.md`](commands/obsidian-workflows/compound.md)
+**Source:** [`commands/compound.md`](commands/compound.md)
 
 #### `/obsidian-workflows:plan`
 
@@ -21,7 +21,7 @@ PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 
 
 **Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"`
 
-**Source:** [`commands/obsidian-workflows/plan.md`](commands/obsidian-workflows/plan.md)
+**Source:** [`commands/plan.md`](commands/plan.md)
 
 #### `/obsidian-workflows:review`
 
@@ -29,7 +29,7 @@ REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 **Usage:** `file=path [policy=<policy-name>]`
 
-**Source:** [`commands/obsidian-workflows/review.md`](commands/obsidian-workflows/review.md)
+**Source:** [`commands/review.md`](commands/review.md)
 
 #### `/obsidian-workflows:work`
 
@@ -37,7 +37,7 @@ WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하
 
 **Usage:** `mode=<active|passive|draft|refine|route> [args...]`
 
-**Source:** [`commands/obsidian-workflows/work.md`](commands/obsidian-workflows/work.md)
+**Source:** [`commands/work.md`](commands/work.md)
 
 
 ### Obsidian Write

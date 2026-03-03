@@ -54,7 +54,7 @@ EOF
         if [[ -n "$name" ]]; then
             # Determine category from file path or name
             local category="General"
-            if [[ "$file" =~ obsidian-workflows ]]; then
+            if [[ "$name" =~ ^(plan|work|review|compound)$ ]]; then
                 category="Obsidian-Workflows"
             elif [[ "$file" =~ obsidian:write ]]; then
                 category="Obsidian-Write"
