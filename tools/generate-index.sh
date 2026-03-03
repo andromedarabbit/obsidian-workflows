@@ -80,7 +80,12 @@ EOF
         # Output commands in this category
         while IFS='|' read -r cat name file description argument_hint; do
             if [[ "$cat" == "$category" ]]; then
-                echo "#### \`/$name\`" >> "$temp_file"
+                local display_name="$name"
+                if [[ "$cat" == "Obsidian-Workflows" && "$name" != *:* ]]; then
+                    display_name="obsidian-workflows:${name}"
+                fi
+
+                echo "#### \`/$display_name\`" >> "$temp_file"
                 echo "" >> "$temp_file"
                 echo "$description" >> "$temp_file"
                 echo "" >> "$temp_file"
