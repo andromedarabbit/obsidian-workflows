@@ -1,5 +1,5 @@
 ---
-name: obsidian-workflows:compound
+name: compound
 description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 argument-hint: "[file=path] [latest]"
 allowed-tools: Read, Write, Edit, Glob, Grep

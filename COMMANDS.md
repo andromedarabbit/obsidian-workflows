@@ -7,7 +7,7 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 
 ### Obsidian Workflows
 
-#### `/obsidian-workflows:compound`
+#### `/compound`
 
 COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
@@ -15,7 +15,7 @@ COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 **Source:** [`commands/obsidian-workflows/compound.md`](commands/obsidian-workflows/compound.md)
 
-#### `/obsidian-workflows:plan`
+#### `/plan`
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
@@ -23,7 +23,7 @@ PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 
 
 **Source:** [`commands/obsidian-workflows/plan.md`](commands/obsidian-workflows/plan.md)
 
-#### `/obsidian-workflows:review`
+#### `/review`
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
@@ -31,7 +31,7 @@ REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 **Source:** [`commands/obsidian-workflows/review.md`](commands/obsidian-workflows/review.md)
 
-#### `/obsidian-workflows:work`
+#### `/work`
 
 WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
