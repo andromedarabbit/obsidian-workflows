@@ -27,9 +27,9 @@ Preflight Gate (fail-fast):
    - `Workflows/policy/writing-policy.newsletter.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
-2. 누락이 하나라도 있으면 즉시 `FAIL`로 종료합니다.
-3. 종료 시 누락 파일 목록과 다음 액션(`/obsidian:write.init`)을 함께 출력합니다.
-4. 자동 초기화는 수행하지 않습니다.
+2. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
+3. 초기화 후 동일 목록을 재검증합니다.
+4. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
 
 모드 매핑(mode 지정 시 질문 없는 deterministic 실행):
 - `mode=active` -> `obsidian:write.active`

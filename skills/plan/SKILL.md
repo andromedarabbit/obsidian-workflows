@@ -32,9 +32,9 @@ The canonical source for initialization targets is the `초기화 대상` sectio
    - `Workflows/policy/writing-policy.newsletter.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
-2. If any are missing, immediately terminate with `FAIL` status.
-3. At termination, output missing file list and next action (`/obsidian:write.init`).
-4. Do not perform automatic initialization.
+2. If any are missing, run `/obsidian:write.init` first to start initialization.
+3. Re-check the same target list after init.
+4. If files are still missing after init, terminate with `FAIL` status and output missing file list.
 
 ## Intent Gate
 

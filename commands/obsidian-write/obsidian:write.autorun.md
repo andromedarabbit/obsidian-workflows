@@ -13,7 +13,7 @@ updated: 2026-03-01T23:40
 - 이 명령은 non-interactive `passive` 전용입니다(질문 분기 없음).
 
 상태 파일:
-- `.claude/state/obsidian-write-passive.json`
+- `.claude/state/obsidian-write-passive.json` (runtime, gitignored)
 - 주요 필드: `last_propose_run_at`, `last_status`, `last_proposal_note`
 
 락/중복 방지:
