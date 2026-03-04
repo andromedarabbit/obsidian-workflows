@@ -59,6 +59,18 @@ show_wikilinks: true
 external_tools:
   detection: auto  # auto | manual | disabled
   auto_use: ask    # ask | true | false
+workflow_mode: auto  # auto | fast | full
+auto_mode_rules:
+  - condition: "proposal exists and idea selected"
+    mode: fast
+  - condition: "first time or complex topic"
+    mode: full
+  - condition: "review after draft"
+    mode: fast
+  - condition: "repeated task (same policy 3+ times)"
+    mode: fast
+cache_enabled: true
+cache_ttl_hours: 24
 ---
 
 # Writing Config Example

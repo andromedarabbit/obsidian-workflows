@@ -17,6 +17,18 @@ Scope Guard (repo-only):
 - 실행 대상은 vault root 하위 저장소 파일로 제한합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
+Smart Mode Selection:
+- `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.
+- Fast mode 자동 선택 조건:
+  - Proposal 파일이 이미 존재하고 idea가 선택됨
+  - 동일 policy를 최근 24시간 내 3회 이상 사용
+  - Draft 모드에서 proposal이 이미 검증됨
+- Full mode 자동 선택 조건:
+  - 첫 실행 (초기화 필요)
+  - Active 모드에서 복잡한 주제
+  - `--verbose` 플래그
+- 수동 override: `--fast` 플래그로 강제 fast mode
+
 Fast Mode (--fast):
 - `--fast` 플래그가 있으면 속도 최적화 모드로 실행합니다.
 - Fast mode 동작:

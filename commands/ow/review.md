@@ -13,6 +13,17 @@ updated: 2026-03-04T21:49
 - 이 명령은 검증/리포팅 전용으로 동작하며 파일을 수정하지 않습니다.
 - 최소 권한 원칙에 따라 read-only 도구만 사용합니다.
 
+Smart Mode Selection:
+- `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.
+- Fast mode 자동 선택 조건:
+  - 초안 작성 후 리뷰 (Drafts 디렉토리의 파일)
+  - 동일 policy를 최근 24시간 내 3회 이상 사용
+  - 파일 크기 < 1000자
+- Full mode 자동 선택 조건:
+  - 첫 리뷰 (정책 검증 필요)
+  - `--verbose` 플래그
+- 수동 override: `--fast` 플래그로 강제 fast mode
+
 Fast Mode (--fast):
 - `--fast` 플래그가 있으면 속도 최적화 모드로 실행합니다.
 - Fast mode 동작:

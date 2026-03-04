@@ -11,6 +11,16 @@ updated: 2026-03-04T21:49
 
 후속 확장(현재 미구현): `obsidian:write.compound.sync` (planned)
 
+Smart Mode Selection:
+- `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.
+- Fast mode 자동 선택 조건:
+  - 반복 학습 캡처 (동일 policy 3회 이상)
+  - 파일 크기 < 2000자
+- Full mode 자동 선택 조건:
+  - 첫 학습 캡처
+  - 복잡한 패턴 분석 필요
+- 수동 override: `--fast` 플래그로 강제 fast mode
+
 Fast Mode (--fast):
 - `--fast` 플래그가 있으면 속도 최적화 모드로 실행합니다.
 - Fast mode 동작:
