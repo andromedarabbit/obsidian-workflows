@@ -1,0 +1,13 @@
+[project]
+name = "obsidian-workflows-tools"
+version = "0.1.0"
+description = "External tools detection for obsidian-workflows"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+keyword-detector = "keyword_detector:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
