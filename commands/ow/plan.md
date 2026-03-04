@@ -1,10 +1,10 @@
 ---
 name: ow:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
-argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"
+argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T10:31
+updated: 2026-03-04T21:49
 ---
 
 `obsidian-workflows:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
@@ -17,8 +17,19 @@ Scope Guard (repo-only):
 - 구현/검증/출력은 vault root 하위 저장소 파일만 대상으로 합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
+Fast Mode (--fast):
+- `--fast` 플래그가 있으면 속도 최적화 모드로 실행합니다.
+- Fast mode 동작:
+  - Preflight 검증 간소화 (파일 존재 확인만, 초기화 건너뛰기)
+  - External tools 탐지 비활성화
+  - Active 모드: 리서치 단계 생략 (WebSearchPrime 건너뛰기)
+  - Passive 모드: 아이디어 생성만 수행 (상세 분석 생략)
+  - Context Card 출력 최소화
+- Fast mode는 단순 작업에 최적화되어 있으며, 복잡한 주제나 첫 실행 시에는 권장하지 않습니다.
+
 Preflight Gate (fail-fast):
 - 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
+- **Fast mode가 아닐 때만** 전체 검증을 수행합니다:
 1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/SOUL.md`
@@ -27,8 +38,10 @@ Preflight Gate (fail-fast):
 3. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
 4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
 5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
+- **Fast mode일 때**: `writing-config.md` 존재만 확인하고 즉시 진행합니다.
 
 External Tools Detection:
+- **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
 1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
 2. `plan` 단계 키워드: canvas, visual, graph, mind-map, plan
 3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
@@ -36,6 +49,7 @@ External Tools Detection:
    - `true`: 자동 사용 (질문 없이)
    - `false`: 건너뛰기
 4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+- **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Intent Gate:
 1. `--intent`가 없으면 사용자 의도를 먼저 확인합니다.
@@ -50,7 +64,9 @@ Intent Gate:
   1. 선택 policy의 `topic_required` 계약을 우선 적용합니다.
   2. `topic_required: true`이고 `topic`이 없으면 즉시 종료합니다(fail-fast).
   3. `topic_required: false` 정책(예: daily-note)은 `topic` 없이도 진행할 수 있습니다.
-  4. 다음 실행 커맨드를 명시적으로 handoff합니다.
+  4. **Fast mode가 아닐 때**: WebSearchPrime으로 리서치를 수행합니다.
+  5. **Fast mode일 때**: 리서치를 건너뛰고 topic/policy 확정만 수행합니다.
+  6. 다음 실행 커맨드를 명시적으로 handoff합니다.
      - `/obsidian-workflows:work mode=active topic="..." policy=...`
      - `/obsidian:write.active topic="..." policy=...`
 - `passive` 분기:

@@ -1,10 +1,10 @@
 ---
 name: ow:work
 description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
-argument-hint: mode=<active|passive|draft|refine|route> [args...]
+argument-hint: mode=<active|passive|draft|refine|route> [args...] [--fast]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T10:31
+updated: 2026-03-04T21:49
 ---
 
 `obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
@@ -17,7 +17,19 @@ Scope Guard (repo-only):
 - 실행 대상은 vault root 하위 저장소 파일로 제한합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
+Fast Mode (--fast):
+- `--fast` 플래그가 있으면 속도 최적화 모드로 실행합니다.
+- Fast mode 동작:
+  - Preflight 검증 간소화 (파일 존재 확인만)
+  - External tools 탐지 비활성화
+  - Draft 모드: Proposal 파일 읽기만 (검증 생략)
+  - Refine 모드: SOUL 규칙 간소화 적용
+  - Wikilinks 생성 생략
+  - Context Card 출력 최소화
+- Fast mode는 단순 작업에 최적화되어 있습니다.
+
 External Tools Detection:
+- **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
 1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
 2. 모드별 키워드:
    - `active`: markdown, obsidian, humanizer, write, draft, template
@@ -28,9 +40,11 @@ External Tools Detection:
    - `true`: 자동 사용 (질문 없이)
    - `false`: 건너뛰기
 4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+- **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Preflight Gate (fail-fast):
 - 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
+- **Fast mode가 아닐 때만** 전체 검증을 수행합니다:
 1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/SOUL.md`
@@ -39,6 +53,7 @@ Preflight Gate (fail-fast):
 3. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
 4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
 5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
+- **Fast mode일 때**: `writing-config.md` 존재만 확인하고 즉시 진행합니다.
 
 모드 매핑(mode 지정 시 질문 없는 deterministic 실행):
 - `mode=active` -> `obsidian:write.active` (policy의 `source_strategy`/`missing_source_behavior` 계약을 따름; 예: daily-note에서 직전 노트가 없으면 `SKIP` + 최근 파일 후보 제시)
