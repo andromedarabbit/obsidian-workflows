@@ -1,15 +1,22 @@
 ---
 name: ow:compound
 description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
-argument-hint: "[file=path] [latest] [--fast]"
+argument-hint: "[file=path] [latest] [--fast] [--skip external-tools,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T21:49
+updated: 2026-03-04T22:00
 ---
 
 `obsidian-workflows:compound`는 MVP에서 `obsidian:write.compound.capture`를 실행해 반복 개선용 학습 로그를 남깁니다.
 
 후속 확장(현재 미구현): `obsidian:write.compound.sync` (planned)
+
+Selective Step Skipping (--skip):
+- `--skip` 플래그로 특정 단계를 건너뛸 수 있습니다.
+- 건너뛸 수 있는 단계:
+  - `external-tools`: 외부 도구 탐지
+  - `context-card`: Context Card 출력
+- 프리셋 설정: `writing-config.md`의 `skip_steps.compound` 배열
 
 Smart Mode Selection:
 - `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.

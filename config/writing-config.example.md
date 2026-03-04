@@ -71,6 +71,11 @@ auto_mode_rules:
     mode: fast
 cache_enabled: true
 cache_ttl_hours: 24
+skip_steps:
+  plan: []
+  work: []
+  review: []
+  compound: []
 ---
 
 # Writing Config Example

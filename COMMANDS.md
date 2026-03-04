@@ -11,7 +11,7 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 
 COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
-**Usage:** `"[file=path] [latest] [--fast]"`
+**Usage:** `"[file=path] [latest] [--fast] [--skip external-tools,context-card]"`
 
 **Source:** [`commands/ow/compound.md`](commands/ow/compound.md)
 
@@ -19,7 +19,7 @@ COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
-**Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast]"`
+**Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"`
 
 **Source:** [`commands/ow/plan.md`](commands/ow/plan.md)
 
@@ -27,7 +27,7 @@ PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
-**Usage:** `file=path [policy=<policy-name>] [--fast]`
+**Usage:** `file=path [policy=<policy-name>] [--fast] [--skip external-tools,context-card]`
 
 **Source:** [`commands/ow/review.md`](commands/ow/review.md)
 
@@ -35,7 +35,7 @@ REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
-**Usage:** `mode=<active|passive|draft|refine|route> [args...] [--fast]`
+**Usage:** `mode=<active|passive|draft|refine|route> [args...] [--fast] [--skip preflight,external-tools,validation,context-card]`
 
 **Source:** [`commands/ow/work.md`](commands/ow/work.md)
 

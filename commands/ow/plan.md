@@ -1,10 +1,10 @@
 ---
 name: ow:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
-argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast]"
+argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T21:49
+updated: 2026-03-04T22:00
 ---
 
 `obsidian-workflows:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
@@ -16,6 +16,16 @@ updated: 2026-03-04T21:49
 Scope Guard (repo-only):
 - 구현/검증/출력은 vault root 하위 저장소 파일만 대상으로 합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
+
+Selective Step Skipping (--skip):
+- `--skip` 플래그로 특정 단계를 건너뛸 수 있습니다.
+- 건너뛸 수 있는 단계:
+  - `preflight`: 초기화 검증 (파일 존재 확인만 수행)
+  - `external-tools`: 외부 도구 탐지
+  - `research`: 리서치 (active 모드에서 WebSearchPrime)
+  - `context-card`: Context Card 출력
+- 여러 단계를 쉼표로 구분해서 지정: `--skip preflight,external-tools`
+- 프리셋 설정: `writing-config.md`의 `skip_steps.plan` 배열
 
 Smart Mode Selection:
 - `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.

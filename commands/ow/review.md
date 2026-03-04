@@ -1,10 +1,10 @@
 ---
 name: ow:review
 description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
-argument-hint: file=path [policy=<policy-name>] [--fast]
+argument-hint: file=path [policy=<policy-name>] [--fast] [--skip external-tools,context-card]
 allowed-tools: Read, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T21:49
+updated: 2026-03-04T22:00
 ---
 
 `obsidian-workflows:review`는 MVP에서 `obsidian:write.review.policy`를 기본 게이트로 실행합니다.
@@ -12,6 +12,13 @@ updated: 2026-03-04T21:49
 보안/권한 원칙:
 - 이 명령은 검증/리포팅 전용으로 동작하며 파일을 수정하지 않습니다.
 - 최소 권한 원칙에 따라 read-only 도구만 사용합니다.
+
+Selective Step Skipping (--skip):
+- `--skip` 플래그로 특정 단계를 건너뛸 수 있습니다.
+- 건너뛸 수 있는 단계:
+  - `external-tools`: 외부 도구 탐지
+  - `context-card`: Context Card 출력
+- 프리셋 설정: `writing-config.md`의 `skip_steps.review` 배열
 
 Smart Mode Selection:
 - `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.

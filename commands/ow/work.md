@@ -1,10 +1,10 @@
 ---
 name: ow:work
 description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
-argument-hint: mode=<active|passive|draft|refine|route> [args...] [--fast]
+argument-hint: mode=<active|passive|draft|refine|route> [args...] [--fast] [--skip preflight,external-tools,validation,context-card]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T21:49
+updated: 2026-03-04T22:00
 ---
 
 `obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
@@ -16,6 +16,16 @@ updated: 2026-03-04T21:49
 Scope Guard (repo-only):
 - 실행 대상은 vault root 하위 저장소 파일로 제한합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
+
+Selective Step Skipping (--skip):
+- `--skip` 플래그로 특정 단계를 건너뛸 수 있습니다.
+- 건너뛸 수 있는 단계:
+  - `preflight`: 초기화 검증
+  - `external-tools`: 외부 도구 탐지
+  - `validation`: 입력 검증 (proposal/policy 검증)
+  - `context-card`: Context Card 출력
+- 여러 단계를 쉼표로 구분: `--skip preflight,validation`
+- 프리셋 설정: `writing-config.md`의 `skip_steps.work` 배열
 
 Smart Mode Selection:
 - `workflow_mode: auto`일 때 컨텍스트를 분석해서 자동으로 fast/full 모드를 선택합니다.
