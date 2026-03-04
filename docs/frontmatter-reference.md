@@ -237,10 +237,13 @@ name: my-command
 
 **Error**: `Duplicate command name 'work' found in:`
 
-**Fix**: Ensure each command has a unique name. Consider using namespaces:
-```yaml
-name: obsidian-workflows:work
-```
+**Fix**: Ensure each command has a unique name and only one canonical file under `commands/`.
+
+### Legacy Command Root
+
+**Error**: `Legacy command root 'commands/obsidian-workflows/' detected ...`
+
+**Fix**: Move entrypoints to top-level canonical files (for example `commands/work.md`) and remove `commands/obsidian-workflows/*.md`.
 
 ---
 

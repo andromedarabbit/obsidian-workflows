@@ -98,7 +98,7 @@ Then run validators:
 # Validate command frontmatter
 npm run validate:commands
 
-# Check for duplicate names
+# Check duplicate command names + command/skill collisions + legacy command layout
 npm run validate:no-duplicates
 
 # Lint frontmatter YAML
@@ -250,10 +250,23 @@ ERROR: Duplicate command name 'work' found in:
   - commands/obsidian-workflows/work.md
 ```
 
-**Fix**: Rename one command or use namespace:
-```yaml
-name: obsidian-workflows:work
+**Fix**: Keep one canonical command file only. Do not define the same `name` twice.
+
+### Legacy Command Root (Double Namespace Risk)
+
+**Error**:
 ```
+ERROR: Legacy command root 'commands/obsidian-workflows/' detected at commands/obsidian-workflows/work.md
+  Move file under 'commands/' directly (e.g., 'commands/plan.md') to avoid double namespace discovery.
+```
+
+**Fix**: Move entrypoints to canonical root:
+- `commands/plan.md`
+- `commands/work.md`
+- `commands/review.md`
+- `commands/compound.md`
+
+and remove `commands/obsidian-workflows/*.md`.
 
 ### Path Safety Violation
 

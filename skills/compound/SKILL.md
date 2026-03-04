@@ -1,9 +1,10 @@
 ---
-name: compound
-description: This skill should be used when the user wants to capture learning points from completed work, asks for "obsidian-workflows:compound", needs to document insights for iterative improvement, or wants to build knowledge from finished content. Use when user says "compound", "capture learning", "document insights", "learn from this".
+name: workflow-compound-reference
+description: Internal reference for the COMPOUND track contract. Not user-invocable; command entrypoint is /obsidian-workflows:compound.
+user-invocable: false
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-02T14:58
+updated: 2026-03-03T23:50
 ---
 
 # COMPOUND Track Entry Point

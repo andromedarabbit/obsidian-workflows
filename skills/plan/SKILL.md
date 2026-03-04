@@ -1,9 +1,10 @@
 ---
-name: plan
-description: This skill should be used when the user wants to plan writing content, asks for "obsidian-workflows:plan", wants to start a writing workflow, or needs to choose between active writing (known topic) or passive discovery (scan for ideas). Use when user says "plan", "start writing", "writing workflow", "obsidian plan".
+name: workflow-plan-reference
+description: Internal reference for the PLAN track contract. Not user-invocable; command entrypoint is /obsidian-workflows:plan.
+user-invocable: false
 version: 0.1.0
 created: 2026-03-02T01:34
-updated: 2026-03-03T19:00
+updated: 2026-03-03T23:50
 ---
 
 # PLAN Track Entry Point

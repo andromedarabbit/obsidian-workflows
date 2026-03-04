@@ -1,9 +1,10 @@
 ---
-name: work
-description: This skill should be used when the user wants to execute writing work, asks for "obsidian-workflows:work", needs to draft or refine content, or wants to route to specific writing modes (active/passive/draft/refine). Use when user says "work", "write", "draft", "refine", "execute writing".
+name: workflow-work-reference
+description: Internal reference for the WORK track contract. Not user-invocable; command entrypoint is /obsidian-workflows:work.
+user-invocable: false
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-02T17:40
+updated: 2026-03-03T23:50
 ---
 
 # WORK Track Entry Point

@@ -1,9 +1,10 @@
 ---
-name: review
-description: This skill should be used when the user wants to review writing quality, asks for "obsidian-workflows:review", needs policy/style quality gate checks, or wants to validate content against writing policies. Use when user says "review", "check quality", "validate", "quality gate".
+name: workflow-review-reference
+description: Internal reference for the REVIEW track contract. Not user-invocable; command entrypoint is /obsidian-workflows:review.
+user-invocable: false
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-02T14:58
+updated: 2026-03-03T23:50
 ---
 
 # REVIEW Track Entry Point

@@ -17,10 +17,13 @@ Define deterministic command discovery rules for this plugin repository.
 3. Keep command namespaces explicit:
    - Public workflow entrypoints: `obsidian-workflows:*`
    - Execution commands: `obsidian:write.*`
-4. Companion docs may exist, but must not redefine command identities.
+4. `commands/` must not include a nested legacy root matching plugin namespace (for this repo: `commands/obsidian-workflows/`).
+   - Canonical entrypoints must stay directly under `commands/` (`commands/plan.md`, `commands/work.md`, `commands/review.md`, `commands/compound.md`).
+5. Companion docs may exist, but must not redefine command identities.
 
 ## Validation Checklist
 
 - [ ] Every command file has frontmatter: `name`, `description`, `argument-hint`, `allowed-tools`, `created`, `updated`
 - [ ] Every canonical `name` appears exactly once under `commands`
-- [ ] No stale alternate command roots remain undocumented
+- [ ] `commands/obsidian-workflows/` does not exist
+- [ ] `npm run validate:no-duplicates` passes (duplicates + command/skill collision + legacy layout checks)
