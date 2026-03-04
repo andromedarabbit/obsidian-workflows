@@ -29,6 +29,16 @@ A structured 4-stage workflow system for writing projects in Obsidian with Claud
 /plugin install obsidian-workflows@andromedarabbit
 ```
 
+### Install from Local Directory
+
+```bash
+# From within Claude Code session
+claude --plugin-dir /path/to/obsidian-workflows
+
+# Example: if you cloned to ~/projects/obsidian-workflows
+claude --plugin-dir ~/projects/obsidian-workflows
+```
+
 ### Install via npx skills
 
 ```bash
