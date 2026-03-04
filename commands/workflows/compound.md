@@ -1,10 +1,10 @@
 ---
-name: wf:compound
+name: workflows:compound
 description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 argument-hint: "[file=path] [latest]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T10:20
+updated: 2026-03-04T10:25
 ---
 
 `obsidian-workflows:compound`는 MVP에서 `obsidian:write.compound.capture`를 실행해 반복 개선용 학습 로그를 남깁니다.

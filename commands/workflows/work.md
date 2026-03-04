@@ -1,10 +1,10 @@
 ---
-name: wf:work
+name: workflows:work
 description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 argument-hint: mode=<active|passive|draft|refine|route> [args...]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T10:20
+updated: 2026-03-04T10:25
 ---
 
 `obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
