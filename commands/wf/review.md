@@ -1,10 +1,10 @@
 ---
-name: review
+name: wf:review
 description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 argument-hint: file=path [policy=<policy-name>]
 allowed-tools: Read, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-02T15:07
+updated: 2026-03-04T10:20
 ---
 
 `obsidian-workflows:review`는 MVP에서 `obsidian:write.review.policy`를 기본 게이트로 실행합니다.

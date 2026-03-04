@@ -5,39 +5,39 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 ## Available Commands
 
 
-### Obsidian Workflows
+### General
 
-#### `/obsidian-workflows:compound`
+#### `/wf:compound`
 
 COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 **Usage:** `"[file=path] [latest]"`
 
-**Source:** [`commands/compound.md`](commands/compound.md)
+**Source:** [`commands/wf/compound.md`](commands/wf/compound.md)
 
-#### `/obsidian-workflows:plan`
+#### `/wf:plan`
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
 **Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"`
 
-**Source:** [`commands/plan.md`](commands/plan.md)
+**Source:** [`commands/wf/plan.md`](commands/wf/plan.md)
 
-#### `/obsidian-workflows:review`
+#### `/wf:review`
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 **Usage:** `file=path [policy=<policy-name>]`
 
-**Source:** [`commands/review.md`](commands/review.md)
+**Source:** [`commands/wf/review.md`](commands/wf/review.md)
 
-#### `/obsidian-workflows:work`
+#### `/wf:work`
 
 WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
 **Usage:** `mode=<active|passive|draft|refine|route> [args...]`
 
-**Source:** [`commands/work.md`](commands/work.md)
+**Source:** [`commands/wf/work.md`](commands/wf/work.md)
 
 
 ### Obsidian Write
