@@ -28,6 +28,15 @@ Preflight Gate (fail-fast):
 4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
 5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
 
+External Tools Detection:
+1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
+2. `plan` 단계 키워드: canvas, visual, graph, mind-map, plan
+3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
+   - `ask`: AskUserQuestion으로 사용 여부 확인
+   - `true`: 자동 사용 (질문 없이)
+   - `false`: 건너뛰기
+4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+
 Intent Gate:
 1. `--intent`가 없으면 사용자 의도를 먼저 확인합니다.
    - A) 이미 주제가 있다 (`active`)

@@ -17,6 +17,18 @@ Scope Guard (repo-only):
 - 실행 대상은 vault root 하위 저장소 파일로 제한합니다.
 - `~/.claude/*` 같은 전역 런타임 상태를 해결책으로 사용하지 않습니다.
 
+External Tools Detection:
+1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
+2. 모드별 키워드:
+   - `active`: markdown, obsidian, humanizer, write, draft, template
+   - `draft`: markdown, obsidian, humanizer, write, draft, template
+   - `refine`: humanizer, grammar, style, polish, edit, rewrite
+3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
+   - `ask`: AskUserQuestion으로 사용 여부 확인
+   - `true`: 자동 사용 (질문 없이)
+   - `false`: 건너뛰기
+4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+
 Preflight Gate (fail-fast):
 - 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
 1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.

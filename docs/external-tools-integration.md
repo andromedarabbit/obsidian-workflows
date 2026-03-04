@@ -1,70 +1,84 @@
-# External Tool Detector
+# External Tools Integration
 
-이 유틸리티는 설치된 외부 도구(skills, MCP 서버)를 감지하고 활용 가능 여부를 확인합니다.
+Keyword-based runtime detection system for external tools (skills, MCP servers).
 
-## 지원 도구
+## Architecture
 
-### 1. humanizer
-- **용도**: AI 생성 텍스트를 자연스러운 인간 글쓰기로 변환
-- **활용 단계**: draft, refine, compound
-- **감지 방법**: skill 목록에서 `humanizer` 존재 확인
+### Keyword-Based Detection
 
-### 2. grammar-checker
-- **용도**: 맞춤법, 문법, 띄어쓰기, 구두점 검사
-- **활용 단계**: refine, review
-- **감지 방법**: skill 목록에서 `grammar-checker` 존재 확인
+External tools are detected at runtime by matching keywords against installed skills/MCP tools:
 
-### 3. style-guide
-- **용도**: 프로젝트 스타일 가이드 준수 검사
-- **활용 단계**: refine, review
-- **감지 방법**: skill 목록에서 `style-guide` 존재 확인
+```javascript
+const STAGE_KEYWORDS = {
+  draft: ['markdown', 'obsidian', 'humanizer', 'write', 'draft', 'template'],
+  refine: ['humanizer', 'grammar', 'style', 'polish', 'edit', 'rewrite'],
+  review: ['grammar', 'style', 'checker', 'lint', 'review', 'quality'],
+  compound: ['humanizer', 'capture', 'learn', 'knowledge'],
+  research: ['defuddle', 'web', 'scrape', 'extract', 'research'],
+  plan: ['canvas', 'visual', 'graph', 'mind-map', 'plan'],
+};
+```
 
-## 감지 로직
+### Detection Flow
+
+1. Command execution starts (e.g., `oe:draft`)
+2. `src/external-tools/keyword-detector.js` parses available skills/MCP tools
+3. Keywords for the stage are matched against tool names/descriptions
+4. Detected tools are presented to user based on `auto_use` setting
+5. Tool execution failures are logged but don't block workflow (fail-safe)
+
+## Configuration
+
+In `writing-config.md`:
+
+```yaml
+external_tools:
+  detection: auto  # auto | manual | disabled
+  auto_use: ask    # ask | true | false
+```
+
+- `detection: auto` - Automatically detect tools at runtime
+- `auto_use: ask` - Prompt user before using detected tools (default)
+- `auto_use: true` - Use detected tools without prompting
+- `auto_use: false` - Skip external tools
+
+## Supported Tool Categories
+
+### Obsidian Skills (kepano/obsidian-skills)
+- **obsidian-markdown**: Markdown syntax, wikilinks, callouts
+- **obsidian-cli**: Vault interaction, Templater integration
+- **defuddle**: Web scraping, markdown extraction
+- **obsidian-bases**: Database views, filtering
+- **json-canvas**: Visual graphs, mind mapping
+
+### Writing Enhancement
+- **humanizer**: AI text naturalization
+- **grammar-checker**: Korean grammar/spelling
+- **style-guide**: Style consistency checking
+
+## Usage Example
 
 ```bash
-# 설치된 skills 목록 조회
-claude skill list --json | jq -r '.skills[].name'
+# User runs draft command
+/obsidian-workflows:oe:work mode=draft
 
-# 특정 도구 존재 확인
-if claude skill list --json | jq -r '.skills[].name' | grep -q "^humanizer$"; then
-    echo "humanizer available"
-fi
+# System detects: obsidian-markdown, humanizer
+# If auto_use=ask:
+#   "Detected tools: obsidian-markdown, humanizer. Use them? (y/n)"
+# If auto_use=true:
+#   Automatically applies tools
+# If auto_use=false:
+#   Skips tool detection
 ```
 
-## 설정 기반 동작
+## Adding Custom Tools
 
-`writing-config.md`의 `auto_use_external_tools` 설정에 따라 동작:
+No code changes needed! Install any skill/MCP tool with relevant keywords:
 
-- `ask` (기본값): 도구 발견 시 사용 여부를 사용자에게 질문
-- `true`: 자동으로 활용 (질문 없이)
-- `false`: 사용하지 않음
+```bash
+# Install a custom grammar tool
+claude skill install my-grammar-tool
 
-## 통합 예시
-
-### draft 단계에서 humanizer 활용
-
-```markdown
-1. 초안 생성 완료
-2. humanizer 도구 감지
-3. auto_use_external_tools 설정 확인
-   - ask: "초안에 humanizer를 적용하시겠습니까? (AI 생성 텍스트를 자연스럽게 변환)"
-   - true: 자동 적용
-   - false: 건너뛰기
-4. 적용 시: `/humanizer [draft-file-path]` 실행
+# Will be auto-detected in 'review' stage if description contains:
+# "grammar", "style", "checker", "lint", "review", or "quality"
 ```
-
-### review 단계에서 grammar-checker 활용
-
-```markdown
-1. 정책 기반 리뷰 완료
-2. grammar-checker 도구 감지
-3. auto_use_external_tools 설정 확인
-4. 적용 시: `/grammar-checker [file-path]` 실행
-5. 검사 결과를 리뷰 리포트에 통합
-```
-
-## 도구 호출 규칙
-
-- 도구 실행은 항상 `/skill-name [args]` 형태로 호출
-- 실행 결과는 원본 워크플로우 출력에 통합
-- 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
