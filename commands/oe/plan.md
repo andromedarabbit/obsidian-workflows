@@ -1,10 +1,10 @@
 ---
-name: workflows:plan
+name: oe:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T10:25
+updated: 2026-03-04T10:31
 ---
 
 `obsidian-workflows:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
