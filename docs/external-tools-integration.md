@@ -60,7 +60,7 @@ external_tools:
 
 ```bash
 # User runs draft command
-/obsidian-workflows:oe:work mode=draft
+/obsidian-workflows:ow:work mode=draft
 
 # System detects: obsidian-markdown, humanizer
 # If auto_use=ask:

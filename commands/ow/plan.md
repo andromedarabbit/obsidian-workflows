@@ -1,5 +1,5 @@
 ---
-name: oe:plan
+name: ow:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"
 allowed-tools: Read, Write, Edit, Glob, Grep

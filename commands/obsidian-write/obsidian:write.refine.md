@@ -57,7 +57,7 @@ updated: 2026-03-03T19:00
    - grammar-checker: 2 errors fixed
    - style-guide: All checks passed
 
-   Next: /obsidian-workflows:oe:review file="..." policy=...
+   Next: /obsidian-workflows:ow:review file="..." policy=...
    ```
 
 5. **Fail-safe 원칙**:

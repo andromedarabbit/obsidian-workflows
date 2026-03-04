@@ -62,7 +62,7 @@ updated: 2026-03-03T19:00
    - style-guide: 1 inconsistency found
      • Use "사용자" instead of "유저" (line 42)
 
-   Next: /obsidian-workflows:oe:compound file="..."
+   Next: /obsidian-workflows:ow:compound file="..."
    ```
 
 5. **Fail-safe 원칙**:

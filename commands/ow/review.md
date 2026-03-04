@@ -1,5 +1,5 @@
 ---
-name: oe:review
+name: ow:review
 description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 argument-hint: file=path [policy=<policy-name>]
 allowed-tools: Read, Glob, Grep

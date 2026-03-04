@@ -7,37 +7,37 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 
 ### General
 
-#### `/oe:compound`
+#### `/ow:compound`
 
 COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 **Usage:** `"[file=path] [latest]"`
 
-**Source:** [`commands/oe/compound.md`](commands/oe/compound.md)
+**Source:** [`commands/ow/compound.md`](commands/ow/compound.md)
 
-#### `/oe:plan`
+#### `/ow:plan`
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
 **Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose]"`
 
-**Source:** [`commands/oe/plan.md`](commands/oe/plan.md)
+**Source:** [`commands/ow/plan.md`](commands/ow/plan.md)
 
-#### `/oe:review`
+#### `/ow:review`
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 **Usage:** `file=path [policy=<policy-name>]`
 
-**Source:** [`commands/oe/review.md`](commands/oe/review.md)
+**Source:** [`commands/ow/review.md`](commands/ow/review.md)
 
-#### `/oe:work`
+#### `/ow:work`
 
 WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
 **Usage:** `mode=<active|passive|draft|refine|route> [args...]`
 
-**Source:** [`commands/oe/work.md`](commands/oe/work.md)
+**Source:** [`commands/ow/work.md`](commands/ow/work.md)
 
 
 ### Obsidian Write

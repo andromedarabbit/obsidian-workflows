@@ -1,5 +1,5 @@
 ---
-name: oe:work
+name: ow:work
 description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 argument-hint: mode=<active|passive|draft|refine|route> [args...]
 allowed-tools: Read, Write, Edit, Glob, Grep
