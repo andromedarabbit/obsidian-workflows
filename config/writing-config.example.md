@@ -56,6 +56,11 @@ output_verbosity: minimal
 idea_detail_lines: 3
 show_context_card: false
 show_wikilinks: true
+auto_use_external_tools: ask
+external_tools_enabled:
+  - humanizer
+  - grammar-checker
+  - style-guide
 ---
 
 # Writing Config Example
