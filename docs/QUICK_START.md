@@ -25,7 +25,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 제안받은 아이디어 중 하나를 선택해서 초안을 작성합니다.
 
 ```bash
-/obsidian-workflows:ow:work --fast mode=draft proposal="Workflows/Proposals/passive-proposals/2026-03-04-ideas.md" idea=1
+/obsidian-workflows:ow:work --fast proposal="Workflows/Proposals/passive-proposals/2026-03-04-ideas.md" idea=1
 ```
 
 **Fast mode 효과:**

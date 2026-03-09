@@ -9,13 +9,17 @@ updated: 2026-03-03T23:50
 
 # WORK Track Entry Point
 
-`obsidian-workflows:work` is the WORK track entry point. When `mode` is specified, it deterministically executes one of: active/passive/draft/refine/route.
+`obsidian-workflows:work` is the WORK track entry point. It executes one of active/passive/draft/refine/route by explicit `mode` or intent-first inference from context.
 
 ## Mode Routing
 
 ### Without mode parameter:
-- Immediately terminate with `FAIL` status.
-- Instruct user to specify one of `active|passive|draft|refine|route`.
+- Infer mode using intent-first rules.
+- Inference order:
+  1. If `proposal` or `idea` is present → `draft`
+  2. If previous PLAN context indicates passive proposal completion → `draft`
+  3. If previous PLAN context indicates active handoff → `active`
+  4. If still ambiguous, ask user.
 
 ### With mode parameter:
 - `mode=active` → Execute `/obsidian:write.active`
@@ -44,8 +48,9 @@ When `mode=draft` and `proposal` parameter is not provided:
 
 1. Validate mode parameter if provided.
 2. If mode is invalid, immediately terminate with `FAIL` status.
-3. Route to appropriate command based on mode.
-4. Pass through all additional parameters (topic, policy, file, etc.).
+3. If mode is missing, infer mode with intent-first rules above.
+4. Route to appropriate command based on mode.
+5. Pass through all additional parameters (topic, policy, file, etc.).
 
 ## Status/Output Rules
 
@@ -59,7 +64,8 @@ When `mode=draft` and `proposal` parameter is not provided:
 ## Usage
 
 ```
+/obsidian-workflows:work
+/obsidian-workflows:work proposal="path/to/proposal.md" idea=1
 /obsidian-workflows:work mode=active topic="My Topic" policy=blog
-/obsidian-workflows:work mode=draft proposal="path/to/proposal.md" idea=1
 /obsidian-workflows:work mode=refine file="path/to/draft.md"
 ```

@@ -33,9 +33,9 @@ REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 #### `/ow:work`
 
-WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
+WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
-**Usage:** `mode=<active|passive|draft|refine|route> [args...] [--fast] [--skip preflight,external-tools,validation,context-card]`
+**Usage:** `[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]`
 
 **Source:** [`commands/ow/work.md`](commands/ow/work.md)
 

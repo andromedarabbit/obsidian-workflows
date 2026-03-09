@@ -1,7 +1,7 @@
 ---
 name: ow:work
-description: WORK 트랙 진입점. mode 지정 시 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
-argument-hint: mode=<active|passive|draft|refine|route> [args...] [--fast] [--skip preflight,external-tools,validation,context-card]
+description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
+argument-hint: [mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
 updated: 2026-03-04T22:00
@@ -99,8 +99,12 @@ Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
 
 실행 규칙:
 - 시작/종료 시 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)를 출력합니다.
-- `mode`가 없으면 즉시 `FAIL`로 종료하고 `active|passive|draft|refine|route` 중 하나를 지정하도록 안내합니다.
 - `mode`가 지정되면 추가 질문 없이 해당 경로를 실행합니다.
+- `mode`가 없으면 아래 순서로 자동 추론합니다:
+  1. `proposal` 또는 `idea` 인자가 있으면 `mode=draft`
+  2. 직전 PLAN 결과가 passive proposal 생성 완료 문맥이면 `mode=draft`
+  3. 직전 PLAN 결과가 active handoff 문맥이면 `mode=active`
+  4. 위 규칙으로도 불명확하면 사용자에게 질문합니다.
 - 하위 명령의 입력 스키마를 그대로 따릅니다.
 - 실패 시 조용한 fallback 없이 즉시 종료하고 원인/해결 액션을 반환합니다.
 

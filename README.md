@@ -123,13 +123,13 @@ Execute writing tasks and create content.
 
 **Usage:**
 ```bash
-/obsidian-workflows:work mode=<active|passive|draft|refine|route> [args...]
+/obsidian-workflows:work [mode=<active|passive|draft|refine|route>] [args...]
 ```
 
 **Examples:**
 ```bash
-/obsidian-workflows:work mode=passive
-/obsidian-workflows:work mode=draft proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
+/obsidian-workflows:work
+/obsidian-workflows:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
 /obsidian-workflows:work mode=active policy=daily-note
 ```
 
@@ -179,7 +179,7 @@ Capture learning points from completed work.
 /obsidian-workflows:plan --intent passive
 
 # 2. Create draft from selected proposal idea
-/obsidian-workflows:work mode=draft proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
+/obsidian-workflows:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
 
 # 3. Refine the content
 /obsidian-workflows:work mode=refine file="Workflows/Drafts/2026-03-03.md" policy=daily-note
