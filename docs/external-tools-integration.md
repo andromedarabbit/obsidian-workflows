@@ -8,21 +8,21 @@ Keyword-based runtime detection system for external tools (skills, MCP servers).
 
 External tools are detected at runtime by matching keywords against installed skills/MCP tools:
 
-```javascript
-const STAGE_KEYWORDS = {
-  draft: ['markdown', 'obsidian', 'humanizer', 'write', 'draft', 'template'],
-  refine: ['humanizer', 'grammar', 'style', 'polish', 'edit', 'rewrite'],
-  review: ['grammar', 'style', 'checker', 'lint', 'review', 'quality'],
-  compound: ['humanizer', 'capture', 'learn', 'knowledge'],
-  research: ['defuddle', 'web', 'scrape', 'extract', 'research'],
-  plan: ['canvas', 'visual', 'graph', 'mind-map', 'plan'],
-};
+```python
+STAGE_KEYWORDS = {
+    "draft": ["markdown", "obsidian", "humanizer", "write", "draft", "template"],
+    "refine": ["humanizer", "grammar", "style", "polish", "edit", "rewrite"],
+    "review": ["grammar", "style", "checker", "lint", "review", "quality"],
+    "compound": ["humanizer", "capture", "learn", "knowledge"],
+    "research": ["defuddle", "web", "scrape", "extract", "research"],
+    "plan": ["canvas", "visual", "graph", "mind-map", "plan"],
+}
 ```
 
 ### Detection Flow
 
 1. Command execution starts (e.g., `oe:draft`)
-2. `src/external-tools/keyword-detector.js` parses available skills/MCP tools
+2. `src/external-tools/keyword_detector.py` parses available skills/MCP tools
 3. Keywords for the stage are matched against tool names/descriptions
 4. Detected tools are presented to user based on `auto_use` setting
 5. Tool execution failures are logged but don't block workflow (fail-safe)

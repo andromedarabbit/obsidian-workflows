@@ -66,7 +66,7 @@ Preflight Gate (fail-fast):
 
 External Tools Detection:
 - **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
-1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
+1. 명령어 시작 시 `src/external-tools/keyword_detector.py`를 사용해 관련 도구를 탐지합니다.
 2. `plan` 단계 키워드: canvas, visual, graph, mind-map, plan
 3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
    - `ask`: AskUserQuestion으로 사용 여부 확인

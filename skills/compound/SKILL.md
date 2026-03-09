@@ -4,7 +4,7 @@ description: Internal reference for the COMPOUND track contract. Not user-invoca
 user-invocable: false
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-03T23:50
+updated: 2026-03-04T22:20
 ---
 
 # COMPOUND Track Entry Point
@@ -24,6 +24,7 @@ updated: 2026-03-03T23:50
 ## Rules
 
 - Keep capture lightweight and record-focused (close to noop skeleton).
+- Avoid over-analysis in default mode; prioritize short, reusable capture notes.
 
 ## Usage
 

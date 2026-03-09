@@ -52,7 +52,7 @@ Fast Mode (--fast):
 
 External Tools Detection:
 - **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
-1. 명령어 시작 시 `src/external-tools/keyword-detector.js`를 사용해 관련 도구를 탐지합니다.
+1. 명령어 시작 시 `src/external-tools/keyword_detector.py`를 사용해 관련 도구를 탐지합니다.
 2. 모드별 키워드:
    - `active`: markdown, obsidian, humanizer, write, draft, template
    - `draft`: markdown, obsidian, humanizer, write, draft, template
