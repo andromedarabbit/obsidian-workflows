@@ -1,7 +1,7 @@
 ---
 name: ow:work
 description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
-argument-hint: [mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]
+argument-hint: "[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
 updated: 2026-03-04T22:00

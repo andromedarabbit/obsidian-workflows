@@ -76,9 +76,7 @@ External Tools Detection:
 - **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Intent Gate:
-1. `--intent`가 없으면 사용자 의도를 먼저 확인합니다.
-   - A) 이미 주제가 있다 (`active`)
-   - B) 최근 변경을 스캔해 주제 제안을 받겠다 (`passive`)
+1. `--intent`가 없으면 기본값으로 `passive`를 사용합니다.
 2. `--intent=active`면 질문 없이 active 분기로 진행합니다.
 3. `--intent=passive`면 질문 없이 passive 분기로 진행합니다.
 4. `--intent` 값이 유효하지 않으면 즉시 `FAIL`로 종료합니다.

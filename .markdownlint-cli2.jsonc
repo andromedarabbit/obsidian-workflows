@@ -4,6 +4,7 @@
   ],
   "ignores": [
     "node_modules/**",
-    ".git/**"
+    ".git/**",
+    "obsidian-workflows-eval/**"
   ]
 }
