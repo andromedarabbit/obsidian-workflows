@@ -23,7 +23,7 @@ jobs:
 
       - name: Run frontmatter validation
         run: |
-          chmod +x tools/check-frontmatter.sh
+          chmod +x tools/check-frontmatter.sh tools/validate-fast.sh
           bash -x tools/check-frontmatter.sh || { echo "Frontmatter validation failed"; exit 1; }
 
       - name: Upload validation errors

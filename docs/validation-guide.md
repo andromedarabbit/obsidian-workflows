@@ -13,18 +13,33 @@ The obsidian-workflows repository uses multiple validation layers to ensure comm
 
 ## Local Validation
 
-### Quick Validation
+### Recommended entrypoints
 
-Run all validators at once:
+Use the root `Makefile` as the main discovery and execution interface:
 
 ```bash
-# Shell validators
+make help
+make validate-fast
+make validate-ci
+```
+
+- `make validate-fast` runs the quick local path for command/frontmatter/hook-path checks.
+- `make validate-ci` runs the PR-ready path that mirrors the main locally reproducible CI checks.
+
+### Quick Validation
+
+Run the fast local validation path:
+
+```bash
+make validate-fast
+```
+
+This currently runs:
+
+```bash
 ./tools/check-frontmatter.sh
 ./tools/validate-command.sh
 ./tools/validate-hook-paths.sh
-
-# Node.js validators (requires npm install)
-npm run validate:all
 ```
 
 ### Individual Validators
@@ -79,6 +94,24 @@ Creates COMMANDS.md from frontmatter:
 
 **Output**: `COMMANDS.md` with categorized command list
 
+### PR-ready Validation
+
+Run the CI-parity local validation path before opening a PR:
+
+```bash
+make validate-ci
+```
+
+This path covers:
+
+- fast shell validators
+- command frontmatter validation
+- duplicate and namespace validation
+- frontmatter YAML lint
+- markdown lint
+- `COMMANDS.md` freshness
+- workflow YAML syntax validation
+
 ### Node.js Validators
 
 Markdown lint config source of truth:
@@ -107,8 +140,17 @@ npm run lint:frontmatter
 # Lint markdown
 npm run lint:markdown
 
-# Run all validations
-npm run validate:all
+# Fast local path
+npm run validate:fast
+
+# Workflow YAML syntax validation
+npm run validate:workflows
+
+# COMMANDS.md freshness validation
+npm run validate:generated
+
+# Run the CI-parity path
+npm run validate:ci
 ```
 
 ## Pre-commit Hooks
@@ -149,7 +191,7 @@ pre-commit run check-command-frontmatter
 
 ### Configured Hooks
 
-- `check-yaml` - Validate YAML syntax
+- `check-yaml` - Validate YAML syntax (excluding `.github/workflows/`; use `make validate-workflows` for local workflow checks when workflow files change)
 - `end-of-file-fixer` - Ensure files end with newline
 - `trailing-whitespace` - Remove trailing whitespace
 - `check-merge-conflict` - Detect merge conflict markers
@@ -178,16 +220,17 @@ Jobs:
 Runs on: PR and push to main
 
 Jobs:
-- `markdown-lint` - Lint markdown files
+- `markdown-lint` - Lint markdown files via `tools/validate-markdown.sh`
 - `yaml-lint` - Lint YAML files
-- `frontmatter-lint` - Lint frontmatter YAML
+- `frontmatter-lint` - Lint frontmatter YAML via `tools/lint-frontmatter.sh`
+- `workflow-syntax` - Validate workflow YAML syntax via `tools/validate-workflows.sh`
 
 #### 3. Generate Documentation (`.github/workflows/generate-docs.yml`)
 
 Runs on: PR and push to main
 
 Jobs:
-- `generate-indices` - Generate COMMANDS.md and check for uncommitted changes
+- `generate-indices` - Validate `COMMANDS.md` freshness via `tools/validate-generated.sh`
 
 ### Viewing CI Results
 
@@ -308,6 +351,15 @@ WARNING: commands/hooks/my-hook.sh - ShellCheck found issues
 shellcheck commands/hooks/my-hook.sh
 ```
 
+### Workflow YAML Syntax Error
+
+**Fix**: Run the local workflow validator:
+```bash
+make validate-workflows
+```
+
+If it fails, correct the YAML syntax in `.github/workflows/*.yml` and rerun the target.
+
 ### COMMANDS.md Out of Date
 
 **Error**:
@@ -361,9 +413,9 @@ node -e "const yaml = require('js-yaml'); console.log(yaml.load(require('fs').re
 
 ## Best Practices
 
-1. **Run validators before committing**
+1. **Run the fast path before committing**
    ```bash
-   ./tools/check-frontmatter.sh && git commit
+   make validate-fast && git commit
    ```
 
 2. **Use pre-commit hooks** - Automatic validation
@@ -373,14 +425,14 @@ node -e "const yaml = require('js-yaml'); console.log(yaml.load(require('fs').re
 
 3. **Fix issues immediately** - Don't let validation errors accumulate
 
-4. **Test new commands** - Validate before creating PR
+4. **Run the PR-ready path before creating a PR**
    ```bash
-   npm run validate:all
+   make validate-ci
    ```
 
-5. **Keep COMMANDS.md updated** - Run generate-index.sh after changes
+5. **Keep COMMANDS.md updated** - Use the generated-file validator after command changes
    ```bash
-   ./tools/generate-index.sh
+   make validate-generated
    ```
 
 ## References

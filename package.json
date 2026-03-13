@@ -9,7 +9,11 @@
     "lint:markdown": "markdownlint-cli2 '**/*.md' '#node_modules'",
     "lint:frontmatter": "node scripts/lint-frontmatter.js",
     "generate:command-index": "bash tools/generate-index.sh",
-    "validate:all": "npm run validate:commands && npm run validate:no-duplicates && npm run lint:frontmatter"
+    "validate:fast": "bash tools/validate-fast.sh",
+    "validate:generated": "bash tools/validate-generated.sh",
+    "validate:workflows": "bash tools/validate-workflows.sh",
+    "validate:ci": "bash tools/validate-ci.sh",
+    "validate:all": "npm run validate:ci"
   },
   "devDependencies": {
     "markdownlint-cli2": "^0.12.0",

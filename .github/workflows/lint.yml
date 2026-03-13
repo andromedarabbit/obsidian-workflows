@@ -6,6 +6,10 @@ on:
       - '**.md'
       - '**.yml'
       - '**.yaml'
+      - 'package.json'
+      - 'tools/validate-markdown.sh'
+      - 'tools/lint-frontmatter.sh'
+      - 'tools/validate-workflows.sh'
       - '.github/workflows/lint.yml'
   push:
     branches:
@@ -14,6 +18,10 @@ on:
       - '**.md'
       - '**.yml'
       - '**.yaml'
+      - 'package.json'
+      - 'tools/validate-markdown.sh'
+      - 'tools/lint-frontmatter.sh'
+      - 'tools/validate-workflows.sh'
 
 jobs:
   markdown-lint:
@@ -33,7 +41,7 @@ jobs:
         run: npm ci
 
       - name: Run markdownlint
-        run: npm run lint:markdown
+        run: bash ./tools/validate-markdown.sh
 
   yaml-lint:
     name: YAML Lint
@@ -66,4 +74,23 @@ jobs:
         run: npm ci
 
       - name: Run frontmatter lint
-        run: npm run lint:frontmatter
+        run: bash ./tools/lint-frontmatter.sh
+
+  workflow-syntax:
+    name: Workflow Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate workflow YAML syntax
+        run: bash ./tools/validate-workflows.sh
