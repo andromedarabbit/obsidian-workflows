@@ -12,6 +12,8 @@
     "validate:fast": "bash tools/validate-fast.sh",
     "validate:generated": "bash tools/validate-generated.sh",
     "validate:workflows": "bash tools/validate-workflows.sh",
+    "validate:behavior-contracts": "node scripts/validate-behavior-contracts.js",
+    "test:plan-passive-default": "node scripts/test-plan-passive-default.js",
     "validate:ci": "bash tools/validate-ci.sh",
     "validate:all": "npm run validate:ci"
   },

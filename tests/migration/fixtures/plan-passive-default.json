@@ -1,0 +1,74 @@
+{
+  "scenarios": [
+    {
+      "name": "omitted-intent-defaults-to-passive",
+      "input": {
+        "intent": null,
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "passive",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "status": ["PASS", "SKIP"]
+      }
+    },
+    {
+      "name": "explicit-passive-stays-passive",
+      "input": {
+        "intent": "passive",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "passive",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "status": ["PASS", "SKIP"]
+      }
+    },
+    {
+      "name": "external-tools-ask-is-not-intent-prompt",
+      "input": {
+        "intent": null,
+        "fast": false,
+        "externalToolsAutoUse": "ask"
+      },
+      "expected": {
+        "branch": "passive",
+        "asksIntentSelection": false,
+        "asksExternalTools": true,
+        "status": ["PASS", "SKIP"]
+      }
+    },
+    {
+      "name": "fast-mode-skips-external-tools-question",
+      "input": {
+        "intent": null,
+        "fast": true,
+        "externalToolsAutoUse": "ask"
+      },
+      "expected": {
+        "branch": "passive",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "status": ["PASS", "SKIP"]
+      }
+    },
+    {
+      "name": "explicit-active-routes-without-prompt",
+      "input": {
+        "intent": "active",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "active",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "status": ["PASS"]
+      }
+    }
+  ]
+}

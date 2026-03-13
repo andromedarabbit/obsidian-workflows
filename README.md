@@ -104,9 +104,12 @@ Plan your writing workflow before execution.
 
 **Examples:**
 ```bash
+/obsidian-workflows:plan
 /obsidian-workflows:plan --intent passive
 /obsidian-workflows:plan --intent active topic="Daily operations summary" policy=daily-note
 ```
+
+When `--intent` is omitted, the command defaults to passive mode. If your config uses `external_tools.auto_use: ask`, you may still see an external-tool usage prompt, but not an intent-selection prompt.
 
 Daily-note behavior is policy-driven. With `source_strategy: previous-note`, it reads the previous daily note from `daily_notes_path`. If previous note is missing and policy requires `missing_source_behavior: skip-and-prompt-recent`, it returns `SKIP` and suggests up to `fallback_recent_files_limit` recent files for manual selection.
 

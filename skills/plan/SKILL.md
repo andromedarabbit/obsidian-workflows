@@ -4,12 +4,12 @@ description: Internal reference for the PLAN track contract. Not user-invocable;
 user-invocable: false
 version: 0.1.0
 created: 2026-03-02T01:34
-updated: 2026-03-03T23:50
+updated: 2026-03-13T10:15
 ---
 
 # PLAN Track Entry Point
 
-`obsidian-workflows:plan` is the intent-selection entry point for the PLAN track.
+`obsidian-workflows:plan` is the PLAN track entry point. When `--intent` is omitted, it defaults to the passive branch.
 
 ## Important Notes
 
@@ -36,9 +36,7 @@ The canonical source for initialization targets is the `초기화 대상(코어)
 
 ## Intent Gate
 
-1. If `--intent` is not provided, first confirm user intent:
-   - A) Already have a topic (`active`)
-   - B) Want to scan recent changes for topic suggestions (`passive`)
+1. If `--intent` is not provided, default to `passive`.
 2. If `--intent=active`, proceed to active branch without questions.
 3. If `--intent=passive`, proceed to passive branch without questions.
 4. If `--intent` value is invalid, immediately terminate with `FAIL` status.
