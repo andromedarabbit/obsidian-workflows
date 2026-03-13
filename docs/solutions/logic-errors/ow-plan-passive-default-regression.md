@@ -11,8 +11,6 @@ tags:
   - command-contract
 ---
 
-# ow:plan passive-default regression
-
 ## Problem
 
 `/obsidian-workflows:ow:plan` should default to the passive branch when `--intent` is omitted. After updating the command contract, the flow was still reported as interactive in real use.
