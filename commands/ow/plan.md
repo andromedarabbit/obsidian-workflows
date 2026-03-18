@@ -94,6 +94,7 @@ Intent Gate:
 - `passive` 분기:
   1. `writing-config.md`에서 `source_paths`, `exclude_paths`, `proposal_path`, `final_path`를 확인합니다.
   2. `obsidian:write.scan` 규칙으로 후보 파일을 수집합니다.
+     - 성능: `src/scan-recent-files.sh` 스크립트 사용 권장 (git log보다 훨씬 빠름)
   3. `obsidian:write.propose` 규칙으로 아이디어 3~5개를 제안 노트로 저장합니다.
   4. **생성된 proposal 파일을 읽어서** 각 아이디어의 상세 내용을 추출합니다.
   5. 종료 시 출력:
