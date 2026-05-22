@@ -23,7 +23,7 @@ files_modified:
   - commands/ow/plan.md
 ---
 
-# Problem
+## Problem
 
 The `/ow:plan --intent passive` command was experiencing significant slowdowns when scanning for recently modified files. The workflow used `git log` to find files changed after a specific timestamp, which required traversing commit history, parsing metadata, and filtering results.
 
@@ -37,7 +37,7 @@ The `/ow:plan --intent passive` command was experiencing significant slowdowns w
 - Unnecessary wait time for simple file discovery
 - Workflow felt sluggish compared to other operations
 
-# Root Cause
+## Root Cause
 
 Git log is optimized for querying version control history, not current filesystem state. Using `git log --since` for file discovery:
 
@@ -48,7 +48,7 @@ Git log is optimized for querying version control history, not current filesyste
 
 This approach is 10-100x slower than direct filesystem queries because it's solving the wrong problem - we need "files modified after timestamp" (filesystem query), not "commits containing file changes" (git history query).
 
-# Solution
+## Solution
 
 Created `src/scan-recent-files.sh` that uses filesystem tools with automatic fallback:
 
@@ -152,7 +152,7 @@ Updated `commands/ow/plan.md`:
 | `find` | ~0.5-1.0s | Slower but always available |
 | `git log` | 5-10s+ | **Rejected** - wrong tool for the job |
 
-# Prevention Strategies
+## Prevention Strategies
 
 ## 1. Tool Selection Decision Matrix
 
@@ -229,13 +229,13 @@ fi
 files=$(git log --since="30 days ago" --name-only --pretty=format: commands/ | sort -u)
 ```
 
-# Related Documentation
+## Related Documentation
 
 - [PARALLEL.md](../../PARALLEL.md) - Parallel processing patterns
 - [SMART_MODE.md](../../SMART_MODE.md) - Auto mode selection based on performance
 - [hook-patterns.md](../../hook-patterns.md) - "Use Builtins Pattern" and anti-patterns
 - [ow-plan-passive-default-regression.md](../logic-errors/ow-plan-passive-default-regression.md) - Fast mode skips detection
 
-# Key Takeaway
+## Key Takeaway
 
 **Git is for history, filesystem tools are for current state.** When you need to find files that exist right now, use `fd` or `find`. Reserve `git log` for actual historical queries. This simple distinction prevents 10-40x performance degradation.
