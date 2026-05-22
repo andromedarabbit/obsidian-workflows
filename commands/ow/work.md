@@ -4,7 +4,7 @@ description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 
 argument-hint: "[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
-updated: 2026-03-04T22:00
+updated: 2026-05-22T00:00
 ---
 
 `obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
@@ -100,11 +100,17 @@ Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
 실행 규칙:
 - 시작/종료 시 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)를 출력합니다.
 - `mode`가 지정되면 추가 질문 없이 해당 경로를 실행합니다.
-- `mode`가 없으면 아래 순서로 자동 추론합니다:
-  1. `proposal` 또는 `idea` 인자가 있으면 `mode=draft`
-  2. 직전 PLAN 결과가 passive proposal 생성 완료 문맥이면 `mode=draft`
-  3. 직전 PLAN 결과가 active handoff 문맥이면 `mode=active`
-  4. 위 규칙으로도 불명확하면 사용자에게 질문합니다.
+- `mode`가 없으면 아래 순서로 자동 추론합니다(파일 기반 신호를 대화 문맥보다 우선):
+  1. `proposal` 또는 `idea` 인자가 있으면 `mode=draft` (변경 없음).
+  2. **Active handoff 상태 파일 확인**: `.claude/state/obsidian-write-active-handoff.json`이 존재하고 `status: pending`이면 다음 순서로 진행합니다.
+     1. 파일에서 `topic`, `policy`, `extra_args`를 로드합니다.
+     2. **하위 명령(`obsidian:write.active`) 실행 *전에* 즉시 `status: consumed`로 전이합니다.** 전이 실패 시 fail-fast로 종료합니다. 이 순서를 지키지 않으면 active 실행이 실패할 때 상태 파일이 `pending` 그대로 남아 같은 handoff가 다음 호출에서 자동으로 다시 잡혀 무한 재실행이 발생합니다.
+     3. 로드한 인자로 하위 명령(`obsidian:write.active`)을 실행합니다.
+     - 스키마는 `docs/runtime/state-schema.md`의 "Active handoff state fields" 절을 참조합니다.
+  3. `proposal_path` 디렉토리 스캔에서 pending/in-progress proposal이 감지되면 `mode=draft` (아래 "Proposal 자동 감지" 절과 동일한 규칙을 적용).
+  4. 직전 PLAN 대화 문맥이 passive proposal 생성 완료를 가리키면 `mode=draft` (대화 문맥 fallback).
+  5. 직전 PLAN 대화 문맥이 active handoff를 가리키면 `mode=active` (대화 문맥 fallback).
+  6. 위 규칙으로도 불명확하면 사용자에게 질문합니다.
 - 하위 명령의 입력 스키마를 그대로 따릅니다.
 - 실패 시 조용한 fallback 없이 즉시 종료하고 원인/해결 액션을 반환합니다.
 

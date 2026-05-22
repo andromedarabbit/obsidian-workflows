@@ -1,10 +1,10 @@
 ---
 name: workflow-work-reference
-description: Internal reference for the WORK track contract. Not user-invocable; command entrypoint is /obsidian-workflows:work.
-user-invocable: false
+description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 실행합니다.
+user-invocable: true
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-03T23:50
+updated: 2026-05-22T00:00
 ---
 
 # WORK Track Entry Point

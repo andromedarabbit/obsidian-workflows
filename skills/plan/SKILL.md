@@ -1,10 +1,10 @@
 ---
 name: workflow-plan-reference
-description: Internal reference for the PLAN track contract. Not user-invocable; command entrypoint is /obsidian-workflows:plan.
-user-invocable: false
+description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
+user-invocable: true
 version: 0.1.0
 created: 2026-03-02T01:34
-updated: 2026-03-13T10:15
+updated: 2026-05-22T00:00
 ---
 
 # PLAN Track Entry Point

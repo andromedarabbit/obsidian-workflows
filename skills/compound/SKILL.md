@@ -1,10 +1,10 @@
 ---
 name: workflow-compound-reference
-description: Internal reference for the COMPOUND track contract. Not user-invocable; command entrypoint is /obsidian-workflows:compound.
-user-invocable: false
+description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
+user-invocable: true
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-04T22:20
+updated: 2026-05-22T00:00
 ---
 
 # COMPOUND Track Entry Point

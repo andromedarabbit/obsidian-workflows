@@ -1,10 +1,10 @@
 ---
 name: workflow-review-reference
-description: Internal reference for the REVIEW track contract. Not user-invocable; command entrypoint is /obsidian-workflows:review.
-user-invocable: false
+description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
+user-invocable: true
 version: 0.1.0
 created: 2026-03-02T14:58
-updated: 2026-03-03T23:50
+updated: 2026-05-22T00:00
 ---
 
 # REVIEW Track Entry Point
