@@ -12,7 +12,7 @@ updated: 2026-03-03T19:00
 2. Policy 결정 및 로드:
    - Policy frontmatter에서 `creation_engine` 필드 확인
 3. 출력 경로 결정:
-   - **Policy에 `creation_engine: obsidian-cli`가 있으면**:
+   - **Policy에 `creation_engine: obsidian`이 있으면**:
      a. `writing-config.md`에서 `daily_notes_path` 읽기 (없으면 fail-fast)
      b. 오늘 날짜로 파일명 생성: `YYYY-MM-DD.md` (예: `2026-03-25.md`)
      c. 타겟 경로: `{daily_notes_path}/{YYYY-MM-DD}.md`
@@ -31,8 +31,8 @@ updated: 2026-03-03T19:00
 - 아이디어를 찾지 못하면 즉시 종료합니다.
 - policy 결정 순서: 명시 인자 > 제안 카드 추천 policy > `default_policy` > `enabled_policies` 첫 항목.
 - 최종 policy는 `enabled_policies`에 포함되어야 하며, `policy_dir/writing-policy.<policy>.md`가 존재해야 합니다.
-- policy 템플릿이 `creation_engine: obsidian-cli` / `template_engine: templater`를 요구하면 관련 설정이 누락된 경우 즉시 종료합니다.
-- `creation_engine: obsidian-cli`인 경우 `daily_notes_path`가 설정되지 않았으면 즉시 종료합니다 (fail-fast).
+- policy 템플릿이 `creation_engine: obsidian` / `template_engine: templater`를 요구하면 관련 설정이 누락된 경우 즉시 종료합니다.
+- `creation_engine: obsidian`인 경우 `daily_notes_path`가 설정되지 않았으면 즉시 종료합니다 (fail-fast).
 - 파일명은 `writing-config.md`의 규칙을 우선 적용합니다.
 - `proposal` 경로는 절대 경로 금지, `..` 금지, resolve 후 vault root 하위만 허용, 심볼릭 링크로 root 밖 탈출 금지 규칙을 강제합니다.
 

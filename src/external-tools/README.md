@@ -12,7 +12,7 @@ uvx --from ./src/external-tools keyword-detector draft
 # Found 3 relevant tool(s):
 # - **obsidian-markdown**: Obsidian Flavored Markdown syntax
 # - **humanizer**: AI text naturalization
-# - **obsidian-cli**: Vault interaction via CLI
+# - **obsidian-cli** (`obsidian`): Vault interaction via CLI
 ```
 
 ## Integration

@@ -35,7 +35,7 @@ final_path: Workflows/Notes
 proposal_path: Workflows/Proposals/passive-proposals
 daily_notes_path: Daily Notes
 daily_note_template: 템플릿/Daily.md
-note_creation_engine: obsidian-cli
+note_creation_engine: obsidian
 templater_required: true
 fallback_recent_files_limit: 5
 passive_window_days: 30

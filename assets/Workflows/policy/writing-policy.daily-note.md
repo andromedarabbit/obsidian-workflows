@@ -15,7 +15,7 @@ source_strategy: previous-note
 source_path_key: daily_notes_path
 missing_source_behavior: skip-and-prompt-recent
 recent_candidates_limit: 5
-creation_engine: obsidian-cli
+creation_engine: obsidian
 template_engine: templater
 template_key: daily_note_template
 ---

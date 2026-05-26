@@ -46,7 +46,7 @@ external_tools:
 
 ### Obsidian Skills (kepano/obsidian-skills)
 - **obsidian-markdown**: Markdown syntax, wikilinks, callouts
-- **obsidian-cli**: Vault interaction, Templater integration
+- **obsidian-cli** (`obsidian`): Vault interaction, Templater integration
 - **defuddle**: Web scraping, markdown extraction
 - **obsidian-bases**: Database views, filtering
 - **json-canvas**: Visual graphs, mind mapping

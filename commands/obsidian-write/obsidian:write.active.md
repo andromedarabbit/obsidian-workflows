@@ -31,7 +31,7 @@ updated: 2026-03-03T19:00
   2. 직전 노트가 없고 `missing_source_behavior: skip-and-prompt-recent`면 `SKIP`으로 종료합니다.
   3. 종료 시 최근 파일 최대 N개(`recent_candidates_limit`, 기본 5)를 제시하고 사용자 선택을 요청합니다.
   4. 최근 파일도 없으면 그 사실을 명시하고 다음 액션을 사용자에게 묻습니다.
-- `creation_engine: obsidian-cli`와 `template_engine: templater`가 요구되면 해당 설정 누락 시 즉시 종료합니다.
+- `creation_engine: obsidian`과 `template_engine: templater`가 요구되면 해당 설정 누락 시 즉시 종료합니다.
 
 실행:
 1. `writing-config.md` 로드
@@ -39,7 +39,15 @@ updated: 2026-03-03T19:00
 3. policy 메타데이터 기반 입력/소스 검증
 4. `soul_path` 로드 (soul=true일 때)
 5. policy 형식에 맞는 초안을 생성하고 `draft_path`에 저장
-6. policy가 `creation_engine: obsidian-cli`를 요구하면 Obsidian CLI 경로로 생성
+6. policy가 `creation_engine: obsidian`을 요구하면 `obsidian create` 명령으로 생성
+   - 새 파일 생성 (Templater 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" silent`
+     - `template=` 파라미터는 core Templates 플러그인 전용이며 Templater를 실행하지 않음
+     - `template_engine: templater`일 때는 `template=` 없이 생성하고 Templater folder template auto-trigger에 의존
+   - 새 파일 생성 (core Templates 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" template="템플릿/Daily.md" silent`
+   - 기존 Daily Note 읽기: `obsidian daily:read`
+   - Daily Note에 내용 추가: `obsidian daily:append content="..."`
+   - 바이너리명은 `obsidian`이며 `obsidian-cli`가 아님에 주의
+   - `daily`라는 서브커맨드는 없음. 읽기는 `daily:read`, 추가는 `daily:append` 사용
 7. soul=true이면 보이스 리라이트를 적용
 
 출력:
