@@ -70,7 +70,7 @@ proposal_policy_allowlist:
 
 daily_notes_path: Daily Notes
 daily_note_template: 템플릿/Daily.md
-note_creation_engine: obsidian-cli
+note_creation_engine: obsidian
 templater_required: true
 fallback_recent_files_limit: 5
 
