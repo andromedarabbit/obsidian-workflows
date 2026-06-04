@@ -47,6 +47,24 @@ const sections = {
 
 const errors = [];
 
+function isFreeformWriteRequest(input) {
+  if (!input.freeformArgs) {
+    return false;
+  }
+
+  return /(작성|작성하자|써|써줘|정리해줘|write|draft|compose)/i.test(input.freeformArgs);
+}
+
+function documentsFreeformActiveRule() {
+  return sections.intentGate.includes('free-form 작성 지시가 있으면 질문 없이 active 분기로 진행합니다.')
+    && sections.intentGate.includes('free-form 작성 지시는 명령 인자에 자연어 topic과 즉시 작성 동사가 함께 있는 경우입니다.');
+}
+
+function documentsBlankPassiveDefault() {
+  return sections.intentGate.includes('`--intent`가 없고 free-form 작성 지시도 없으면 기본값으로 `passive`를 사용합니다.')
+    || sections.intentGate.includes('`--intent`가 없으면 기본값으로 `passive`를 사용합니다.');
+}
+
 function evaluateScenario(scenario) {
   const { name, input, expected } = scenario;
 
@@ -57,7 +75,12 @@ function evaluateScenario(scenario) {
     statusSupported: false,
   };
 
-  if (input.intent === null && sections.intentGate.includes('`--intent`가 없으면 기본값으로 `passive`를 사용합니다.')) {
+  if (input.intent === null && isFreeformWriteRequest(input) && documentsFreeformActiveRule()) {
+    result.branch = 'active';
+    result.asksIntentSelection = false;
+  }
+
+  if (input.intent === null && !isFreeformWriteRequest(input) && documentsBlankPassiveDefault()) {
     result.branch = 'passive';
     result.asksIntentSelection = false;
   }

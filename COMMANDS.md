@@ -19,7 +19,7 @@ COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
-**Usage:** `"[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"`
+**Usage:** `"[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"`
 
 **Source:** [`commands/ow/plan.md`](commands/ow/plan.md)
 

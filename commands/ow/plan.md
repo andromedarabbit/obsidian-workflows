@@ -1,7 +1,7 @@
 ---
 name: ow:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
-argument-hint: "[--intent active|passive] [topic=...] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"
+argument-hint: "[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28
 updated: 2026-05-23T00:00
@@ -91,10 +91,15 @@ External Tools Detection:
 - **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Intent Gate:
-1. `--intent`가 없으면 기본값으로 `passive`를 사용합니다.
-2. `--intent=active`면 질문 없이 active 분기로 진행합니다.
-3. `--intent=passive`면 질문 없이 passive 분기로 진행합니다.
-4. `--intent` 값이 유효하지 않으면 즉시 `FAIL`로 종료합니다.
+1. `--intent=active`면 질문 없이 active 분기로 진행합니다.
+2. `--intent=passive`면 질문 없이 passive 분기로 진행합니다.
+3. `--intent`가 없고 free-form 작성 지시가 있으면 질문 없이 active 분기로 진행합니다.
+   - free-form 작성 지시는 명령 인자에 자연어 topic과 즉시 작성 동사가 함께 있는 경우입니다.
+   - 한국어 동사 예: `작성`, `작성하자`, `써`, `써줘`, `정리해줘`.
+   - 영어 동사 예: `write`, `draft`, `compose`.
+   - 예: `/obsidian-workflows:ow:plan 팀스탠드업을 작성하자` → `topic="팀스탠드업"`, `intent=active`.
+4. `--intent`가 없고 free-form 작성 지시도 없으면 기본값으로 `passive`를 사용합니다.
+5. `--intent` 값이 유효하지 않으면 즉시 `FAIL`로 종료합니다.
 
 분기 실행 규칙:
 - `active` 분기:

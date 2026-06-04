@@ -29,6 +29,21 @@
       }
     },
     {
+      "name": "natural-language-write-request-routes-active",
+      "input": {
+        "intent": null,
+        "freeformArgs": "팀스탠드업을 작성하자",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "active",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "status": ["PASS"]
+      }
+    },
+    {
       "name": "external-tools-ask-is-not-intent-prompt",
       "input": {
         "intent": null,

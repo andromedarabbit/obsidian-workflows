@@ -40,8 +40,14 @@ const externalTools = getOrderedSection(commandText, 'External Tools Detection:'
 
 const checks = [
   {
-    description: 'canonical ow:plan contract defines omitted --intent default as passive',
-    ok: intentGate.includes('`--intent`가 없으면 기본값으로 `passive`를 사용합니다.'),
+    description: 'canonical ow:plan contract defines blank omitted --intent default as passive',
+    ok: intentGate.includes('`--intent`가 없고 free-form 작성 지시도 없으면 기본값으로 `passive`를 사용합니다.')
+      || intentGate.includes('`--intent`가 없으면 기본값으로 `passive`를 사용합니다.'),
+  },
+  {
+    description: 'canonical ow:plan contract routes free-form writing requests to active without prompting',
+    ok: intentGate.includes('free-form 작성 지시가 있으면 질문 없이 active 분기로 진행합니다.')
+      && intentGate.includes('free-form 작성 지시는 명령 인자에 자연어 topic과 즉시 작성 동사가 함께 있는 경우입니다.'),
   },
   {
     description: 'canonical ow:plan contract routes explicit active without prompting',
