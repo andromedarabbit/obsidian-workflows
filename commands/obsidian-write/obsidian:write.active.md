@@ -4,7 +4,7 @@ description: Active 모드. 사용자 입력(topic/sources/policy)으로 즉시 
 argument-hint: topic=... [policy=<policy-name>] [sources=[[노트A]],[[노트B]]] [soul=false]
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:29
-updated: 2026-03-03T19:00
+updated: 2026-06-04T00:00
 ---
 
 입력:
@@ -44,10 +44,11 @@ updated: 2026-03-03T19:00
      - `template=` 파라미터는 core Templates 플러그인 전용이며 Templater를 실행하지 않음
      - `template_engine: templater`일 때는 `template=` 없이 생성하고 Templater folder template auto-trigger에 의존
    - 새 파일 생성 (core Templates 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" template="템플릿/Daily.md" silent`
-   - 기존 Daily Note 읽기: `obsidian daily:read`
-   - Daily Note에 내용 추가: `obsidian daily:append content="..."`
+   - 기존 Daily Note 읽기: `obsidian read path="Daily Notes/YYYY-MM/YYYY-MM-DD.md"`
+   - 특정 섹션(스탠드업 등) 교체: native `Edit` 툴로 해당 heading 아래 블록만 교체
+   - 전체 파일 재작성 필요 시: `obsidian create path="Daily Notes/YYYY-MM/YYYY-MM-DD.md" content="..." overwrite`
    - 바이너리명은 `obsidian`이며 `obsidian-cli`가 아님에 주의
-   - `daily`라는 서브커맨드는 없음. 읽기는 `daily:read`, 추가는 `daily:append` 사용
+   - `daily:read`/`daily:append`는 CLI v1.12.7에 존재하지 않음 — 사용하면 "Command not found" 오류 발생
 7. soul=true이면 보이스 리라이트를 적용
 
 출력:
