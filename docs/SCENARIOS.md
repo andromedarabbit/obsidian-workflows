@@ -141,7 +141,7 @@ skip_steps:
 **최적화 팁:**
 - `proposal_auto_select: true`로 자동 선택
 - `skip_steps`로 불필요한 단계 제거
-- SessionStart 훅으로 자동 실행 가능
+- `/obsidian:write.autorun`으로 자동 제안 실행
 
 **예상 시간:** 30초 (첫 실행: 2분)
 

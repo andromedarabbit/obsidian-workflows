@@ -1,6 +1,6 @@
 ---
 name: obsidian:write.autorun
-description: 일일 자동 제안 실행. SessionStart 훅에서 호출되는 Passive 오케스트레이터입니다.
+description: 일일 자동 제안 실행. 비대화형(passive) 자동 실행 전용 오케스트레이터입니다.
 argument-hint: "[--trigger session-start]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 created: 2026-03-01T17:28

@@ -11,13 +11,13 @@
 ## Cutover steps
 
 - [ ] Point plugin source/install workflow to dedicated repo
-- [ ] Apply updated local settings from `.claude/settings.local.json.example`
+- [ ] Apply updated local settings from `.claude/settings.local.json.example` <!-- 미반영: settings example은 생성되지 않음. 로컬 설정은 `.claude/settings.local.json`을 직접 사용 -->
 - [ ] Verify command discovery from `commands`
 - [ ] Execute smoke flows: plan passive, work draft, review
 
 ## Post-cutover validation window
 
-- [ ] Monitor first session-start autorun
+- [ ] Monitor first session-start autorun <!-- 제거됨: session-start 자동 트리거는 이 저장소에 배선되지 않음. autorun은 명시 호출 전용 -->
 - [ ] Validate status output contracts
 - [ ] Validate path safety failures are fail-fast
 
@@ -33,5 +33,5 @@
 ### No-Go / Hold
 
 - [ ] Any fail-fast contract regression detected
-- [ ] SessionStart autorun regression persists after one retry
+- [ ] SessionStart autorun regression persists after one retry <!-- 제거됨: session-start 자동 트리거는 이 저장소에 배선되지 않음. autorun은 명시 호출 전용 -->
 - [ ] Path safety mismatch across entrypoints

@@ -27,8 +27,8 @@
 
 ### Runtime templates
 
-- `.claude/state/*.json` -> `.claude/state/*.json.example`
-- `.claude/settings.local.json` -> `.claude/settings.local.json.example`
+- `.claude/state/*.json` -> `.claude/state/*.json.example` <!-- 미반영: state .example 템플릿은 생성되지 않음. state는 런타임 생성(gitignored) -->
+- `.claude/settings.local.json` -> `.claude/settings.local.json.example` <!-- 미반영: settings example은 생성되지 않음(주 용도였던 session-start 훅 배선이 제외됨) -->
 
 ### Config/assets templates
 

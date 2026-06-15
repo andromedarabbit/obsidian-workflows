@@ -5,7 +5,7 @@
 Initiate rollback if any of the following occur during validation window:
 
 - Command discovery failure for canonical workflow entrypoints
-- SessionStart autorun regression
+- SessionStart autorun regression <!-- 제거됨: session-start 자동 트리거는 이 저장소에 배선되지 않음. autorun은 명시 호출 전용 -->
 - State parse/continuity failures
 - Path safety bypass or inconsistent enforcement
 

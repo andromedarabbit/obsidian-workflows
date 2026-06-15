@@ -52,7 +52,7 @@ Active 모드. 사용자 입력(topic/sources/policy)으로 즉시 초안을 생
 
 #### `/obsidian:write.autorun`
 
-일일 자동 제안 실행. SessionStart 훅에서 호출되는 Passive 오케스트레이터입니다.
+일일 자동 제안 실행. 비대화형(passive) 자동 실행 전용 오케스트레이터입니다.
 
 **Usage:** `"[--trigger session-start]"`
 
