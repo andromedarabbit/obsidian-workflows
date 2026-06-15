@@ -72,7 +72,9 @@ function evaluateScenario(scenario) {
     branch: 'unknown',
     asksIntentSelection: true,
     asksExternalTools: false,
+    status: [],
     statusSupported: false,
+    requiresAskUserQuestionHandoff: false,
   };
 
   if (input.intent === null && isFreeformWriteRequest(input) && documentsFreeformActiveRule()) {
@@ -109,11 +111,21 @@ function evaluateScenario(scenario) {
   const skipDocumented = sections.statusRules.includes('- `SKIP`: passive 후보가 0건인 정상 empty case');
 
   if (result.branch === 'active') {
+    result.status = ['PASS'];
     result.statusSupported = activeBranchDocumented && passDocumented;
+    result.requiresAskUserQuestionHandoff = sections.branchRules.includes('Active Handoff Menu')
+      && sections.branchRules.includes('AskUserQuestion')
+      && sections.branchRules.includes('바로 실행')
+      && sections.branchRules.includes('obsidian-workflows:ow:work');
   }
 
   if (result.branch === 'passive') {
+    result.status = ['PASS', 'SKIP'];
     result.statusSupported = passiveBranchDocumented && passDocumented && skipDocumented;
+    result.requiresAskUserQuestionHandoff = sections.branchRules.includes('Passive Handoff Menu')
+      && sections.branchRules.includes('AskUserQuestion')
+      && sections.branchRules.includes('Idea 선택해서 draft')
+      && sections.branchRules.includes('obsidian-workflows:ow:work');
   }
 
   if (result.branch !== expected.branch) {
@@ -126,6 +138,15 @@ function evaluateScenario(scenario) {
 
   if (result.asksExternalTools !== expected.asksExternalTools) {
     errors.push(`${name}: expected asksExternalTools=${expected.asksExternalTools}, got ${result.asksExternalTools}`);
+  }
+
+  if (expected.requiresAskUserQuestionHandoff !== undefined
+    && result.requiresAskUserQuestionHandoff !== expected.requiresAskUserQuestionHandoff) {
+    errors.push(`${name}: expected requiresAskUserQuestionHandoff=${expected.requiresAskUserQuestionHandoff}, got ${result.requiresAskUserQuestionHandoff}`);
+  }
+
+  if (expected.status !== undefined && JSON.stringify(result.status) !== JSON.stringify(expected.status)) {
+    errors.push(`${name}: expected status=${JSON.stringify(expected.status)}, got ${JSON.stringify(result.status)}`);
   }
 
   if (!result.statusSupported) {

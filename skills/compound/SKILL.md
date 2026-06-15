@@ -9,7 +9,7 @@ updated: 2026-05-22T00:00
 
 # COMPOUND Track Entry Point
 
-`obsidian-workflows:compound` executes `obsidian:write.compound.capture` in MVP to leave learning logs for iterative improvement.
+`obsidian-workflows:ow:compound` executes `obsidian:write.compound.capture` in MVP to leave learning logs for iterative improvement.
 
 ## Future Extensions (Currently Unimplemented)
 
@@ -29,7 +29,7 @@ updated: 2026-05-22T00:00
 ## Usage
 
 ```
-/obsidian-workflows:compound file="path/to/completed.md"
-/obsidian-workflows:compound latest
-/obsidian-workflows:compound
+/obsidian-workflows:ow:compound file="path/to/completed.md"
+/obsidian-workflows:ow:compound latest
+/obsidian-workflows:ow:compound
 ```

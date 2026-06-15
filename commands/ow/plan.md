@@ -2,19 +2,19 @@
 name: ow:plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 argument-hint: "[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"
-allowed-tools: Read, Write, Edit, Glob, Grep
+allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Skill
 created: 2026-03-01T17:28
 updated: 2026-05-23T00:00
 ---
 
-`obsidian-workflows:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
+`obsidian-workflows:ow:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
 
 > **Critical contract — Plan 종료 출력**
 >
 > Active/Passive 두 분기 모두, plan 종료의 출력은 **항상 `AskUserQuestion` 4-옵션 메뉴여야 합니다**. 텍스트 명령어 안내로 종료하면 명세 위반입니다.
 >
 > 이 skill에서 흔히 발생하는 실패 모드:
-> - AI가 plan 분기를 실행한 뒤 "다음 단계: `/obsidian-workflows:work mode=active topic="..." policy=...`" 같은 텍스트 안내를 출력하고 멈추는 것.
+> - AI가 plan 분기를 실행한 뒤 텍스트 slash command 안내를 출력하고 멈추는 것.
 > - 사용자에게 명령어를 복붙시키는 워크플로우는 **폐기되었습니다**. 이 형태로 종료하면 명세 위반입니다.
 >
 > 올바른 종료:
@@ -25,7 +25,7 @@ updated: 2026-05-23T00:00
 > 자세한 옵션 정의, 동작, completion check, negative/positive example은 아래 "Active Handoff Menu" / "Passive Handoff Menu" 절을 참조하세요. **이 두 절은 non-optional load입니다 — 분기 종료 단계에 도달하면 반드시 읽어야 합니다.**
 
 주의:
-- 이 명령은 로컬 플러그인 엔트리포인트입니다 (`/obsidian-workflows:plan`).
+- 이 명령은 로컬 플러그인 엔트리포인트입니다 (`/obsidian-workflows:ow:plan`).
 - `/compound-engineering:workflows:plan`은 다른 플러그인의 스킬이므로, 이 플러그인의 plan 분기를 실행하지 않습니다.
 
 Scope Guard (repo-only):
@@ -66,6 +66,12 @@ Fast Mode (--fast):
   - Context Card 출력 최소화
 - Fast mode는 단순 작업에 최적화되어 있으며, 복잡한 주제나 첫 실행 시에는 권장하지 않습니다.
 
+Helper Script Path Resolution:
+- helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
+- helper script를 쓸 때는 먼저 `obsidian-workflows` plugin/repo root를 해석하고, 해석된 root 아래의 절대 경로로 실행합니다.
+- root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
+- optional helper script 단계는 경고 후 건너뛰고, 본래 단계의 fail-safe 정책을 따릅니다.
+
 Preflight Gate (fail-fast):
 - 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
 - **Fast mode가 아닐 때만** 전체 검증을 수행합니다:
@@ -81,13 +87,15 @@ Preflight Gate (fail-fast):
 
 External Tools Detection:
 - **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
-1. 명령어 시작 시 `src/external-tools/keyword_detector.py`를 사용해 관련 도구를 탐지합니다.
-2. `plan` 단계 키워드: canvas, visual, graph, mind-map, plan
-3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
+1. 명령어 시작 시 helper script path resolution 규칙에 따라 plugin/repo root를 먼저 해석합니다.
+2. root가 해석되고 external tool detector가 존재할 때만 절대 경로로 실행해 관련 도구를 탐지합니다. 현재 vault cwd 기준의 `src/...` 경로를 추측해 실행하지 않습니다.
+3. `plan` 단계 키워드: canvas, visual, graph, mind-map, plan
+4. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
    - `ask`: AskUserQuestion으로 사용 여부 확인
    - `true`: 자동 사용 (질문 없이)
    - `false`: 건너뛰기
-4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+5. root 또는 detector를 확인할 수 없으면 외부 도구 탐지만 경고 후 건너뛰고 워크플로우 계속 진행 (fail-safe)
+6. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
 - **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Intent Gate:
@@ -109,16 +117,16 @@ Intent Gate:
   4. **Fast mode가 아닐 때**: WebSearchPrime으로 리서치를 수행합니다.
   5. **Fast mode일 때**: 리서치를 건너뛰고 topic/policy 확정만 수행합니다.
   6. **STOP. 종료 시 반드시 `AskUserQuestion` 도구를 fire하여 4-옵션 Handoff 메뉴를 표시합니다.**
-     - **금지**: "다음 단계:", "또는 직접:", "/obsidian-workflows:work mode=...", "/obsidian:write.active ..." 등 텍스트 명령어 안내. 사용자가 명령어를 복붙하는 워크플로우는 폐기되었습니다.
+     - **금지**: "다음 단계:", "또는 직접:"처럼 텍스트 slash command를 안내하는 출력. 사용자가 명령어를 복붙하는 워크플로우는 폐기되었습니다.
      - 메뉴 옵션, 동작, completion check는 아래 "Active Handoff Menu" 절 참조. **이 절을 읽지 않고 분기를 완료하지 마세요 (non-optional load).**
 - `passive` 분기:
   1. `writing-config.md`에서 `source_paths`, `exclude_paths`, `proposal_path`, `final_path`를 확인합니다.
   2. `obsidian:write.scan` 규칙으로 후보 파일을 수집합니다.
-     - 성능: `src/scan-recent-files.sh` 스크립트 사용 권장 (git log보다 훨씬 빠름)
+     - 성능 최적화 helper script는 Helper Script Path Resolution 규칙으로 plugin/repo root를 해석한 뒤에만 사용합니다.
   3. `obsidian:write.propose` 규칙으로 아이디어 3~5개를 제안 노트로 저장합니다.
   4. **생성된 proposal 파일을 읽어서** 각 아이디어의 상세 내용을 추출합니다.
   5. proposal 요약 출력 후 **STOP. 반드시 `AskUserQuestion` 도구를 fire하여 4-옵션 Handoff 메뉴를 표시합니다.**
-     - **금지**: "Next: /obsidian-workflows:work proposal=...", "다음 단계:" 등 텍스트 명령어 안내. 메뉴 fire 없이 종료하면 명세 위반입니다.
+     - **금지**: "Next:", "다음 단계:"처럼 텍스트 slash command를 안내하는 출력. 메뉴 fire 없이 종료하면 명세 위반입니다.
      - 메뉴 옵션, 동작, completion check는 아래 "Passive Handoff Menu" 절 참조. **non-optional load.**
      - 요약 출력 세부:
        - `output_verbosity` 설정에 따라 형식 선택 (minimal/verbose)
@@ -132,11 +140,8 @@ Intent Gate:
 Active Handoff Menu (active 분기 종료 직후):
 - **`AskUserQuestion` 도구를 즉시 fire하여 메뉴를 표시하세요. 텍스트 명령어 안내로 종료하는 것은 명세 위반입니다.**
 - 흔한 실패 모드 (이렇게 종료하지 마세요):
-  ```
-  ❌ "다음 단계 (work 단계에서 초안 즉시 생성):
-       /obsidian-workflows:work mode=active topic="..." policy=daily-note
-     또는 직접:
-       /obsidian:write.active topic="..." policy=daily-note"
+  ```text
+  ❌ 다음 단계 안내문을 쓰고 사용자가 slash command를 직접 복사해 실행하게 만드는 출력
   ```
   사용자에게 명령어를 복붙시키는 워크플로우는 폐기되었습니다. AI가 학습된 default로 위 패턴에 빠지기 쉬우니, 명세를 따라 메뉴를 fire하세요.
 - 올바른 종료:
@@ -163,7 +168,7 @@ Active Handoff Menu (active 분기 종료 직후):
   3. **다른 정책으로** — policy 변경 후 plan 재실행
      - 동작: 사용자에게 사용할 policy 후보(현재 enabled_policies)를 제시하고 선택을 받아 active 분기를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   4. **나중에** — handoff 상태만 저장하고 종료
-     - 동작: `.claude/state/obsidian-write-active-handoff.json`을 아래 스키마로 저장하고 종료합니다(`status: pending`). 이후 `/obsidian-workflows:work`가 mode 없이 호출되면 이 파일을 자동 감지해 active 모드로 진행합니다.
+     - 동작: `.claude/state/obsidian-write-active-handoff.json`을 아래 스키마로 저장하고 종료합니다(`status: pending`). 이후 `/obsidian-workflows:ow:work`가 mode 없이 호출되면 이 파일을 자동 감지해 active 모드로 진행합니다.
 - Active handoff 상태 파일 스키마는 `docs/runtime/state-schema.md`의 "Active handoff state fields" 절을 참조합니다.
 - **Completion check** — active 분기는 다음 3가지가 모두 완료되어야 끝납니다.
   1. `AskUserQuestion` 도구로 위 4-옵션 메뉴를 fire함
@@ -178,9 +183,8 @@ Active Handoff Menu (active 분기 종료 직후):
 Passive Handoff Menu (passive 분기 종료 직후):
 - proposal 요약을 먼저 출력(아래 출력 형식 참조)한 다음, **`AskUserQuestion` 도구를 즉시 fire하여 메뉴를 표시하세요. 텍스트 명령어 안내로 종료하는 것은 명세 위반입니다.**
 - 흔한 실패 모드 (이렇게 종료하지 마세요):
-  ```
-  ❌ "Next: /obsidian-workflows:work proposal="..." idea=N"
-  ❌ "다음 단계: 위 idea 중 하나를 선택하려면 /work proposal=... idea=N 실행하세요"
+  ```text
+  ❌ proposal 요약 뒤에 다음 단계 slash command를 텍스트로 안내하고 종료하는 출력
   ```
 - 올바른 종료:
   ```
@@ -205,7 +209,7 @@ Passive Handoff Menu (passive 분기 종료 직후):
   3. **다른 정책으로** — proposal 재생성
      - 동작: 사용자에게 policy 후보를 제시하고 선택을 받아 propose를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   4. **나중에** — proposal만 저장하고 종료
-     - 동작: proposal frontmatter는 `status: pending` 그대로 유지하고 종료합니다. 이후 `/obsidian-workflows:work`가 호출되면 기존 "Proposal 자동 감지" 흐름으로 이어집니다.
+     - 동작: proposal frontmatter는 `status: pending` 그대로 유지하고 종료합니다. 이후 `/obsidian-workflows:ow:work`가 호출되면 기존 "Proposal 자동 감지" 흐름으로 이어집니다.
 - **Completion check** — passive 분기는 다음 3가지가 모두 완료되어야 끝납니다.
   1. proposal 요약 출력 후 `AskUserQuestion` 도구로 위 4-옵션 메뉴를 fire함
   2. 사용자 선택을 수신함

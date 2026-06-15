@@ -16,7 +16,7 @@ Ensure all file/path input entrypoints fail fast for unsafe inputs.
 - `/obsidian:write.draft`
 - `/obsidian:write.refine`
 - `/obsidian:write.route`
-- `/obsidian-workflows:review`
+- `/obsidian-workflows:ow:review`
 
 ## Expected
 

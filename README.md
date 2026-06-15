@@ -89,7 +89,7 @@ Policy resolution is config-driven: `policy` is valid only when it is included i
 
 ## Usage
 
-### 1. Plan (`/obsidian-workflows:plan`)
+### 1. Plan (`/obsidian-workflows:ow:plan`)
 
 Plan your writing workflow before execution.
 
@@ -99,21 +99,21 @@ Plan your writing workflow before execution.
 
 **Usage:**
 ```bash
-/obsidian-workflows:plan [--intent active|passive] [topic=...] [policy=<policy-name>]
+/obsidian-workflows:ow:plan [--intent active|passive] [topic=...] [policy=<policy-name>]
 ```
 
 **Examples:**
 ```bash
-/obsidian-workflows:plan
-/obsidian-workflows:plan --intent passive
-/obsidian-workflows:plan --intent active topic="Daily operations summary" policy=daily-note
+/obsidian-workflows:ow:plan
+/obsidian-workflows:ow:plan --intent passive
+/obsidian-workflows:ow:plan --intent active topic="Daily operations summary" policy=daily-note
 ```
 
 When `--intent` is omitted, the command defaults to passive mode. If your config uses `external_tools.auto_use: ask`, you may still see an external-tool usage prompt, but not an intent-selection prompt.
 
 Daily-note behavior is policy-driven. With `source_strategy: previous-note`, it reads the previous daily note from `daily_notes_path`. If previous note is missing and policy requires `missing_source_behavior: skip-and-prompt-recent`, it returns `SKIP` and suggests up to `fallback_recent_files_limit` recent files for manual selection.
 
-### 2. Work (`/obsidian-workflows:work`)
+### 2. Work (`/obsidian-workflows:ow:work`)
 
 Execute writing tasks and create content.
 
@@ -126,17 +126,17 @@ Execute writing tasks and create content.
 
 **Usage:**
 ```bash
-/obsidian-workflows:work [mode=<active|passive|draft|refine|route>] [args...]
+/obsidian-workflows:ow:work [mode=<active|passive|draft|refine|route>] [args...]
 ```
 
 **Examples:**
 ```bash
-/obsidian-workflows:work
-/obsidian-workflows:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
-/obsidian-workflows:work mode=active policy=daily-note
+/obsidian-workflows:ow:work
+/obsidian-workflows:ow:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
+/obsidian-workflows:ow:work mode=active policy=daily-note
 ```
 
-### 3. Review (`/obsidian-workflows:review`)
+### 3. Review (`/obsidian-workflows:ow:review`)
 
 Review content quality against style guide and policies.
 
@@ -147,15 +147,15 @@ Review content quality against style guide and policies.
 
 **Usage:**
 ```bash
-/obsidian-workflows:review [file or draft reference]
+/obsidian-workflows:ow:review [file or draft reference]
 ```
 
 **Example:**
 ```bash
-/obsidian-workflows:review drafts/k8s-operators.md
+/obsidian-workflows:ow:review drafts/k8s-operators.md
 ```
 
-### 4. Compound (`/obsidian-workflows:compound`)
+### 4. Compound (`/obsidian-workflows:ow:compound`)
 
 Capture learning points from completed work.
 
@@ -167,31 +167,31 @@ Capture learning points from completed work.
 
 **Usage:**
 ```bash
-/obsidian-workflows:compound [completed work reference]
+/obsidian-workflows:ow:compound [completed work reference]
 ```
 
 **Example:**
 ```bash
-/obsidian-workflows:compound finals/k8s-operators-published.md
+/obsidian-workflows:ow:compound finals/k8s-operators-published.md
 ```
 
 ### Complete Workflow Example
 
 ```bash
 # 1. Plan ideas from recent changes
-/obsidian-workflows:plan --intent passive
+/obsidian-workflows:ow:plan --intent passive
 
 # 2. Create draft from selected proposal idea
-/obsidian-workflows:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
+/obsidian-workflows:ow:work proposal="Workflows/Proposals/passive-proposals/proposal-2026-03-03.md" idea=1
 
 # 3. Refine the content
-/obsidian-workflows:work mode=refine file="Workflows/Drafts/2026-03-03.md" policy=daily-note
+/obsidian-workflows:ow:work mode=refine file="Workflows/Drafts/2026-03-03.md" policy=daily-note
 
 # 4. Review for quality
-/obsidian-workflows:review file="Workflows/Drafts/2026-03-03.md" policy=daily-note
+/obsidian-workflows:ow:review file="Workflows/Drafts/2026-03-03.md" policy=daily-note
 
 # 5. Capture learnings
-/obsidian-workflows:compound file="Workflows/Notes/2026-03-03.md"
+/obsidian-workflows:ow:compound file="Workflows/Notes/2026-03-03.md"
 ```
 
 ## Documentation

@@ -34,5 +34,5 @@ updated: 2026-03-01T23:40
 - 조용한 fallback 없이 fail-fast로 동작합니다.
 
 역할 경계:
-- `obsidian-workflows:plan`은 의도 확인형(질문 가능) 진입점입니다.
+- `obsidian-workflows:ow:plan`은 의도 확인형(질문 가능) 진입점입니다.
 - `obsidian:write.autorun`은 훅 기반 자동 실행에서만 사용하는 deterministic passive 오케스트레이터입니다.

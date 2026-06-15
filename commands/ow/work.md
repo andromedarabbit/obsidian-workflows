@@ -2,12 +2,12 @@
 name: ow:work
 description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 argument-hint: "[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"
-allowed-tools: Read, Write, Edit, Glob, Grep
+allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Skill
 created: 2026-03-01T17:28
 updated: 2026-05-22T00:00
 ---
 
-`obsidian-workflows:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
+`obsidian-workflows:ow:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
 
 주의:
 - 로컬 워크플로우는 `/obsidian-workflows:*`를 사용합니다.
@@ -50,18 +50,26 @@ Fast Mode (--fast):
   - Context Card 출력 최소화
 - Fast mode는 단순 작업에 최적화되어 있습니다.
 
+Helper Script Path Resolution:
+- helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
+- helper script를 쓸 때는 먼저 `obsidian-workflows` plugin/repo root를 해석하고, 해석된 root 아래의 절대 경로로 실행합니다.
+- root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
+- optional helper script 단계는 경고 후 건너뛰고, 본래 단계의 fail-safe 정책을 따릅니다.
+
 External Tools Detection:
 - **Fast mode가 아닐 때만** 외부 도구를 탐지합니다.
-1. 명령어 시작 시 `src/external-tools/keyword_detector.py`를 사용해 관련 도구를 탐지합니다.
-2. 모드별 키워드:
+1. 명령어 시작 시 helper script path resolution 규칙에 따라 plugin/repo root를 먼저 해석합니다.
+2. root가 해석되고 external tool detector가 존재할 때만 절대 경로로 실행해 관련 도구를 탐지합니다. 현재 vault cwd 기준의 `src/...` 경로를 추측해 실행하지 않습니다.
+3. 모드별 키워드:
    - `active`: markdown, obsidian, humanizer, write, draft, template
    - `draft`: markdown, obsidian, humanizer, write, draft, template
    - `refine`: humanizer, grammar, style, polish, edit, rewrite
-3. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
+4. 탐지된 도구가 있으면 `writing-config.md`의 `external_tools.auto_use` 설정을 확인합니다:
    - `ask`: AskUserQuestion으로 사용 여부 확인
    - `true`: 자동 사용 (질문 없이)
    - `false`: 건너뛰기
-4. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
+5. root 또는 detector를 확인할 수 없으면 외부 도구 탐지만 경고 후 건너뛰고 워크플로우 계속 진행 (fail-safe)
+6. 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행 (fail-safe)
 - **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Preflight Gate (fail-fast):
@@ -79,7 +87,7 @@ Preflight Gate (fail-fast):
 
 모드 매핑(mode 지정 시 질문 없는 deterministic 실행):
 - `mode=active` -> `obsidian:write.active` (policy의 `source_strategy`/`missing_source_behavior` 계약을 따름; 예: daily-note에서 직전 노트가 없으면 `SKIP` + 최근 파일 후보 제시)
-- `mode=passive` -> `obsidian-workflows:plan --intent passive` (`scan -> propose`)
+- `mode=passive` -> `obsidian-workflows:ow:plan --intent passive` (`scan -> propose`)
 - `mode=draft` -> `obsidian:write.draft`
 - `mode=refine` -> `obsidian:write.refine`
 - `mode=route` -> `obsidian:write.route`
@@ -113,6 +121,7 @@ Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
   6. 위 규칙으로도 불명확하면 사용자에게 질문합니다.
 - 하위 명령의 입력 스키마를 그대로 따릅니다.
 - 실패 시 조용한 fallback 없이 즉시 종료하고 원인/해결 액션을 반환합니다.
+- 사용자가 명령어를 복사해 실행하는 흐름이 아닙니다. 현재 세션에서 routing을 수행할 수 있으면 플랫폼의 skill-invocation primitive를 사용합니다.
 
 상태/출력 규칙:
 - 상태 의미는 `PASS|SKIP|FAIL`로만 사용합니다.

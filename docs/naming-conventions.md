@@ -27,7 +27,7 @@ compound
 obsidian:write.active
 obsidian:write.draft
 obsidian:write.refine
-obsidian-workflows:work
+obsidian-workflows:ow:work
 ```
 
 ### Guidelines

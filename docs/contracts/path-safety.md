@@ -25,5 +25,5 @@ Must be consistent across:
 - `obsidian:write.draft`
 - `obsidian:write.refine`
 - `obsidian:write.route`
-- `obsidian-workflows:review`
+- `obsidian-workflows:ow:review`
 - Any new command with file/path arguments

@@ -9,7 +9,7 @@ updated: 2026-05-22T00:00
 
 # REVIEW Track Entry Point
 
-`obsidian-workflows:review` executes `obsidian:write.review.policy` as the default quality gate in MVP.
+`obsidian-workflows:ow:review` executes `obsidian:write.review.policy` as the default quality gate in MVP.
 
 ## Security/Permission Principles
 
@@ -39,6 +39,6 @@ updated: 2026-05-22T00:00
 ## Usage
 
 ```
-/obsidian-workflows:review file="path/to/document.md" policy=blog
-/obsidian-workflows:review file="노트/my-article.md"
+/obsidian-workflows:ow:review file="path/to/document.md" policy=blog
+/obsidian-workflows:ow:review file="노트/my-article.md"
 ```

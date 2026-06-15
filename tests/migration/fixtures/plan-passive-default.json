@@ -11,6 +11,23 @@
         "branch": "passive",
         "asksIntentSelection": false,
         "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
+        "status": ["PASS", "SKIP"]
+      }
+    },
+    {
+      "name": "plain-topic-without-write-verb-stays-passive",
+      "input": {
+        "intent": null,
+        "freeformArgs": "팀 스탠드업",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "passive",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS", "SKIP"]
       }
     },
@@ -25,11 +42,28 @@
         "branch": "passive",
         "asksIntentSelection": false,
         "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS", "SKIP"]
       }
     },
     {
-      "name": "natural-language-write-request-routes-active",
+      "name": "korean-spaced-writing-request-routes-active",
+      "input": {
+        "intent": null,
+        "freeformArgs": "팀 스탠드업 문서를 작성",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "active",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
+        "status": ["PASS"]
+      }
+    },
+    {
+      "name": "korean-compact-writing-request-routes-active",
       "input": {
         "intent": null,
         "freeformArgs": "팀스탠드업을 작성하자",
@@ -40,6 +74,39 @@
         "branch": "active",
         "asksIntentSelection": false,
         "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
+        "status": ["PASS"]
+      }
+    },
+    {
+      "name": "korean-polish-writing-request-routes-active",
+      "input": {
+        "intent": null,
+        "freeformArgs": "이번 주 회고를 정리해줘",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "active",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
+        "status": ["PASS"]
+      }
+    },
+    {
+      "name": "english-writing-request-routes-active",
+      "input": {
+        "intent": null,
+        "freeformArgs": "draft a weekly review",
+        "fast": false,
+        "externalToolsAutoUse": false
+      },
+      "expected": {
+        "branch": "active",
+        "asksIntentSelection": false,
+        "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS"]
       }
     },
@@ -54,6 +121,7 @@
         "branch": "passive",
         "asksIntentSelection": false,
         "asksExternalTools": true,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS", "SKIP"]
       }
     },
@@ -68,6 +136,7 @@
         "branch": "passive",
         "asksIntentSelection": false,
         "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS", "SKIP"]
       }
     },
@@ -82,6 +151,7 @@
         "branch": "active",
         "asksIntentSelection": false,
         "asksExternalTools": false,
+        "requiresAskUserQuestionHandoff": true,
         "status": ["PASS"]
       }
     }

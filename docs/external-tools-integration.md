@@ -22,7 +22,7 @@ STAGE_KEYWORDS = {
 ### Detection Flow
 
 1. Command execution starts (e.g., `oe:draft`)
-2. `src/external-tools/keyword_detector.py` parses available skills/MCP tools
+2. Resolve the `obsidian-workflows` plugin/repo root first, then run the external tool detector from an absolute path under that root
 3. Keywords for the stage are matched against tool names/descriptions
 4. Detected tools are presented to user based on `auto_use` setting
 5. Tool execution failures are logged but don't block workflow (fail-safe)

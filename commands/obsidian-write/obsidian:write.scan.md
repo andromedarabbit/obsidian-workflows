@@ -30,11 +30,12 @@ updated: 2026-03-02T17:34
    - `candidates[]` (path, modified_at)
 
 성능 최적화:
-- **권장**: `src/scan-recent-files.sh` 스크립트를 사용하면 git log보다 훨씬 빠릅니다.
-- 스크립트는 `fd`(빠름, 인덱싱 불필요)를 우선 사용하고, 실패 시 `find`로 fallback합니다.
+- helper script를 사용하면 git log보다 훨씬 빠릅니다.
+- helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
+- 먼저 `obsidian-workflows` plugin/repo root를 해석하고, 해석된 root 아래의 절대 경로로 실행합니다.
+- root를 해석할 수 없으면 vault cwd에서 추측하지 말고 native `Glob`/`Grep` 기반 스캔으로 진행합니다.
+- helper script는 `fd`(빠름, 인덱싱 불필요)를 우선 사용하고, 실패 시 `find`로 fallback합니다.
 - `fd` 설치: `brew install fd` (선택사항, 없으면 자동으로 find 사용)
-- 사용법: `./src/scan-recent-files.sh <directory> <since-timestamp> [extension]`
-- 예시: `./src/scan-recent-files.sh . "2026-03-17T10:00:00" md`
 - 출력: JSON 배열 `[{"path": "...", "mtime": "..."}]`
 
 실패 정책:

@@ -33,7 +33,7 @@ Include `schema_version` key for forward-compatible migrations.
 
 ## Active handoff state fields
 
-`.claude/state/obsidian-write-active-handoff.json` records a pending active-mode plan that has been deferred to a later `/obsidian-workflows:work` invocation. It is the active-branch counterpart to passive-branch proposal files.
+`.claude/state/obsidian-write-active-handoff.json` records a pending active-mode plan that has been deferred to a later `/obsidian-workflows:ow:work` invocation. It is the active-branch counterpart to passive-branch proposal files.
 
 - `schema_version`
 - `created_at` — ISO 8601 with timezone offset

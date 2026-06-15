@@ -23,6 +23,8 @@ files_modified:
   - commands/ow/plan.md
 ---
 
+> Historical note: this document preserves the helper script examples and command text that were current when the performance issue was analyzed. If an example below shows a cwd-relative helper invocation such as `./src/scan-recent-files.sh`, read it as historical context; current contracts require resolving the plugin/repo root first and executing helper scripts by absolute path.
+
 ## Problem
 
 The `/ow:plan --intent passive` command was experiencing significant slowdowns when scanning for recently modified files. The workflow used `git log` to find files changed after a specific timestamp, which required traversing commit history, parsing metadata, and filtering results.

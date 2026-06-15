@@ -11,6 +11,8 @@ tags:
   - command-contract
 ---
 
+> Historical note: this incident write-up preserves the user-visible command strings and prompts that existed when the regression happened. Some examples below intentionally mention legacy aliases such as `/obsidian-workflows:plan`; treat them as incident context, not the current canonical command surface.
+
 ## Problem
 
 `/obsidian-workflows:ow:plan` should default to the passive branch when `--intent` is omitted. After updating the command contract, the flow was still reported as interactive in real use.

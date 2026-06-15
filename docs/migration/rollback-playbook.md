@@ -18,9 +18,9 @@ Initiate rollback if any of the following occur during validation window:
 
 ## Smoke Checks After Rollback
 
-- `/obsidian-workflows:plan --intent passive`
-- `/obsidian-workflows:work mode=draft ...`
-- `/obsidian-workflows:review ...`
+- `/obsidian-workflows:ow:plan --intent passive`
+- `/obsidian-workflows:ow:work mode=draft ...`
+- `/obsidian-workflows:ow:review ...`
 
 ## Communication
 
