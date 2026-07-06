@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideation: Claude Code Hook Reliability &amp; DX — 2026-06-15</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; line-height: 1.65; background: #f8fafc; color: #0f172a; }
+.page { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+/* Header */
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 700; color: #0f172a; line-height: 1.2; margin-bottom: 0.9rem; }
+.meta-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; font-size: 13px; margin-bottom: 2rem; max-width: 600px; }
+.meta-grid dt { color: #64748b; font-weight: 600; }
+.meta-grid dd { color: #334155; }
+
+/* Stats strip */
+.stats-strip { display: flex; gap: 0; background: white; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 2.5rem; overflow: hidden; }
+.stat { flex: 1; text-align: center; padding: 1.1rem 0.75rem; border-right: 1px solid #e2e8f0; }
+.stat:last-child { border-right: none; }
+.stat .val { display: block; font-size: 1.875rem; font-weight: 700; color: #4f46e5; line-height: 1.1; }
+.stat .lbl { font-size: 11.5px; color: #64748b; margin-top: 0.2rem; }
+
+/* Sections */
+section { margin-bottom: 3rem; }
+h2 { font-size: 1.2rem; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.25rem; letter-spacing: -0.01em; }
+
+/* Jump list */
+.jump-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; padding: 0.85rem 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 7px; }
+.jump-list a { font-size: 12.5px; color: #4f46e5; text-decoration: none; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid #c7d2fe; background: #eef2ff; white-space: nowrap; }
+.jump-list a:hover { background: #e0e7ff; border-color: #a5b4fc; }
+
+/* Idea articles */
+article.idea { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.75rem; margin-bottom: 1.5rem; }
+.idea-rank { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.35rem; }
+article.idea h3 { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.85rem; line-height: 1.3; }
+
+/* Chips */
+.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem; }
+.chip { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 600; padding: 0.18rem 0.55rem; border-radius: 4px; white-space: nowrap; line-height: 1.4; }
+.chip-authoring  { background: #eef2ff; color: #3730a3; }
+.chip-validation { background: #ecfdf5; color: #065f46; }
+.chip-cicd       { background: #fffbeb; color: #78350f; }
+.chip-knowledge  { background: #f5f3ff; color: #5b21b6; }
+.chip-feedback   { background: #f0f9ff; color: #075985; }
+.chip-cross      { background: #fdf4ff; color: #7e22ce; }
+.chip-direct     { background: #ecfdf5; color: #065f46; }
+.chip-external   { background: #eff6ff; color: #1e40af; }
+.chip-reasoned   { background: #fff7ed; color: #9a3412; }
+.chip-conf-high  { background: #ecfdf5; color: #166534; }
+.chip-conf-med   { background: #fffbeb; color: #78350f; }
+.chip-cx-low     { background: #ecfdf5; color: #166534; }
+.chip-cx-med     { background: #fef9c3; color: #713f12; }
+.chip-cx-high    { background: #fee2e2; color: #991b1b; }
+
+/* Field layout */
+.fields { display: flex; flex-direction: column; gap: 0.8rem; }
+.field { display: grid; grid-template-columns: 115px 1fr; gap: 0.5rem; align-items: start; font-size: 14px; }
+.field-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; padding-top: 0.25rem; }
+.field-value { color: #1e293b; }
+.downside { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 0.55rem 0.75rem; border-radius: 0 4px 4px 0; font-size: 13.5px; color: #78350f; }
+
+/* Diagrams */
+.diagram { margin: 1.25rem 0 0.5rem; }
+.diagram svg { display: block; max-width: 100%; height: auto; }
+
+/* Grounding */
+.grounding-blocks { display: flex; flex-direction: column; gap: 0.75rem; }
+.grounding-block { background: white; border: 1px solid #e2e8f0; border-radius: 7px; padding: 1rem 1.25rem; font-size: 14px; }
+.grounding-block strong { font-weight: 700; display: block; margin-bottom: 0.35rem; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #4f46e5; }
+.grounding-block ul { padding-left: 1.25rem; color: #334155; }
+.grounding-block li { margin-bottom: 0.2rem; }
+
+/* Axes */
+.axes-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.axis-item { display: flex; align-items: center; gap: 0.6rem; font-size: 14px; color: #1e293b; }
+.axis-num { font-size: 11px; font-weight: 700; color: #94a3b8; min-width: 20px; }
+
+/* Rejection table */
+.rejection-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rejection-table th { background: #f8fafc; text-align: left; padding: 0.55rem 0.8rem; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.rejection-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; line-height: 1.4; }
+.rejection-table tr:hover td { background: #f8fafc; }
+.rejection-table .idea-name { font-weight: 500; color: #334155; }
+.rejection-table .reason { color: #64748b; }
+
+/* Footer */
+.composition-signal { font-size: 12px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 1.5rem; margin-top: 3rem; }
+
+/* Utilities */
+code { font-family: ui-monospace, Menlo, "Cascadia Code", monospace; font-size: 0.855em; background: #f1f5f9; padding: 0.1em 0.35em; border-radius: 3px; }
+p { margin-bottom: 0.7rem; color: #334155; line-height: 1.65; }
+p:last-child { margin-bottom: 0; }
+
+@media (max-width: 640px) {
+  .field { grid-template-columns: 1fr; }
+  .stats-strip { flex-wrap: wrap; }
+  .stat { min-width: 45%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── HEADER ─────────────────────────────────────────────────── -->
+<header>
+  <div class="eyebrow">Ideation Artifact &middot; Repo-Grounded</div>
+  <h1>Claude Code Hook Reliability &amp; DX</h1>
+  <dl class="meta-grid">
+    <dt>Date</dt><dd><time datetime="2026-06-15">2026-06-15</time></dd>
+    <dt>Topic</dt><dd><code>claude-code-hook-reliability</code></dd>
+    <dt>Mode</dt><dd>repo-grounded</dd>
+    <dt>Focus</dt><dd><code>claude-code-hook-playbook-2026-06-15.md</code></dd>
+  </dl>
+</header>
+
+<!-- ── STATS STRIP ────────────────────────────────────────────── -->
+<div class="stats-strip" aria-label="Summary statistics">
+  <div class="stat"><span class="val">7</span><span class="lbl">Ranked ideas</span></div>
+  <div class="stat"><span class="val">~48</span><span class="lbl">Raw candidates</span></div>
+  <div class="stat"><span class="val">17</span><span class="lbl">Cut</span></div>
+  <div class="stat"><span class="val">5</span><span class="lbl">Axes covered</span></div>
+</div>
+
+<!-- ── GROUNDING CONTEXT ──────────────────────────────────────── -->
+<section id="grounding-context">
+  <h2>Grounding Context</h2>
+  <div class="grounding-blocks">
+    <div class="grounding-block">
+      <strong>Codebase Context</strong>
+      <p><strong>obsidian-workflows</strong> is a state-machine driven Claude Code plugin for Obsidian writing workflows. Orchestration is via <code>.claude/state/*.json</code> — the repo does not currently use hook-event subscriptions.</p>
+      <ul>
+        <li>Existing L1 static validators: <code>check-frontmatter.sh</code>, <code>validate-command.sh</code>, <code>validate-hook-paths.sh</code></li>
+        <li>L2 behavior contract validator (docstring-based); 5 manual smoke-test specs (.md)</li>
+        <li>No stdin contract validators; no automated hook test runner</li>
+        <li>Stale-reference fix previously committed as <code>532c3e5</code> (hook contract / stale reference recovery)</li>
+      </ul>
+    </div>
+    <div class="grounding-block">
+      <strong>User-Named Constraint: claude-code-hook-playbook-2026-06-15.md</strong>
+      <p>Hard-won lessons from an <code>oh-my-skills</code> session. Four documented silent-failure classes:</p>
+      <ul>
+        <li><strong>matcher</strong> matches tool name strings only (Bash, Edit, Write…) — not content or file paths. Content filtering belongs in the <code>if</code> field or in-script stdin parsing.</li>
+        <li><strong>PostToolWrite</strong> is a non-existent event. The 29 official events are enumerated in SchemaStore.</li>
+        <li><strong>$FILE</strong> env var doesn't exist. Claude Code passes context via stdin JSON: <code>tool_input.file_path</code>, <code>tool_input.command</code>, <code>hook_event_name</code>, <code>tool_name</code>, <code>session_id</code>, <code>cwd</code>, <code>transcript_path</code>.</li>
+        <li>No official SKILL.md hook validator. Testing pyramid: L1 static lint (no claude) → L2 stdin injection (PATH stub + HOME isolation) → L3 real claude headless.</li>
+        <li>Pre-commit gate ordering: introduce validator + fix violations in the same commit; <code>.pre-commit-config.yaml</code> must be in the first commit.</li>
+      </ul>
+    </div>
+    <div class="grounding-block">
+      <strong>Past Learnings</strong>
+      <ul>
+        <li>Canonical single source of truth prevents drift across documentation and validators.</li>
+        <li><code>fd</code> (not <code>git log</code>) for filesystem queries in hook scripts — 10-100× faster.</li>
+        <li>Scenario-based fixture tests catch regressions that docstring checks miss.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── TOPIC AXES ─────────────────────────────────────────────── -->
+<section id="topic-axes">
+  <h2>Topic Axes</h2>
+  <div class="axes-list">
+    <div class="axis-item"><span class="axis-num">1</span><span class="chip chip-authoring">Hook authoring correctness</span>&mdash; preventing matcher/event/stdin mistakes at write time</div>
+    <div class="axis-item"><span class="axis-num">2</span><span class="chip chip-validation">Validation and testing</span>&mdash; static lint, stdin contract tests, E2E smoke tests</div>
+    <div class="axis-item"><span class="axis-num">3</span><span class="chip chip-knowledge">Knowledge propagation</span>&mdash; making hard-won hook knowledge reachable to future developers</div>
+    <div class="axis-item"><span class="axis-num">4</span><span class="chip chip-cicd">CI/CD integration</span>&mdash; gate ordering, pre-commit, pipeline safety without requiring <code>claude</code></div>
+    <div class="axis-item"><span class="axis-num">5</span><span class="chip chip-feedback">Developer feedback loop</span>&mdash; how fast/clearly does a developer know a hook is broken?</div>
+  </div>
+</section>
+
+<!-- ── RANKED IDEAS ───────────────────────────────────────────── -->
+<section id="ranked-ideas">
+  <h2>Ranked Ideas</h2>
+  <nav class="jump-list" aria-label="Jump to idea">
+    <a href="#idea-1">1. Hook Validator Suite</a>
+    <a href="#idea-2">2. Canonical Event Enum as SSOT</a>
+    <a href="#idea-3">3. Hook Template Generator</a>
+    <a href="#idea-4">4. L2 Stdin Contract Test Harness</a>
+    <a href="#idea-5">5. Hook Execution Audit Log</a>
+    <a href="#idea-6">6. Executable Runbook</a>
+    <a href="#idea-7">7. Hook Registry Inversion</a>
+  </nav>
+
+  <!-- ── IDEA 1 ── -->
+  <article class="idea" id="idea-1">
+    <div class="idea-rank">Idea 1</div>
+    <h3>Hook Validator Suite</h3>
+    <div class="chips">
+      <span class="chip chip-cross">CI/CD integration + Hook authoring correctness</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-high">Confidence 95%</span>
+      <span class="chip chip-cx-med">Complexity Medium</span>
+    </div>
+
+    <div class="diagram" aria-label="Hook Validator Suite flow diagram">
+      <svg viewBox="0 0 545 185" width="545" height="185" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow: SKILL.md hooks block feeds into validator with three checks, producing CI Pass or Block with reason">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 9 3, 0 6" fill="context-stroke"/>
+          </marker>
+        </defs>
+        <!-- Source box -->
+        <rect x="8" y="72" width="100" height="42" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="58" y="90" text-anchor="middle" font-size="12" fill="#0f172a" font-family="ui-monospace,monospace">SKILL.md</text>
+        <text x="58" y="107" text-anchor="middle" font-size="11" fill="#475569" font-family="ui-monospace,monospace">hooks:</text>
+        <!-- Arrow source → validator -->
+        <line x1="108" y1="93" x2="166" y2="93" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="137" y="86" text-anchor="middle" font-size="10" fill="#94a3b8">L1 Lint</text>
+        <!-- Validator outer frame -->
+        <rect x="168" y="22" width="166" height="142" rx="7" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="251" y="43" text-anchor="middle" font-size="11" font-weight="600" fill="#3730a3">Validator</text>
+        <!-- Row 1: event name -->
+        <rect x="177" y="51" width="148" height="28" rx="3" fill="white" stroke="#c7d2fe" stroke-width="1"/>
+        <text x="251" y="69" text-anchor="middle" font-size="11" fill="#1e1b4b">&#x2460; event name</text>
+        <!-- Row 2: matcher dead-zone -->
+        <rect x="177" y="86" width="148" height="28" rx="3" fill="white" stroke="#c7d2fe" stroke-width="1"/>
+        <text x="251" y="104" text-anchor="middle" font-size="11" fill="#1e1b4b">&#x2461; matcher dead-zone</text>
+        <!-- Row 3: if consistency -->
+        <rect x="177" y="121" width="148" height="28" rx="3" fill="white" stroke="#c7d2fe" stroke-width="1"/>
+        <text x="251" y="139" text-anchor="middle" font-size="11" fill="#1e1b4b">&#x2462; if: consistency</text>
+        <!-- Arrow → PASS (upward right) -->
+        <line x1="334" y1="93" x2="392" y2="62" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="358" y="66" text-anchor="middle" font-size="10" fill="#059669">all pass</text>
+        <!-- Arrow → BLOCK (downward right) -->
+        <line x1="334" y1="93" x2="392" y2="124" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="358" y="122" text-anchor="middle" font-size="10" fill="#dc2626">any fail</text>
+        <!-- PASS box -->
+        <rect x="394" y="44" width="132" height="36" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+        <text x="460" y="67" text-anchor="middle" font-size="12" fill="#065f46">&#x2705; CI Pass</text>
+        <!-- BLOCK box -->
+        <rect x="394" y="106" width="132" height="36" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="460" y="129" text-anchor="middle" font-size="11" fill="#991b1b">&#x274C; Block + reason</text>
+      </svg>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">A comprehensive static linter that checks every hook definition for three silent-failure classes simultaneously: (a) non-existent event names against the 29-event SchemaStore enum, (b) matchers that regex-match no known tool name string, and (c) <code>if</code> field expressions on non-tool events. Runs in CI as a hard block with SARIF-compatible output for inline PR annotations. No <code>claude</code> binary required — stdlib Python/bash only.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Playbook §Problem 1 ("<code>Bash.*git.*commit</code> → 절대 발동 안 함 ❌"), §Problem 2 (PostToolWrite = dead hook, full 29-event list from SchemaStore), §Problem 4 (validate-matchers.sh pattern). SchemaStore JSON schema provides the authoritative event enum at no cost.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">Silent failure is the dominant failure mode: a wrong event name or dead matcher produces zero errors, zero output, no signal — for months. A static gate that runs on every commit closes this entire class before it reaches production, with no runtime dependency.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside">Introducing the gate while violations exist blocks CI immediately — gate-ordering discipline required (introduce + fix in same commit, per playbook §Git B). Tool-name list needs updating when Claude Code adds new tools.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 2 ── -->
+  <article class="idea" id="idea-2">
+    <div class="idea-rank">Idea 2</div>
+    <h3>Canonical Event Enum as Single Source of Truth</h3>
+    <div class="chips">
+      <span class="chip chip-authoring">Hook authoring correctness</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-high">Confidence 90%</span>
+      <span class="chip chip-cx-low">Complexity Low</span>
+    </div>
+
+    <div class="diagram" aria-label="Hub-and-spoke diagram: hook-events.yaml feeds four consumers">
+      <svg viewBox="0 0 500 230" width="500" height="230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Central hook-events.yaml file feeds CI Validator, IDE Autocomplete, Test Fixtures, and Docs Generator">
+        <defs>
+          <marker id="arr2" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 9 3, 0 6" fill="context-stroke"/>
+          </marker>
+        </defs>
+        <!-- Hub (center) -->
+        <rect x="170" y="100" width="160" height="50" rx="7" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+        <text x="250" y="121" text-anchor="middle" font-size="12" font-weight="600" fill="#3730a3">hook-events.yaml</text>
+        <text x="250" y="138" text-anchor="middle" font-size="11" fill="#6366f1">(29 events + tool names)</text>
+
+        <!-- Spoke: Hub → Top (IDE Autocomplete) -->
+        <line x1="250" y1="100" x2="250" y2="52" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <!-- Top box -->
+        <rect x="170" y="14" width="160" height="36" rx="5" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="250" y="36" text-anchor="middle" font-size="12" fill="#5b21b6">IDE Autocomplete</text>
+
+        <!-- Spoke: Hub → Right (CI Validator) -->
+        <line x1="330" y1="125" x2="390" y2="105" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <!-- Right box -->
+        <rect x="392" y="87" width="98" height="36" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+        <text x="441" y="109" text-anchor="middle" font-size="12" fill="#065f46">CI Validator</text>
+
+        <!-- Spoke: Hub → Bottom (Test Fixtures) -->
+        <line x1="250" y1="150" x2="250" y2="178" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <!-- Bottom box -->
+        <rect x="170" y="180" width="160" height="36" rx="5" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+        <text x="250" y="202" text-anchor="middle" font-size="12" fill="#78350f">Test Fixtures</text>
+
+        <!-- Spoke: Hub → Left (Docs Generator) -->
+        <line x1="170" y1="125" x2="112" y2="105" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <!-- Left box -->
+        <rect x="10" y="87" width="100" height="36" rx="5" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="60" y="109" text-anchor="middle" font-size="12" fill="#075985">Docs</text>
+
+        <!-- Center label -->
+        <text x="250" y="220" text-anchor="middle" font-size="10" fill="#94a3b8">One update &#x2192; all consumers stay in sync</text>
+      </svg>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">Extract the 29 official Claude Code hook events and the set of known tool name strings into a single machine-readable file (<code>config/hook-events.yaml</code>). Every downstream artifact — the Hook Validator Suite, IDE autocomplete snippets, documentation tables, and test fixture templates — reads from this file. When Anthropic adds or renames an event, one change propagates everywhere.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Playbook §Problem 2 identifies SchemaStore (<code>schemastore.org/claude-code-plugin-manifest.json</code>) as the authoritative event enum source and documents how drift caused 10+ silent broken hooks. <code>reasoned:</code> A single checked-in enum file eliminates the class of drift bugs where validators, docs, and snippets each maintain their own copy of the 29-event list.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">The broken hooks in the playbook's intro were caused by knowledge drift — developers used event names they believed were correct without a single source to check against. Making the enum a checked-in artifact turns it from implicit knowledge into enforced reality, and every future tool can rely on it without re-fetching SchemaStore.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside">Requires periodic synchronization with SchemaStore when Claude Code releases update the event set. Needs a CI check confirming the file is sourced from SchemaStore rather than diverging silently.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 3 ── -->
+  <article class="idea" id="idea-3">
+    <div class="idea-rank">Idea 3</div>
+    <h3>Hook Template Generator (<code>tools/new-hook.sh</code>)</h3>
+    <div class="chips">
+      <span class="chip chip-knowledge">Knowledge propagation</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-high">Confidence 85%</span>
+      <span class="chip chip-cx-low">Complexity Low</span>
+    </div>
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">A scaffolding script that generates a correctly-structured hook script given an event name and tool name: shebang, stdin-guard preamble (detects no-arg invocation, parses <code>tool_input.file_path</code> via <code>python3 -c</code>), exit-contract inline comments (exit 0 = allow, exit 2 + stderr = block, other = non-blocking), and a clearly-marked <code># TODO: business logic</code> section. Generated files pass L1 lint immediately, with no manual boilerplate to get wrong.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Playbook §Problem 3 documents the stdin guard pattern verbatim (the multi-case shell guard, the <code>python3 -c 'import json,sys; ...'</code> idiom, and the exit code semantics) but does not codify it as a generator. This is the playbook's content + the observation that no scaffold currently exists in <code>tools/</code>.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">Every hook written from scratch passes through a danger zone: the author either knows the stdin schema and exit contract, or they don't. The generator makes the correct path the zero-effort path. Developers who copy-paste from the scaffold absorb correct patterns even without fully understanding why each line exists.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside">Scaffold generators require maintenance as the stdin schema evolves. Developers may copy-paste and stop short of understanding the underlying contract — acceptable for productivity but limits knowledge transfer beyond the immediate task.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 4 ── -->
+  <article class="idea" id="idea-4">
+    <div class="idea-rank">Idea 4</div>
+    <h3>L2 Stdin Contract Test Harness</h3>
+    <div class="chips">
+      <span class="chip chip-validation">Validation and testing</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-high">Confidence 90%</span>
+      <span class="chip chip-cx-med">Complexity Medium</span>
+    </div>
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">A minimal test runner (<code>tools/test-hook.sh</code>) that injects a fixture JSON payload via stdin into a hook script and asserts exit code, stderr, and optional stdout. Fixture files (<code>tests/hooks/fixtures/</code>) carry the exact stdin shape Claude Code sends: <code>tool_name</code>, <code>tool_input</code>, <code>hook_event_name</code>, <code>cwd</code>, <code>session_id</code>, <code>transcript_path</code>, <code>permission_mode</code>. PATH-stub + HOME-isolation ensures no test touches real external tools. <code>npm run test:hooks</code> runs all specs in under 5 seconds with no <code>claude</code> binary.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Playbook §Testing L2 documents the exact pattern: "Claude Code가 보내는 stdin JSON을 그대로 주입해 발화/no-op·출력계약 단언. 외부 CLI는 PATH stub, HOME은 mktemp로 격리." and provides the <code>run_check()</code> bash function verbatim. Codebase grounding confirms "no stdin contract validators, no automated E2E hook test runner" exist.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">L1 (linting) catches structural mistakes at definition time. L3 (real Claude) catches runtime mistakes but is slow and has dependencies. L2 closes the middle: it detects logic bugs in stdin parsing, incorrect exit codes, and contract violations — in seconds, with zero runtime dependencies. Without it, a refactor that changes how a hook reads <code>tool_input.file_path</code> breaks silently in production.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside">Fixture files must be maintained as the stdin schema evolves. Test coverage is only as good as the fixture library — hand-authored fixtures may miss edge cases Claude actually sends. Requires discipline to write fixtures alongside new hooks.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 5 ── -->
+  <article class="idea" id="idea-5">
+    <div class="idea-rank">Idea 5</div>
+    <h3>Hook Execution Audit Log</h3>
+    <div class="chips">
+      <span class="chip chip-feedback">Developer feedback loop</span>
+      <span class="chip chip-reasoned">reasoned:</span>
+      <span class="chip chip-conf-med">Confidence 80%</span>
+      <span class="chip chip-cx-med">Complexity Medium</span>
+    </div>
+
+    <div class="diagram" aria-label="Before and after: silent failure vs. audit log observability">
+      <svg viewBox="0 0 510 155" width="510" height="155" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before: hook fires into a black box producing silence. After: hook fires through a shim that writes to audit.jsonl enabling grep queries.">
+        <defs>
+          <marker id="arr3" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 9 3, 0 6" fill="context-stroke"/>
+          </marker>
+          <marker id="arr3dn" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="context-stroke"/>
+          </marker>
+        </defs>
+        <!-- BEFORE label -->
+        <text x="118" y="18" text-anchor="middle" font-size="12" font-weight="600" fill="#64748b">Before: Silent Failure</text>
+        <!-- Hook fires box -->
+        <rect x="10" y="28" width="88" height="28" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="54" y="46" text-anchor="middle" font-size="11" fill="#0f172a">hook fires</text>
+        <!-- Arrow → black box -->
+        <line x1="98" y1="42" x2="132" y2="42" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <!-- Black box (unknown) -->
+        <rect x="134" y="28" width="42" height="28" rx="4" fill="#1e293b"/>
+        <text x="155" y="47" text-anchor="middle" font-size="14" fill="white">?</text>
+        <!-- Arrow → void -->
+        <line x1="176" y1="42" x2="203" y2="42" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <!-- Void circle -->
+        <circle cx="216" cy="42" r="13" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="216" y="47" text-anchor="middle" font-size="14" fill="#991b1b">&#x2205;</text>
+        <!-- Caption -->
+        <text x="118" y="76" text-anchor="middle" font-size="11" fill="#94a3b8">no error &middot; no log &middot; no signal</text>
+
+        <!-- Divider -->
+        <line x1="258" y1="8" x2="258" y2="148" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- AFTER label -->
+        <text x="388" y="18" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">After: Audit Log</text>
+        <!-- Hook fires box -->
+        <rect x="276" y="28" width="88" height="28" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="320" y="46" text-anchor="middle" font-size="11" fill="#0f172a">hook fires</text>
+        <!-- Arrow → shim -->
+        <line x1="364" y1="42" x2="398" y2="42" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <!-- Shim box -->
+        <rect x="400" y="22" width="60" height="40" rx="4" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="430" y="40" text-anchor="middle" font-size="11" fill="#3730a3">shim</text>
+        <text x="430" y="54" text-anchor="middle" font-size="10" fill="#6366f1">(1 line)</text>
+        <!-- Arrow down → log file -->
+        <line x1="430" y1="62" x2="430" y2="84" stroke="#059669" stroke-width="1.5" marker-end="url(#arr3dn)"/>
+        <!-- audit.jsonl box -->
+        <rect x="385" y="86" width="90" height="28" rx="4" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+        <text x="430" y="104" text-anchor="middle" font-size="11" fill="#065f46">audit.jsonl</text>
+        <!-- Caption -->
+        <text x="388" y="130" text-anchor="middle" font-size="11" fill="#059669">grep &#x2192; instant answer</text>
+        <text x="388" y="147" text-anchor="middle" font-size="10" fill="#94a3b8">&#x26A0; never-fired detection</text>
+      </svg>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">A lightweight shim wrapper (one sourced shell library line at the top of a hook script) that appends a structured JSON entry to <code>~/.claude/hook-audit.jsonl</code> per invocation: timestamp, hook name, event, tool, exit code, duration. A companion <code>tools/hook-audit-summary.sh</code> surfaces hooks that have never fired across recent sessions. Activate verbose mode with <code>HOOK_DEBUG=1</code>.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Stdin JSON contains <code>session_id</code>, <code>transcript_path</code>, <code>hook_event_name</code>, and <code>tool_name</code> (playbook §Problem 3) — exactly what's needed for an audit record. <code>reasoned:</code> The playbook names the root cause of the bug class as lack of observation: "아무도 훅 발동을 관측하지 않았다." A shim that writes one JSON line per call costs near-zero overhead and converts invisible behavior into a searchable stream.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">All other ideas prevent new bugs. The audit log diagnoses existing ones. Right now, "did my hook fire?" requires adding <code>echo</code> statements and re-running Claude. The log answers that question in one <code>grep</code>, retroactively, for any past session — without re-running anything. It turns months-silent failures into "hook X has never fired in 47 sessions."</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside"><code>hook-audit.jsonl</code> grows indefinitely without rotation (needs a configurable log path + max-size policy). The shim is opt-in unless the Template Generator (#3) includes it by default. In headless/CI environments, <code>~/.claude/</code> may not exist — needs a fallback log path.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 6 ── -->
+  <article class="idea" id="idea-6">
+    <div class="idea-rank">Idea 6</div>
+    <h3>Executable Runbook</h3>
+    <div class="chips">
+      <span class="chip chip-knowledge">Knowledge propagation</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-high">Confidence 85%</span>
+      <span class="chip chip-cx-low">Complexity Low</span>
+    </div>
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">Convert the playbook into a permanent, CI-tested documentation artifact at <code>docs/hook-authoring-guide.md</code>. Every runnable code block — the matcher examples, the <code>if</code> field patterns, the stdin guard boilerplate, the L2 test harness usage — is annotated with a <code>&lt;!-- verify --&gt;</code> marker and validated by <code>tools/test-docs.sh</code> in CI. When a code block goes stale (e.g., the stdin schema changes), CI fails with a reference to the specific block.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> The playbook identifies the root cause of the bug class as knowledge absence: "이 버그가 살아남은 단 하나의 이유 = 아무도 훅 발동을 관측하지 않았다." The playbook IS the knowledge — the gap is persistence and discoverability. Past learnings confirm "canonical single source of truth prevents drift" and scenario-based fixture tests are the right regression prevention pattern.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">The playbook represents the hardest lessons from this session. Without a permanent, enforced home, this knowledge will be re-discovered in the next session that adds hooks. Making the guide executable (CI-tested code blocks) means future refactors that break the examples cause build failures, keeping the guide accurate indefinitely — not just accurate at the time of writing.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside"><code>tools/test-docs.sh</code> needs careful scoping — not every code block is independently runnable (some require a vault or live Claude context). Start with the highest-value blocks (stdin guard template, event enum list, exit contract examples) and grow coverage incrementally.</div></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── IDEA 7 ── -->
+  <article class="idea" id="idea-7">
+    <div class="idea-rank">Idea 7</div>
+    <h3>Hook Registry Inversion</h3>
+    <div class="chips">
+      <span class="chip chip-cicd">CI/CD integration</span>
+      <span class="chip chip-direct">direct:</span>
+      <span class="chip chip-conf-med">Confidence 75%</span>
+      <span class="chip chip-cx-med">Complexity Medium</span>
+    </div>
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Description</span>
+        <span class="field-value">Instead of manually maintaining hook entries in <code>settings.json</code>, a sync script (<code>npm run sync:hooks</code>) crawls all <code>.md</code> files in <code>commands/</code> and <code>.claude/skills/</code>, extracts every <code>hooks:</code> frontmatter block, and writes the canonical hook list back to settings. The settings file becomes a derived artifact, not a hand-edited one. Stale references (pointing to deleted scripts) and missing registrations become structurally detectable — the sync script flags them on each run.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Basis</span>
+        <span class="field-value"><code>direct:</code> Commit <code>532c3e5</code> ("fix(contract): ow 명령 계약과 stale 참조 정합성 회복") demonstrates that stale references in the hook registry are a real, recurring issue in this repo. CLAUDE.md's stated principle "Keep command discovery deterministic (single canonical source per command name)" applies equally to hooks. <code>reasoned:</code> If settings is derived from skill files, the category of "settings points to a script that moved/was deleted" becomes detectable at sync time.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Rationale</span>
+        <span class="field-value">The <code>532c3e5</code> commit had to fix stale references manually. Registry inversion makes that class of fix structurally unnecessary: the sync script produces a diff when any script moves or disappears, surfacing the inconsistency at CI time rather than months later during a debug session.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Downsides</span>
+        <span class="field-value"><div class="downside">The sync script must parse all <code>.md</code> frontmatter reliably — YAML parsing in bash is fragile, prefer a Node.js script. Settings may have entries from other mechanisms (system-level hooks, team-shared config) that the sync script doesn't know about. Requires a policy decision: which entries are auto-synced vs. manually maintained.</div></span>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- ── REJECTION SUMMARY ──────────────────────────────────────── -->
+<section id="rejection-summary">
+  <h2>Rejection Summary</h2>
+  <table class="rejection-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Idea</th>
+        <th>Reason Rejected</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Event Name Validator (standalone)</td>
+        <td class="reason">Duplicates stronger idea — merged into Hook Validator Suite (#1) which adds matcher and if: checks in the same tool</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Matcher Dead-Zone Detector (standalone)</td>
+        <td class="reason">Duplicates stronger idea — merged into Hook Validator Suite (#1)</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">if: Field Consistency Validator (standalone)</td>
+        <td class="reason">Duplicates stronger idea — absorbed by Hook Validator Suite (#1)'s third check</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Fixture Auto-Generator</td>
+        <td class="reason">Too expensive relative to value at this repo's scale; L2 Harness (#4) already solves the fixture problem with a small curated library</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Hook Liveness Canary</td>
+        <td class="reason">Duplicates stronger idea — Audit Log (#5) provides never-fired detection; canary adds marginal value once the log exists</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Hook-to-Event Coverage Map (standalone)</td>
+        <td class="reason">Below standalone ambition floor; naturally subsumed by the validator suite's SARIF output and any future reporting layer</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Self-bootstrapping Pre-commit</td>
+        <td class="reason">Real but narrow — gate ordering is a one-time problem at introduction, not an ongoing concern warranting a dedicated tool</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Schema Drift Detector</td>
+        <td class="reason">Too speculative — solves a future schema-version problem the current repo doesn't yet have; revisit when SchemaStore updates break something</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Migration-Gated Hook Upgrades (Flyway analogy)</td>
+        <td class="reason">Too expensive — over-engineered for a single-team plugin repo; analogy is sound but the overhead doesn't match the scale</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Failure-Record Documentation (errors explain themselves)</td>
+        <td class="reason">Absorbed by Hook Validator Suite (#1) — the validator should emit helpful "did you mean?" messages; not a standalone idea</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Inline stdin Schema Surfacing</td>
+        <td class="reason">Duplicates — overlaps IDE integration and is absorbed by the Template Generator (#3) as standard scaffold commentary</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">IDE Schema Integration (standalone)</td>
+        <td class="reason">Derivative of Canonical Enum SSOT (#2); natural follow-on once the enum file exists — team can pursue at low marginal cost</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">File-Watcher L1 Linter (save-time feedback)</td>
+        <td class="reason">Below ambition floor — pre-commit gate is already adequate; save-time feedback is a nice DX improvement but not a distinctive standalone idea</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Self-asserting Hook Preamble</td>
+        <td class="reason">Absorbed by Template Generator (#3) — the scaffold template includes this as standard boilerplate, which is simpler than opt-in per-hook preambles</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Hook Signal Shape Annotations (<code>signal_shape:</code>)</td>
+        <td class="reason">Too expensive — introduces new YAML schema complexity with no existing tooling ecosystem to parse or enforce it</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Consumer-Driven Hook Contracts (Pact-style)</td>
+        <td class="reason">Too expensive — appropriate for multi-team microservice contracts, overkill for a single-team plugin repo</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td class="idea-name">Script-as-Source-of-Truth</td>
+        <td class="reason">Architecturally complex — inverting SKILL.md's role requires new tooling; Registry Inversion (#7) achieves a similar SSOT benefit with lower disruption</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer class="composition-signal">
+  Composed <time datetime="2026-06-15T00:00:00">2026-06-15</time> by ce-ideate from <code>~/Downloads/claude-code-hook-playbook-2026-06-15.md</code>
+</footer>
+
+</div>
+</body>
+</html>

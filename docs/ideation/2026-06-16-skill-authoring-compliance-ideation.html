@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideation: oh-my-skills 작성 규칙 대비 정합성 평가 — 2026-06-16</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Segoe UI", sans-serif; font-size: 15px; line-height: 1.7; background: #f8fafc; color: #0f172a; }
+.page { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; margin-bottom: 0.5rem; }
+h1 { font-size: 1.9rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.9rem; }
+.meta-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; font-size: 13px; margin-bottom: 2rem; max-width: 640px; }
+.meta-grid dt { color: #64748b; font-weight: 600; }
+.meta-grid dd { color: #334155; }
+.stats-strip { display: flex; background: white; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 2.5rem; overflow: hidden; }
+.stat { flex: 1; text-align: center; padding: 1.1rem 0.5rem; border-right: 1px solid #e2e8f0; }
+.stat:last-child { border-right: none; }
+.stat .val { display: block; font-size: 1.75rem; font-weight: 700; color: #4f46e5; line-height: 1.1; }
+.stat .lbl { font-size: 11px; color: #64748b; margin-top: 0.2rem; }
+section { margin-bottom: 3rem; }
+h2 { font-size: 1.2rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.25rem; }
+.jump-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; padding: 0.85rem 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 7px; }
+.jump-list a { font-size: 12.5px; color: #4f46e5; text-decoration: none; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid #c7d2fe; background: #eef2ff; }
+.jump-list a:hover { background: #e0e7ff; }
+article.idea { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.75rem; margin-bottom: 1.5rem; }
+.idea-rank { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.35rem; }
+article.idea h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.85rem; line-height: 1.35; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem; }
+.chip { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 600; padding: 0.18rem 0.55rem; border-radius: 4px; line-height: 1.4; }
+.chip-a1 { background: #eef2ff; color: #3730a3; }
+.chip-a2 { background: #ecfeff; color: #155e75; }
+.chip-a3 { background: #fffbeb; color: #78350f; }
+.chip-a4 { background: #ecfdf5; color: #065f46; }
+.chip-a5 { background: #fdf4ff; color: #86198f; }
+.chip-direct { background: #ecfdf5; color: #065f46; }
+.chip-external { background: #eff6ff; color: #1e40af; }
+.chip-reasoned { background: #fff7ed; color: #9a3412; }
+.chip-conf-high { background: #ecfdf5; color: #166534; }
+.chip-conf-med { background: #fffbeb; color: #78350f; }
+.chip-cx-low { background: #ecfdf5; color: #166534; }
+.chip-cx-med { background: #fef9c3; color: #713f12; }
+.chip-cx-high { background: #fee2e2; color: #991b1b; }
+.fields { display: flex; flex-direction: column; gap: 0.8rem; }
+.field { display: grid; grid-template-columns: 96px 1fr; gap: 0.5rem; align-items: start; font-size: 14px; }
+.field-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; padding-top: 0.25rem; }
+.field-value { color: #1e293b; }
+.downside { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 0.55rem 0.75rem; border-radius: 0 4px 4px 0; font-size: 13.5px; color: #78350f; }
+.diagram { margin: 1.25rem 0 0.5rem; }
+.diagram svg { display: block; max-width: 100%; height: auto; }
+.grounding-block { background: white; border: 1px solid #e2e8f0; border-radius: 7px; padding: 1rem 1.25rem; font-size: 14px; margin-bottom: 0.75rem; }
+.grounding-block strong { font-weight: 700; display: block; margin-bottom: 0.35rem; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #4f46e5; }
+.grounding-block ul { padding-left: 1.25rem; color: #334155; }
+.grounding-block li { margin-bottom: 0.25rem; }
+.axes-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.axis-item { display: flex; align-items: baseline; gap: 0.6rem; font-size: 14px; }
+.axis-num { font-size: 11px; font-weight: 700; color: #94a3b8; min-width: 18px; }
+table.rej { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.rej th { background: #f8fafc; text-align: left; padding: 0.55rem 0.8rem; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+table.rej td { padding: 0.45rem 0.8rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; line-height: 1.45; }
+table.rej tr:hover td { background: #f8fafc; }
+.rej .name { font-weight: 500; color: #334155; }
+.rej .reason { color: #64748b; }
+.composition-signal { font-size: 12px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 1.5rem; margin-top: 3rem; }
+code { font-family: ui-monospace, Menlo, monospace; font-size: 0.855em; background: #f1f5f9; padding: 0.1em 0.35em; border-radius: 3px; }
+p { margin-bottom: 0.7rem; color: #334155; }
+p:last-child { margin-bottom: 0; }
+.callout { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 14px; }
+.callout strong { color: #991b1b; }
+@media (max-width: 640px) { .field { grid-template-columns: 1fr; } .stat { font-size: 90%; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="eyebrow">Ideation Artifact &middot; 저장소 정합성 평가</div>
+  <h1>oh-my-skills 작성 규칙 대비 obsidian-workflows 정합성</h1>
+  <dl class="meta-grid">
+    <dt>날짜</dt><dd><time datetime="2026-06-16">2026-06-16</time></dd>
+    <dt>주제</dt><dd><code>obsidian-workflows-skill-authoring-compliance</code></dd>
+    <dt>모드</dt><dd>repo-grounded</dd>
+    <dt>평가 기준</dt><dd>oh-my-skills 작성 규칙 (<code>spec/agentskills-spec.md</code>, <code>docs/*</code>, <code>template/skill-template/</code>)</dd>
+    <dt>평가 대상</dt><dd>obsidian-workflows (skill 4 + command 14)</dd>
+  </dl>
+</header>
+
+<div class="stats-strip">
+  <div class="stat"><span class="val">7</span><span class="lbl">살아남은 아이디어</span></div>
+  <div class="stat"><span class="val">~48</span><span class="lbl">생성 후보</span></div>
+  <div class="stat"><span class="val">14</span><span class="lbl">기각</span></div>
+  <div class="stat"><span class="val">5</span><span class="lbl">축 커버</span></div>
+</div>
+
+<section id="grounding">
+  <h2>Grounding Context</h2>
+
+  <div class="callout">
+    <strong>핵심 긴장:</strong> oh-my-skills는 <em>skills 중심</em> 표준(<code>.claude/skills/{category}/{skill}/</code> + SKILL.md·README.md·GUIDELINES.md + frontmatter <code>context/agent/language</code>)이고, obsidian-workflows는 <em>commands 중심</em> 모델(<code>commands/</code>가 정본, hook 경로 <code>commands/</code>)로 의도적으로 갈라져 있습니다. 따라서 평가 결과는 <strong>(a) 순수 미준수 갭</strong>과 <strong>(b) 의도적 분기</strong> 두 종류로 나오며, 후자는 "맞추기"가 아니라 "분기를 명시 문서화"가 답일 수 있습니다.
+  </div>
+
+  <div class="grounding-block">
+    <strong>Codebase Context — obsidian-workflows 실측 (검증됨)</strong>
+    <ul>
+      <li><strong>skill <code>name</code>이 디렉터리와 전부 불일치:</strong> <code>skills/plan/SKILL.md</code>의 <code>name: workflow-plan-reference</code> (디렉터리는 <code>plan</code>). 4개 모두 <code>workflow-*-reference</code> 패턴.</li>
+      <li><strong>SKILL.md는 수동 미러:</strong> 본문이 직접 "이 문서는 <code>commands/ow/plan.md</code>의 mirror이며, 갈리면 command가 canonical"이라고 선언.</li>
+      <li><strong>frontmatter 스키마 분기:</strong> skill은 <code>name/description/user-invocable/version/created/updated</code> — oh-my-skills 필수 <code>context/agent/language</code>가 전부 없음.</li>
+      <li><strong>99바이트 "stub" 파일의 정체:</strong> <code>skills/plan/plan.md</code> 등은 <code>tags: MOCs</code> + <code>folder-index-content</code> — Obsidian Folder Index <strong>vault 노트</strong>. 저장소 자체 규칙 "Do not mix user vault content into this repository"를 위반.</li>
+      <li><strong>skill 검증 사각지대:</strong> <code>tools/check-frontmatter.sh</code>는 <code>find commands</code>만 스캔 — SKILL.md는 10개 validator 중 어느 것도 건드리지 않음. 위 불일치가 CI를 멀쩡히 통과.</li>
+      <li>command 14개는 frontmatter 일관. <code>generate-index.sh</code>가 COMMANDS.md를 frontmatter에서 <strong>자동 생성</strong>(derive-not-handwrite 패턴 이미 보유). <code>.claude-plugin/marketplace.json</code> 존재, <code>plugin.json</code>은 최소(author/license 없음).</li>
+      <li>이 저장소는 Claude Code 이벤트 훅을 쓰지 않음(상태머신 + Skill 도구 오케스트레이션).</li>
+    </ul>
+  </div>
+
+  <div class="grounding-block">
+    <strong>평가 기준 — oh-my-skills 작성 규칙 (요지)</strong>
+    <ul>
+      <li>SKILL.md frontmatter 필수: <code>name, description, version, context(fork|inline), agent, language</code>. <code>name</code>은 kebab-case이며 <strong>디렉터리명과 일치</strong>. description ≤100자.</li>
+      <li>레이아웃 <code>skills/{category}/{skill}/</code> + SKILL.md + README.md + GUIDELINES.md (REFERENCE.md 선택).</li>
+      <li><code>scripts/</code>가 있으면 <code>scripts/tests/run.sh</code> 필수 (BATS→Python→Shell, mktemp+HOME 격리+PATH stub).</li>
+      <li>hook command/path는 <code>.claude/skills/</code>로 시작. 신규 skill은 <code>create-skill.sh</code>로 스캐폴딩. semver + CHANGELOG.</li>
+      <li>한국어 콘텐츠 규칙: 본문 한국어/식별자 영어, em-dash 금지(~·괄호), 외래어 표기법, 용어 일관성.</li>
+    </ul>
+  </div>
+
+  <div class="grounding-block">
+    <strong>External Context — 공개 Agent Skills 표준 (배경)</strong>
+    <ul>
+      <li>Anthropic/agentskills.io 공개 표준은 <strong><code>name</code>+<code>description</code>만 필수</strong>(name ≤64자, claude/anthropic 예약어 금지; description ≤1024자, 3인칭, "무엇을+언제"+트리거 키워드). 나머지는 관례.</li>
+      <li>SKILL.md ≤500줄 권장, references는 1단계 깊이, progressive disclosure. <code>context: fork</code>·<code>hooks</code>는 Claude 전용(비호환).</li>
+      <li>→ 사실상 <strong>3계층</strong>: 공개 표준 ⊂ oh-my-skills 하우스 규칙. obsidian-workflows는 공개 표준은 충족하나 oh-my-skills 엄격층에서 의도적으로 분기.</li>
+    </ul>
+  </div>
+
+  <div class="grounding-block">
+    <strong>Past Learnings</strong>
+    <ul>
+      <li>skill 작성/스펙 정합성 관련 학습은 <code>docs/solutions/</code>에 없음(미포착 영역). 기존 2건은 command 런타임 인시던트뿐 → 이 작업 결과는 <code>/ce-compound</code>로 포착 가치 있음.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="axes">
+  <h2>Topic Axes</h2>
+  <div class="axes-list">
+    <div class="axis-item"><span class="axis-num">1</span><span class="chip chip-a1">Frontmatter 정합성</span>&mdash; 필수 필드, description 제약, name↔디렉터리</div>
+    <div class="axis-item"><span class="axis-num">2</span><span class="chip chip-a2">Skill 파일·레이아웃</span>&mdash; SKILL.md/README/GUIDELINES, references, MOC 오염</div>
+    <div class="axis-item"><span class="axis-num">3</span><span class="chip chip-a3">구조·패키징 분기</span>&mdash; commands vs skills 모델, 분기 stance</div>
+    <div class="axis-item"><span class="axis-num">4</span><span class="chip chip-a4">테스트·검증 패리티</span>&mdash; skill validator, 스캐폴딩, 인덱스 생성</div>
+    <div class="axis-item"><span class="axis-num">5</span><span class="chip chip-a5">한국어 콘텐츠·문서 품질</span>&mdash; 외래어·em-dash·용어·description 작성</div>
+  </div>
+</section>
+
+<section id="ranked">
+  <h2>Ranked Ideas</h2>
+  <nav class="jump-list">
+    <a href="#i1">1. 정합성 stance + 분기 레지스터</a>
+    <a href="#i2">2. skill-frontmatter validator 게이트</a>
+    <a href="#i3">3. skill↔command 미러 해소</a>
+    <a href="#i4">4. frontmatter 정정(name·필드)</a>
+    <a href="#i5">5. MOC vault 파일 제거</a>
+    <a href="#i6">6. 스캐폴딩 + skills 인덱스 생성</a>
+    <a href="#i7">7. 한국어·description lint</a>
+  </nav>
+
+  <!-- IDEA 1 -->
+  <article class="idea" id="i1">
+    <div class="idea-rank">Idea 1 · Top pick</div>
+    <h3>정합성 stance를 먼저 선언하라 — 등급제 + 분기 레지스터</h3>
+    <div class="chips">
+      <span class="chip chip-a3">구조·패키징 분기</span>
+      <span class="chip chip-external">external + reasoned</span>
+      <span class="chip chip-conf-high">확신 90%</span>
+      <span class="chip chip-cx-low">복잡도 Low-Med</span>
+    </div>
+    <div class="diagram" aria-label="3계층 정합성 모델과 분기 레지스터">
+      <svg viewBox="0 0 560 230" width="560" height="230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="세 동심 계층: 공개표준(name+description) 안에 oh-my-skills 하우스규칙, 그 옆에 adopt/divert/n-a 레지스터">
+        <rect x="14" y="20" width="300" height="190" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="164" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af">Level A · 공개 표준 (충족)</text>
+        <text x="164" y="56" text-anchor="middle" font-size="10.5" fill="#1e40af">name + description</text>
+        <rect x="34" y="68" width="260" height="128" rx="6" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="164" y="88" text-anchor="middle" font-size="12" font-weight="600" fill="#3730a3">Level AA · oh-my-skills 하우스</text>
+        <text x="164" y="106" text-anchor="middle" font-size="10.5" fill="#4338ca">context/agent/language · 레이아웃</text>
+        <text x="164" y="121" text-anchor="middle" font-size="10.5" fill="#4338ca">semver · scripts/tests</text>
+        <rect x="54" y="132" width="220" height="54" rx="5" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="164" y="152" text-anchor="middle" font-size="11.5" font-weight="600" fill="#7e22ce">AAA · GUIDELINES · 한국어 규칙</text>
+        <text x="164" y="170" text-anchor="middle" font-size="10" fill="#7e22ce">(목표 등급은 skill별 선언)</text>
+        <!-- register -->
+        <rect x="338" y="40" width="208" height="150" rx="8" fill="white" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="442" y="60" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">분기 레지스터</text>
+        <line x1="352" y1="70" x2="532" y2="70" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="352" y="90" font-size="11" fill="#065f46">&#x2713; adopt &mdash; frontmatter 필드</text>
+        <text x="352" y="114" font-size="11" fill="#9a3412">&#x21C4; divert &mdash; commands/ hook 경로</text>
+        <text x="352" y="138" font-size="11" fill="#9a3412">&#x21C4; divert &mdash; mirror 모델</text>
+        <text x="352" y="162" font-size="11" fill="#64748b">&#x2014; n/a &mdash; 이벤트 훅 미사용</text>
+        <text x="442" y="182" text-anchor="middle" font-size="9.5" fill="#94a3b8">각 규칙에 사유·소유자·검토일</text>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">"이 저장소가 oh-my-skills에 맞춰야 한다"는 전제 자체를 먼저 결정한다. oh-my-skills 각 규칙을 <code>adopt</code>(맞춘다) / <code>divert</code>(사유 있는 분기) / <code>n-a</code>(해당 없음)로 태깅한 <code>docs/conformance.md</code> 레지스터를 만들고, 정합성을 이진 합/불이 아니라 등급(공개표준 A / oh-my-skills AA)으로 본다. 레지스터에 없는 분기는 "드리프트(버그)", 레지스터에 있는 분기는 "승인된 예외"로 취급한다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>external:</code> WCAG A/AA/AAA 등급 정합성 + 규제 감사의 "예외 레지스터(통제+증거+사유)" 패턴. <code>reasoned:</code> 공개 표준은 name+description만 요구하므로 oh-my-skills 규칙 다수는 하우스 의견 — 이 저장소는 commands 중심을 의도 선택했다(CLAUDE.md가 <code>commands/</code>를 canonical로 명시).</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">stance가 없으면 나머지 6개 아이디어가 "갭"인지 "의도 분기"인지 매번 재논쟁된다. 레지스터는 그 재논쟁을 1회 결정으로 바꾼다 — <strong>다른 모든 아이디어의 의미를 규정하므로 가장 먼저</strong>.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">레지스터를 만들어도 갱신하지 않으면 또 다른 stale 문서가 된다. divert 항목마다 검토일을 박고, Idea 2 validator가 "레지스터에 없는 분기"를 잡도록 묶어야 살아있는 문서가 된다.</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 2 -->
+  <article class="idea" id="i2">
+    <div class="idea-rank">Idea 2</div>
+    <h3>skill-frontmatter validator를 CI 게이트로 — 지금 SKILL.md는 검증 사각지대</h3>
+    <div class="chips">
+      <span class="chip chip-a4">테스트·검증 패리티</span>
+      <span class="chip chip-direct">direct</span>
+      <span class="chip chip-conf-high">확신 92%</span>
+      <span class="chip chip-cx-med">복잡도 Med</span>
+    </div>
+    <div class="diagram" aria-label="검증 커버리지 갭: commands는 검증되나 skills는 안 됨">
+      <svg viewBox="0 0 520 150" width="520" height="150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="check-frontmatter.sh가 commands 14개는 검증하나 skill 4개는 통과해버림">
+        <rect x="16" y="55" width="150" height="44" rx="6" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="91" y="73" text-anchor="middle" font-size="11.5" fill="#3730a3">check-frontmatter.sh</text>
+        <text x="91" y="90" text-anchor="middle" font-size="10" fill="#6366f1">find commands 만</text>
+        <line x1="166" y1="62" x2="214" y2="50" stroke="#059669" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="166" y1="92" x2="214" y2="104" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#059669"/></marker>
+          <marker id="arr" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#dc2626"/></marker>
+        </defs>
+        <rect x="216" y="32" width="140" height="40" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+        <text x="286" y="50" text-anchor="middle" font-size="11.5" fill="#065f46">command 14</text>
+        <text x="286" y="65" text-anchor="middle" font-size="10" fill="#059669">&#x2713; 검증됨</text>
+        <rect x="216" y="86" width="140" height="46" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="286" y="104" text-anchor="middle" font-size="11.5" fill="#991b1b">SKILL.md 4</text>
+        <text x="286" y="120" text-anchor="middle" font-size="10" fill="#dc2626">&#x2717; 무검증 (name≠dir 통과)</text>
+        <rect x="378" y="55" width="126" height="44" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+        <text x="441" y="73" text-anchor="middle" font-size="11" fill="#78350f">신규: check-</text>
+        <text x="441" y="89" text-anchor="middle" font-size="11" fill="#78350f">skill-frontmatter</text>
+        <line x1="356" y1="109" x2="404" y2="99" stroke="#d97706" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <defs><marker id="ar2" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#d97706"/></marker></defs>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">기존 <code>check-frontmatter.sh</code>의 형제로 <code>check-skill-frontmatter.sh</code>를 추가해 같은 pre-commit/CI 머신에 태운다. Idea 1에서 정한 스키마(어느 필드가 필수인지, name↔디렉터리 일치, description 길이)를 읽어 모든 현재·미래 skill을 머지 전에 강제한다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> <code>check-frontmatter.sh</code>의 대상은 <code>find commands</code>뿐 — SKILL.md는 10개 validator 어디에도 안 걸린다(검증함). 그래서 <code>name: workflow-plan-reference</code>(≠디렉터리)가 오늘 CI를 통과한다.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">검증기가 없으면 어떤 결정(맞추기든 분기든)도 강제되지 않아 시간이 지나며 조용히 표류한다. stance(Idea 1)를 정해도 게이트가 없으면 종이 위 규칙일 뿐 — 이게 enforcement 기반이다.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">게이트 도입 시 기존 4개 skill이 즉시 빨간불 → 게이트 도입과 위반 정정을 같은 커밋으로 묶어야 한다(이 세션에서 이미 겪은 gate-ordering 패턴).</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 3 -->
+  <article class="idea" id="i3">
+    <div class="idea-rank">Idea 3</div>
+    <h3>skill↔command 미러를 해소 — SKILL.md를 command에서 생성</h3>
+    <div class="chips">
+      <span class="chip chip-a2">Skill 파일·레이아웃</span>
+      <span class="chip chip-direct">direct + reasoned</span>
+      <span class="chip chip-conf-high">확신 85%</span>
+      <span class="chip chip-cx-high">복잡도 Med-High</span>
+    </div>
+    <div class="diagram" aria-label="미러 해소 전후">
+      <svg viewBox="0 0 540 165" width="540" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="현재: command와 SKILL을 손으로 둘 다 작성(표류). 이후: command 하나가 SKILL.md를 생성.">
+        <text x="130" y="20" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">현재 — 손으로 둘 다 작성</text>
+        <rect x="36" y="36" width="90" height="38" rx="5" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="81" y="59" text-anchor="middle" font-size="11" fill="#3730a3">command</text>
+        <rect x="36" y="96" width="90" height="38" rx="5" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="81" y="119" text-anchor="middle" font-size="11" fill="#3730a3">SKILL.md</text>
+        <line x1="131" y1="55" x2="131" y2="96" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="180" y="79" text-anchor="middle" font-size="10" fill="#dc2626">수동 동기화</text>
+        <text x="180" y="93" text-anchor="middle" font-size="10" fill="#dc2626">(표류)</text>
+        <line x1="250" y1="85" x2="290" y2="85" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar3)"/>
+        <defs><marker id="ar3" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#94a3b8"/></marker></defs>
+        <text x="410" y="20" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">이후 — 단일 정본 생성</text>
+        <rect x="320" y="50" width="90" height="38" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+        <text x="365" y="73" text-anchor="middle" font-size="11" fill="#065f46">command</text>
+        <text x="365" y="86" text-anchor="middle" font-size="8.5" fill="#059669">(정본)</text>
+        <line x1="410" y1="69" x2="452" y2="69" stroke="#059669" stroke-width="1.5" marker-end="url(#ar4)"/>
+        <defs><marker id="ar4" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#059669"/></marker></defs>
+        <text x="431" y="62" text-anchor="middle" font-size="9" fill="#059669">generate</text>
+        <rect x="454" y="50" width="76" height="38" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="492" y="69" text-anchor="middle" font-size="10.5" fill="#475569">SKILL.md</text>
+        <text x="492" y="82" text-anchor="middle" font-size="8.5" fill="#94a3b8">(파생)</text>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">각 트랙이 <code>skills/{track}/SKILL.md</code>와 <code>commands/ow/{track}.md</code> 두 곳에 손으로 존재하고, SKILL.md가 스스로 "command의 mirror"임을 선언한다. <code>generate-index.sh</code>가 이미 COMMANDS.md를 frontmatter에서 생성하듯, SKILL.md(+oh-my-skills frontmatter)를 command 정의에서 <strong>생성</strong>하게 만든다. 손으로 두 번 쓰지 않으니 표류 클래스 자체가 사라진다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> <code>skills/plan/SKILL.md</code> 본문이 "이 문서는 <code>commands/ow/plan.md</code>의 mirror... command가 canonical"이라 명시 + CLAUDE.md "single canonical source per command name". <code>reasoned:</code> 수동 미러는 정의상 표류하고, 이 저장소는 최근에도 stale 참조 수정 커밋이 반복됐다.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">생성으로 바꾸면 Idea 4의 frontmatter 필드(context/agent/language)도 생성기가 주입할 수 있어 4개 파일 손편집이 사라진다 — 정합성이 빌드 단계가 된다.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">생성기는 command→SKILL 매핑 규칙(어떤 본문을 어떻게 요약할지)을 설계해야 해 초기 비용이 가장 크다. 대안: 생성 대신 "drift-check"(미러가 갈렸는지 CI 검출)만 먼저 두는 더 가벼운 변형.</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 4 -->
+  <article class="idea" id="i4">
+    <div class="idea-rank">Idea 4</div>
+    <h3>frontmatter 정정 — name↔디렉터리 일치 + context/agent/language는 정직하게 결정</h3>
+    <div class="chips">
+      <span class="chip chip-a1">Frontmatter 정합성</span>
+      <span class="chip chip-direct">direct + external</span>
+      <span class="chip chip-conf-high">확신 88%</span>
+      <span class="chip chip-cx-low">복잡도 Low-Med</span>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">두 가지를 정정한다. (1) <code>name</code>을 디렉터리와 일치시킨다 — 현재 <code>workflow-plan-reference</code>≠<code>plan</code>. (2) 누락된 <code>context/agent/language</code>는 <strong>채우기 전에 결정</strong>: 이 skill들이 실제로 fork 에이전트로 도느냐 인라인 엔트리포인트냐를 보고 정직하게 <code>context: inline</code>을 선언하거나, "우리 스키마(user-invocable 등)가 정본"임을 Idea 1 레지스터에 <code>divert</code>로 기록한다. 런타임이 안 읽는 <code>agent</code> 필드를 cargo-cult로 박지 않는다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> 4개 skill 모두 <code>name: workflow-*-reference</code>로 디렉터리 불일치(검증함) + <code>context/agent/language</code> 부재. <code>external:</code> 공개 표준은 이 셋을 요구하지 않음 — oh-my-skills 엄격층만 요구하므로 "채울지/분기할지"는 진짜 선택지다.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">name↔디렉터리 매핑이 사람 암묵지에 의존하면 skill 추가·이동마다 조용한 불일치가 쌓인다. 일치는 자동 강제 가능한 규칙이라 비용 대비 효과가 크다. 필드 결정은 "정합성 연극"을 피하는 핵심이다.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside"><code>name</code> 변경은 외부에서 이 skill을 부르는 참조(plugin/marketplace 인덱스)를 건드릴 수 있어, 변경 전 참조 영향 확인이 필요하다.</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 5 -->
+  <article class="idea" id="i5">
+    <div class="idea-rank">Idea 5</div>
+    <h3>skill 디렉터리의 Obsidian MOC vault 파일 제거 — 저장소 자체 규칙 위반</h3>
+    <div class="chips">
+      <span class="chip chip-a2">Skill 파일·레이아웃</span>
+      <span class="chip chip-direct">direct</span>
+      <span class="chip chip-conf-high">확신 95%</span>
+      <span class="chip chip-cx-low">복잡도 Low</span>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">각 skill 디렉터리의 99바이트 <code>plan.md</code>/<code>work.md</code> 등은 skill 산출물이 아니라 <code>tags: MOCs</code> + <code>folder-index-content</code>를 담은 <strong>Obsidian Folder Index vault 노트</strong>다. 제거하거나(또는 stance에 따라 정당한 README/GUIDELINES로 대체) 정리한다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> <code>skills/plan/plan.md</code> 내용 확인 — <code>tags: MOCs</code> + <code>folder-index-content</code> 블록. 저장소 CLAUDE.md "Do not mix user vault content into this repository"를 정면 위반.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">vault 전용 파일이 plugin core에 커밋돼 있으면 (a) 자기 규칙 위반이고 (b) skill 레이아웃을 오독하게 만든다("이게 README 자리인가?"). 가장 명확하고 값싼 정리 — 즉시 가능한 cleanup.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">이 파일들이 누군가의 Obsidian vault 뷰(Folder Index 플러그인)에서 실제로 쓰이는지 먼저 확인해야 한다. plugin 저장소엔 불필요하지만, 저장소가 vault와 겸용된다면 <code>.gitignore</code> 처리가 맞을 수 있다.</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 6 -->
+  <article class="idea" id="i6">
+    <div class="idea-rank">Idea 6</div>
+    <h3>스캐폴딩 + skills 인덱스 생성 — 결함을 태어날 때 막는다</h3>
+    <div class="chips">
+      <span class="chip chip-a4">테스트·검증 패리티</span>
+      <span class="chip chip-direct">direct</span>
+      <span class="chip chip-conf-med">확신 80%</span>
+      <span class="chip chip-cx-med">복잡도 Med</span>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">두 가지 도구를 이 저장소 컨벤션에 맞춰 도입한다. (1) <code>create-skill.sh</code> 스캐폴더 — 새 skill을 올바른 frontmatter·레이아웃으로 태어나게 해 Idea 4·5의 결함 재생산을 원천 차단한다. (2) <code>generate-skills-index</code> — 이미 검증된 <code>generate-index.sh</code>(COMMANDS.md 자동 생성) 머신을 <code>skills/*/SKILL.md</code>로 확장해 SKILLS.md를 생성한다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> <code>generate-index.sh</code>가 이미 frontmatter→COMMANDS.md derive 패턴을 가동 중(검증함). oh-my-skills는 <code>create-skill.sh</code> + <code>generate-skills-index</code>를 요구하나 이 저장소엔 skill 스캐폴딩이 없다.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">스캐폴딩은 "정합 경로 = 최소저항 경로"로 만드는 최고 레버리지 수: 이후 모든 skill이 태어날 때부터 정합이라 Idea 2 validator가 거의 빨간불을 안 낸다. 인덱스 생성은 검증된 파서를 재사용하므로 거의 공짜.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">Idea 3(생성형 SKILL.md)을 채택하면 스캐폴더와 역할이 겹친다 — 두 도구의 경계(생성 vs 수기 시작점)를 먼저 정해야 중복 투자를 피한다.</div></span></div>
+    </div>
+  </article>
+
+  <!-- IDEA 7 -->
+  <article class="idea" id="i7">
+    <div class="idea-rank">Idea 7</div>
+    <h3>한국어 콘텐츠 + description lint — 용어집·em-dash·길이·트리거</h3>
+    <div class="chips">
+      <span class="chip chip-a5">한국어 콘텐츠·문서 품질</span>
+      <span class="chip chip-external">external + direct</span>
+      <span class="chip chip-conf-med">확신 78%</span>
+      <span class="chip chip-cx-med">복잡도 Med</span>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="field-label">설명</span><span class="field-value">기존 <code>lint-frontmatter</code>/<code>validate-markdown</code>를 확장해 공유 규칙 세트를 skill·command 14개에 동일 적용한다: description ≤상한·3인칭/트리거 키워드(Anthropic 스타일), em-dash 금지, 외래어 표기법, 단일 용어집 파일 기준 용어 일관성. 용어집 한 번 편집이 저장소 전체 한국어 표면을 재지배한다.</span></div>
+      <div class="field"><span class="field-label">근거</span><span class="field-value"><code>direct:</code> 저장소에 <code>lint-frontmatter</code>·<code>validate-markdown</code> 존재 + <code>plan/SKILL.md</code> description이 100자 초과·트리거 키워드 부재. <code>external:</code> Anthropic은 description 3인칭+"무엇을/언제"+트리거를 요구; oh-my-skills는 ≤100자·외래어 표기법·용어 일관성을 요구.</span></div>
+      <div class="field"><span class="field-label">의의</span><span class="field-value">description은 skill 자동 트리거 정확도를 좌우하는 유일한 메타데이터다. em-dash는 팀이 싫어하는 대표적 AI 문체 흔적이라 하드 차단 가치가 있다. 용어집은 저자가 바뀌어도 용어가 갈라지지 않게 한다.</span></div>
+      <div class="field"><span class="field-label">단점</span><span class="field-value"><div class="downside">한국어 형태소·외래어 검사를 정규식/접미사 사전으로 근사하면 오탐이 난다. 길이·em-dash 같은 결정적 규칙부터 하드 게이트로 걸고, 외래어/용어는 경고 수준에서 시작하는 게 안전하다.</div></span></div>
+    </div>
+  </article>
+</section>
+
+<section id="rejections">
+  <h2>Rejection Summary</h2>
+  <table class="rej">
+    <thead><tr><th>아이디어</th><th>기각 사유</th></tr></thead>
+    <tbody>
+      <tr><td class="name">각 skill에 README.md + GUIDELINES.md 추가</td><td class="reason">cargo-cult 위험 — <code>docs/</code>가 이미 contract를 담고 있어 8개 보일러플레이트 문서는 중복 유지비. 추가 여부는 Idea 1 stance에서 결정할 사안</td></tr>
+      <tr><td class="name"><code>scripts/tests/run.sh</code> 테스트 하네스 도입</td><td class="reason">해당 없음 — 4개 skill은 <code>scripts/</code>가 없는 산문 전용. 이 규칙은 scripts가 있을 때만 발동. 진짜 검증 갭은 skill-frontmatter(Idea 2)</td></tr>
+      <tr><td class="name">plugin.json에 author/license/homepage 보강</td><td class="reason">실재하나 경미 — "agent skills 작성 규칙" 평가 핵심 밖. 별도 패키징 정리로 처리 가능</td></tr>
+      <tr><td class="name">semver + 스킬별 CHANGELOG validator</td><td class="reason">우선순위 낮음 — skill 4개 규모에서 변경-without-bump 검사는 과함. Idea 6 스캐폴드에 CHANGELOG 템플릿만 얹는 선에서 충분</td></tr>
+      <tr><td class="name">정합성 점수 단방향 ratchet (CI 점수 하락 차단)</td><td class="reason">over-engineered — Idea 1 등급제 + Idea 2 게이트가 같은 목적을 더 단순하게 달성</td></tr>
+      <tr><td class="name">기계가독 contract로 분기 리포트 자동 생성</td><td class="reason">너무 비쌈 — 두 표준을 데이터로 인코딩하는 비용이 저장소 규모에 안 맞음. Idea 1 레지스터(수기)로 충분</td></tr>
+      <tr><td class="name">upstream 룰북 lockfile / 버전 핀 + diff</td><td class="reason">over-engineered — oh-my-skills가 빠르게 진화하는 외부 의존이 아니라 같은 작성자의 사내 저장소. 핀-앤-diff 기계는 과투자</td></tr>
+      <tr><td class="name">oh-my-skills 규칙을 extends-able config로 발행</td><td class="reason">중복 — Idea 1 레지스터의 더 무거운 변형. 단일 팀·소규모에선 레지스터가 더 실용적</td></tr>
+      <tr><td class="name">can-i-use 호환성 매트릭스 (규칙×소비자)</td><td class="reason">중복 — Idea 1 stance 결정에 흡수. 별도 매트릭스는 유지비만 추가</td></tr>
+      <tr><td class="name">lintian식 must/should/may 심각도 사다리</td><td class="reason">중복 — Idea 1 등급제 + Idea 2 validator의 경고/에러 구분으로 충분</td></tr>
+      <tr><td class="name">schema-registry 호환 모드(BACKWARD/FORWARD/FULL)</td><td class="reason">over-engineered framing — Idea 4의 "필드 결정"이 같은 판단을 더 직접적으로 수행</td></tr>
+      <tr><td class="name">CODEOWNERS식 상속 감사 (inherited/overridden/orphaned)</td><td class="reason">중복 — Idea 1 분기 레지스터가 동일 정보를 더 단순히 담음</td></tr>
+      <tr><td class="name"><code>check-frontmatter --fix</code> 자동 수정 모드</td><td class="reason">Idea 2 validator + Idea 6 스캐폴더에 흡수 — 독립 아이디어로는 약함</td></tr>
+      <tr><td class="name"><code>.claude/skills/</code> hook 경로로 재수렴</td><td class="reason">잘못된 방향 — 이 저장소는 이벤트 훅을 안 쓰고 commands/ 모델을 의도 선택. Idea 1에서 <code>divert</code>로 기록할 사안이지 맞출 대상 아님</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer class="composition-signal">
+  Composed <time datetime="2026-06-16T00:00:00">2026-06-16</time> by ce-ideate — 평가 기준 <code>/Users/keaton/Workspace/Work/oh-my-skills</code> (agent-skills 작성 규칙), 평가 대상 obsidian-workflows
+</footer>
+
+</div>
+</body>
+</html>

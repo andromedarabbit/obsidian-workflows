@@ -25,7 +25,7 @@ updated: 2026-06-15T00:00
 
 ### Without mode parameter
 
-파일 기반 신호를 대화 문맥보다 우선합니다.
+파일 기반 신호 > PLAN 대화 문맥 신호 > 이번 턴 지시 신호 순으로 우선합니다.
 
 1. `proposal` 또는 `idea` 인자가 있으면 `mode=draft`.
 2. `.claude/state/obsidian-write-active-handoff.json`이 존재하고 `status: pending`이면 active handoff로 처리합니다.
@@ -35,7 +35,11 @@ updated: 2026-06-15T00:00
 3. `proposal_path` 디렉터리에서 pending/in-progress proposal이 감지되면 `mode=draft`.
 4. 직전 PLAN 대화 문맥이 passive proposal 생성을 가리키면 `mode=draft`.
 5. 직전 PLAN 대화 문맥이 active handoff를 가리키면 `mode=active`.
-6. 그래도 불명확하면 사용자에게 질문합니다.
+6. 이번 턴 지시 자체가 모호하지 않은 직접 작성 명령이면 `mode=active`로 간주합니다:
+   - 명령형으로 즉시 반영을 요청한다 (예: "~작성하자", "~해줘", "~를 오늘 노트에 반영해줘").
+   - 초안/제안/검토를 시사하는 표현이 전혀 없다 (예: "초안으로", "제안만", "검토 후", "draft로", "먼저 보여줘").
+   두 조건 중 하나라도 불확실하면 이 규칙을 적용하지 않고 다음 단계로 넘어갑니다.
+7. 위 규칙으로도 불명확하면 사용자에게 질문합니다 (형식은 아래 "Mode 질문 형식" 절을 참조).
 
 ## Active Handoff from PLAN
 
@@ -69,6 +73,17 @@ When `mode=draft` and `proposal` parameter is not provided:
 4. Route to the appropriate command based on mode.
 5. Pass through all additional parameters (`topic`, `policy`, `file`, `proposal`, `idea`, etc.).
 6. Do not end by telling the user to copy and run another slash command. If routing can be performed in the current session, use the platform skill-invocation primitive.
+
+## Mode 질문 형식
+
+위 자동 추론의 7번이 발동할 때(신호가 정말로 부족한 경우):
+
+- 이 지점은 규칙 6이 이미 "모호하지 않은 직접 지시"를 걸러낸 뒤에만 도달하는 예외 경로다. 이번 버그의 실제 증상이 바로 이 지점에서 구조화된 질문 대신 장문 설명으로 새어나간 것이었다. 그래서 `ow:plan.md`와 동일한 강도로 못박는다:
+- **STOP.** 반드시 `AskUserQuestion` 도구를 fire하여 선택지를 제시합니다. 장문 설명으로 질문을 대신하는 것은 명세 위반입니다.
+- `AskUserQuestion` 스키마가 미리 로드되지 않았으면 `ToolSearch`에 `select:AskUserQuestion`을 먼저 호출해 로드합니다.
+- Question stem: 이번 턴 요청·인자에서 topic을 특정할 수 있으면 `"{topic}을(를) 어떤 모드로 진행할까요?"`를, 특정할 수 없으면 `"이 작업을 어떤 모드로 진행할까요?"`를 쓴다. (규칙 2 handoff 경로는 이 질문 지점에 도달하지 않으므로 topic 출처를 handoff로 한정하지 않는다.)
+- 옵션(라벨은 그대로): `active`(지금 바로 반영) / `draft`(초안 먼저) / `passive`(제안만) / `refine`(문체 다듬기). `route`는 메뉴에 넣지 않음 — `AskUserQuestion`의 "Other"로 흡수.
+- 사용자 선택을 받으면 즉시 해당 mode 경로를 실행합니다.
 
 ## Status/Output Rules
 
