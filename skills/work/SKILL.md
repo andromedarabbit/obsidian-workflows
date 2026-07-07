@@ -3,6 +3,8 @@ name: work
 description: WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다. WORK 트랙 실행이 필요하거나 모드를 판단해야 할 때 사용합니다.
 version: 0.1.0
 context: inline
+mirrors: commands/ow/work.md
+mirror_hash: 099d0a6ca9f70050
 language: korean
 user-invocable: true
 created: 2026-03-02T14:58
@@ -11,7 +13,7 @@ updated: 2026-07-07T00:00
 
 # WORK Track Entry Point
 
-`obsidian-workflows:ow:work`는 WORK 트랙 엔트리포인트입니다. 이 문서는 `commands/ow/work.md`의 mirror입니다. 동작이 갈리면 `commands/ow/work.md`를 canonical source로 보고 이 파일을 맞춥니다.
+> 미러 파일: 동작 정본은 `commands/ow/work.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
 
 ## Mode Routing
 

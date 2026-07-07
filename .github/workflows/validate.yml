@@ -33,6 +33,11 @@ jobs:
           chmod +x tools/check-skill-frontmatter.sh
           bash -x tools/check-skill-frontmatter.sh || { echo "Skill frontmatter validation failed"; exit 1; }
 
+      - name: Run skill mirror sync validation
+        run: |
+          chmod +x tools/check-skill-sync.sh
+          bash -x tools/check-skill-sync.sh || { echo "Skill mirror sync validation failed"; exit 1; }
+
       - name: Upload validation errors
         if: failure()
         uses: actions/upload-artifact@v4

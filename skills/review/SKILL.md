@@ -3,6 +3,8 @@ name: review
 description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다. 작성된 문서의 정책/문체 검증이 필요할 때 사용합니다.
 version: 0.1.0
 context: inline
+mirrors: commands/ow/review.md
+mirror_hash: 9c8298a2d7e70a1f
 language: korean
 user-invocable: true
 created: 2026-03-02T14:58
@@ -10,6 +12,8 @@ updated: 2026-07-07T00:00
 ---
 
 # REVIEW Track Entry Point
+
+> 미러 파일: 동작 정본은 `commands/ow/review.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
 
 `obsidian-workflows:ow:review` executes `obsidian:write.review.policy` as the default quality gate in MVP.
 

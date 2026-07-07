@@ -3,6 +3,8 @@ name: plan
 description: PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
 version: 0.1.0
 context: inline
+mirrors: commands/ow/plan.md
+mirror_hash: 2ff00d0c9cfdcb60
 language: korean
 user-invocable: true
 created: 2026-03-02T01:34
@@ -11,7 +13,7 @@ updated: 2026-07-07T00:00
 
 # PLAN Track Entry Point
 
-`obsidian-workflows:ow:plan`은 PLAN 트랙 엔트리포인트입니다. 이 문서는 `commands/ow/plan.md`의 mirror입니다. 동작이 갈리면 `commands/ow/plan.md`를 canonical source로 보고 이 파일을 맞춥니다.
+> 미러 파일: 동작 정본은 `commands/ow/plan.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
 
 ## Intent Gate
 
