@@ -71,7 +71,12 @@ main() {
 
     local file
     while IFS= read -r -d '' file; do
-        check_one "$file"
+        # `|| true` suppresses `set -e` inside check_one so the `(( CHECKED++ ))`
+        # / `((ERRORS++))` arithmetic (which returns exit 1 when the pre-increment
+        # value is 0) does not abort the loop under bash 5.x. Matches the sibling
+        # pattern in check-skill-frontmatter.sh. ERRORS is a global; the final
+        # `[[ $ERRORS -eq 0 ]]` still governs the exit code.
+        check_one "$file" || true
     done < <(find skills -type f -name "SKILL.md" -print0)
 
     echo ""
