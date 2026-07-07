@@ -38,6 +38,7 @@ This currently runs:
 
 ```bash
 ./tools/check-frontmatter.sh
+./tools/check-skill-frontmatter.sh
 ./tools/validate-command.sh
 ./tools/validate-hook-paths.sh
 ```
@@ -57,6 +58,22 @@ Checks required fields, formats, and duplicate names:
 - Date formats (ISO 8601)
 - Name format (kebab-case)
 - Duplicate command names
+
+#### Skill Frontmatter Validation
+
+Checks required fields, formats, name-to-directory match, and description constraints for skills:
+
+```bash
+./tools/check-skill-frontmatter.sh
+```
+
+**What it checks**:
+- Required fields present (`name`, `description`, `version`, `context`)
+- `name` is kebab-case and matches the skill's directory name
+- `version` is valid semver
+- `context` is `fork` or `inline`
+- `description` length (≤1024 UTF-8 codepoints) and when-to-use trigger phrase (warning only — see [Skill Specification](./skill-specification.md))
+- `agent` is only set when `context: fork` (warning otherwise)
 
 #### Structure Validation
 
@@ -196,7 +213,8 @@ pre-commit run check-command-frontmatter
 - `trailing-whitespace` - Remove trailing whitespace
 - `check-merge-conflict` - Detect merge conflict markers
 - `generate-commands-index` - Update COMMANDS.md
-- `check-command-frontmatter` - Validate frontmatter
+- `check-command-frontmatter` - Validate command frontmatter
+- `check-skill-frontmatter` - Validate skill frontmatter
 - `validate-command` - Validate structure
 - `fix-shell-permissions` - Ensure .sh files are executable
 
@@ -208,10 +226,10 @@ Three workflows validate commands on pull requests:
 
 #### 1. Validate Commands (`.github/workflows/validate.yml`)
 
-Runs on: PR and push to main
+Runs on: PR and push to main (triggers on `commands/**`, `skills/**`, `tools/**`)
 
 Jobs:
-- `validate-frontmatter` - Check frontmatter fields
+- `validate-frontmatter` - Check command and skill frontmatter fields
 - `validate-structure` - Check command structure
 - `validate-hook-paths` - Check hook paths
 
@@ -310,6 +328,36 @@ ERROR: Legacy command root 'commands/obsidian-workflows/' detected at commands/o
 - `commands/compound.md`
 
 and remove `commands/obsidian-workflows/*.md`.
+
+### Skill Name Does Not Match Directory
+
+**Error**:
+```
+ERROR: skills/plan/SKILL.md - name 'workflow-plan-reference' does not match directory name 'plan'
+```
+
+**Fix**: Set `name` to the directory name:
+```yaml
+name: plan
+```
+
+### Skill Description Too Long
+
+**Error**:
+```
+ERROR: skills/plan/SKILL.md - description is 1200 chars (exceeds 1024 limit)
+```
+
+**Fix**: Shorten the description to 1024 UTF-8 codepoints or fewer.
+
+### Skill context/agent Mismatch
+
+**Warning**:
+```
+WARNING: skills/plan/SKILL.md - context is 'inline' but 'agent' is set (agent is only meaningful for 'fork'; remove it)
+```
+
+**Fix**: Remove `agent` when `context: inline`, or set `agent` when `context: fork`. See [Skill Specification](./skill-specification.md).
 
 ### Path Safety Violation
 
@@ -438,5 +486,6 @@ node -e "const yaml = require('js-yaml'); console.log(yaml.load(require('fs').re
 ## References
 
 - [Command Specification](./command-specification.md)
+- [Skill Specification](./skill-specification.md)
 - [Frontmatter Reference](./frontmatter-reference.md)
 - [Hook Patterns](./hook-patterns.md)

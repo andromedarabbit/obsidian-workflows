@@ -2,6 +2,8 @@
 
 Complete reference for command frontmatter fields, validation rules, and common patterns.
 
+> This document covers **command** frontmatter. For **skill** frontmatter, see [Skill Specification](./skill-specification.md).
+
 ## Required Fields
 
 ### name

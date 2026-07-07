@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'commands/**'
+      - 'skills/**'
       - 'tools/**'
       - '.github/workflows/validate.yml'
   push:
@@ -11,6 +12,7 @@ on:
       - main
     paths:
       - 'commands/**'
+      - 'skills/**'
       - 'tools/**'
 
 jobs:
@@ -26,6 +28,11 @@ jobs:
           chmod +x tools/check-frontmatter.sh tools/validate-fast.sh
           bash -x tools/check-frontmatter.sh || { echo "Frontmatter validation failed"; exit 1; }
 
+      - name: Run skill frontmatter validation
+        run: |
+          chmod +x tools/check-skill-frontmatter.sh
+          bash -x tools/check-skill-frontmatter.sh || { echo "Skill frontmatter validation failed"; exit 1; }
+
       - name: Upload validation errors
         if: failure()
         uses: actions/upload-artifact@v4
@@ -33,6 +40,7 @@ jobs:
           name: validation-errors-frontmatter
           path: |
             tools/check-frontmatter.sh
+            tools/check-skill-frontmatter.sh
           retention-days: 7
 
   validate-structure:

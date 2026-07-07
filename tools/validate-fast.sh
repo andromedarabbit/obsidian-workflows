@@ -5,5 +5,6 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 bash ./tools/check-frontmatter.sh
+bash ./tools/check-skill-frontmatter.sh
 bash ./tools/validate-command.sh
 bash ./tools/validate-hook-paths.sh

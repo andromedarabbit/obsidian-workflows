@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help validate-fast validate-ci validate-commands validate-frontmatter validate-structure validate-hook-paths validate-markdown lint-frontmatter validate-generated validate-workflows install-hooks
+.PHONY: help validate-fast validate-ci validate-commands validate-frontmatter validate-skill-frontmatter validate-structure validate-hook-paths validate-markdown lint-frontmatter validate-generated validate-workflows install-hooks
 
 help: ## Show available validation targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "} {printf "%-24s %s\n", $$1, $$2}'
@@ -17,6 +17,9 @@ validate-commands: ## Run command-focused Node validators
 
 validate-frontmatter: ## Run shell frontmatter validation
 	bash ./tools/check-frontmatter.sh
+
+validate-skill-frontmatter: ## Run shell skill frontmatter validation
+	bash ./tools/check-skill-frontmatter.sh
 
 validate-structure: ## Run command structure validation
 	bash ./tools/validate-command.sh

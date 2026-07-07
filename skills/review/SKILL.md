@@ -1,10 +1,12 @@
 ---
-name: workflow-review-reference
-description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
-user-invocable: true
+name: review
+description: REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다. 작성된 문서의 정책/문체 검증이 필요할 때 사용합니다.
 version: 0.1.0
+context: inline
+language: korean
+user-invocable: true
 created: 2026-03-02T14:58
-updated: 2026-05-22T00:00
+updated: 2026-07-07T00:00
 ---
 
 # REVIEW Track Entry Point

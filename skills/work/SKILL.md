@@ -1,10 +1,12 @@
 ---
-name: workflow-work-reference
-description: WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
-user-invocable: true
+name: work
+description: WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다. WORK 트랙 실행이 필요하거나 모드를 판단해야 할 때 사용합니다.
 version: 0.1.0
+context: inline
+language: korean
+user-invocable: true
 created: 2026-03-02T14:58
-updated: 2026-06-15T00:00
+updated: 2026-07-07T00:00
 ---
 
 # WORK Track Entry Point

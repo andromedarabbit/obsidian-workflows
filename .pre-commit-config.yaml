@@ -32,6 +32,13 @@ repos:
         pass_filenames: false
         files: '^commands/.*\.md$'
 
+      - id: check-skill-frontmatter
+        name: Check skill frontmatter
+        entry: tools/check-skill-frontmatter.sh
+        language: script
+        pass_filenames: false
+        files: '^skills/.*/SKILL\.md$'
+
       - id: validate-command
         name: Validate command structure
         entry: tools/validate-command.sh

@@ -52,6 +52,28 @@ obsidian-workflows:ow:work
 - `cmd` - Too abbreviated
 - `do-stuff` - Not descriptive
 
+## Skill Names
+
+### Format
+
+Skill names MUST follow kebab-case with no namespace prefix, and MUST equal the skill's directory name:
+
+```
+^[a-z0-9-]+$
+```
+
+### Examples
+
+✅ **Good**:
+- `skills/plan/SKILL.md` with `name: plan`
+- `skills/work/SKILL.md` with `name: work`
+
+❌ **Bad**:
+- `skills/plan/SKILL.md` with `name: workflow-plan-reference` — does not match the directory name
+- `skills/Plan/SKILL.md` — capital letters not allowed in the directory name
+
+See [Skill Specification](./skill-specification.md) for the full frontmatter contract.
+
 ## File Names
 
 ### Command Files
@@ -250,9 +272,10 @@ Standard directory naming:
 
 ```
 .claude/
-├── commands/          # Command definitions
-├── skills/            # Skills (if applicable)
-└── state/             # Runtime state
+└── state/             # Runtime state (not committed)
+
+commands/              # Command definitions (canonical, top-level)
+skills/                # Skill definitions (canonical, top-level)
 
 .github/
 └── workflows/         # GitHub Actions
@@ -269,6 +292,7 @@ tests/                 # Test files
 | Context | Convention | Example |
 |---------|-----------|---------|
 | Command names | kebab-case | `work`, `obsidian:write.active` |
+| Skill names | kebab-case, == directory name | `plan`, `work` |
 | File names | kebab-case | `command-specification.md` |
 | Directory names | kebab-case | `obsidian-workflows/` |
 | Script names | kebab-case | `check-frontmatter.sh` |

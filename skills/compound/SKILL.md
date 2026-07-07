@@ -1,10 +1,12 @@
 ---
-name: workflow-compound-reference
-description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
-user-invocable: true
+name: compound
+description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다. 완성된 문서에서 학습 포인트를 축적해야 할 때 사용합니다.
 version: 0.1.0
+context: inline
+language: korean
+user-invocable: true
 created: 2026-03-02T14:58
-updated: 2026-05-22T00:00
+updated: 2026-07-07T00:00
 ---
 
 # COMPOUND Track Entry Point

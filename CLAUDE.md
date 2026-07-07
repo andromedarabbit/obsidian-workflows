@@ -18,7 +18,7 @@ This repository contains the **plugin core** for Obsidian writing workflows.
 ## Structure
 
 - `commands/`: command definitions (canonical source)
-- `.claude/skills/`: skills and entrypoint guidance
+- `skills/`: skill definitions (top-level, canonical source; see `docs/skill-specification.md`)
 - `.claude-plugin/`: plugin metadata
 - `config/`: example configuration templates
 - `assets/`: template assets (SOUL/policy)

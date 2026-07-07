@@ -35,9 +35,10 @@ Run validators locally before committing to ensure your changes meet quality sta
 ### Shell Validators
 
 ```bash
-./tools/check-frontmatter.sh      # Check frontmatter fields
-./tools/validate-command.sh       # Validate command structure
-./tools/validate-hook-paths.sh    # Verify hook paths
+./tools/check-frontmatter.sh          # Check command frontmatter fields
+./tools/check-skill-frontmatter.sh    # Check skill frontmatter fields
+./tools/validate-command.sh           # Validate command structure
+./tools/validate-hook-paths.sh        # Verify hook paths
 ```
 
 ### Node.js Validators
@@ -69,6 +70,15 @@ This will:
 3. Generate command file with proper frontmatter
 4. Set correct permissions
 
+## Creating New Skills
+
+There is no scaffolder for skills yet (skill count is currently small enough that this is not worth automating — revisit if the count grows past roughly 8-10). To add a new skill:
+
+1. Copy an existing skill directory, e.g. `skills/plan/` to `skills/<new-name>/`
+2. Rename the file's directory to `<new-name>` and update the frontmatter `name` field to match it exactly
+3. Update `description`, `version`, `context`, and other fields per [Skill Specification](docs/skill-specification.md)
+4. Run `bash tools/check-skill-frontmatter.sh` to validate
+
 ## Pre-commit Hooks
 
 Pre-commit hooks automatically run validation before commits:
@@ -76,6 +86,7 @@ Pre-commit hooks automatically run validation before commits:
 - Check YAML syntax
 - Fix trailing whitespace
 - Validate command frontmatter
+- Validate skill frontmatter
 - Validate command structure
 - Generate command index
 - Fix shell script permissions
@@ -101,7 +112,7 @@ This generates `COMMANDS.md` from command frontmatter.
 GitHub Actions workflows validate all changes on PR and push to main:
 
 ### Validate Commands Workflow
-- Validates frontmatter fields
+- Validates command and skill frontmatter fields
 - Checks command structure
 - Verifies hook paths
 

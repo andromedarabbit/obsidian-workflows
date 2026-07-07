@@ -6,9 +6,8 @@ This document describes the organization and purpose of directories and files in
 
 ```text
 obsidian-workflows/
-├── .claude/                    # Claude Code integration
-│   ├── commands/              # Command definitions (canonical source)
-│   ├── skills/                # Skill definitions and entrypoint guidance
+├── .claude/                    # Claude Code local/runtime files
+│   ├── settings.local.json    # Local settings (not committed)
 │   └── state/                 # Runtime state (not committed)
 ├── .claude-plugin/            # Plugin metadata
 ├── .github/                   # GitHub configuration
@@ -16,6 +15,7 @@ obsidian-workflows/
 ├── assets/                    # Template assets
 │   ├── SOUL.md               # Writing style template
 │   └── policy.md             # Channel-specific policies
+├── commands/                   # Command definitions (canonical source)
 ├── config/                    # Configuration templates
 │   └── writing-config.example.md
 ├── docs/                      # Documentation
@@ -24,9 +24,12 @@ obsidian-workflows/
 │   ├── hook-patterns.md
 │   ├── naming-conventions.md
 │   ├── repository-structure.md (this file)
+│   ├── skill-specification.md
 │   └── validation-guide.md
+├── skills/                     # Skill definitions (canonical source)
 ├── tools/                     # Validation and utility scripts
 │   ├── check-frontmatter.sh
+│   ├── check-skill-frontmatter.sh
 │   ├── validate-command.sh
 │   ├── validate-hook-paths.sh
 │   └── generate-index.sh
@@ -41,11 +44,16 @@ obsidian-workflows/
 ## Directory Purposes
 
 ### `.claude/`
-Claude Code integration directory containing commands, skills, and runtime state.
+Claude Code local/runtime files. Commands and skills live at the top-level `commands/` and `skills/` directories, not under `.claude/` — see those entries below.
 
-- **`commands/`**: Canonical source for command definitions. Each command is a markdown file with frontmatter and implementation details.
-- **`skills/`**: Skill definitions that provide higher-level workflow guidance to Claude.
+- **`settings.local.json`**: Local Claude Code settings (not committed to git).
 - **`state/`**: Runtime state directory (not committed to git). Used for temporary workflow state.
+
+### `commands/`
+Canonical source for command definitions. Each command is a markdown file with frontmatter and implementation details. See [Command Specification](./command-specification.md).
+
+### `skills/`
+Canonical source for skill definitions. Each skill is a `SKILL.md` file under `skills/<name>/`. See [Skill Specification](./skill-specification.md).
 
 ### `.claude-plugin/`
 Plugin metadata for Claude Code plugin system. Contains plugin manifest and configuration.
@@ -68,15 +76,17 @@ Configuration file templates:
 ### `docs/`
 Comprehensive documentation for developers and contributors:
 - **`command-specification.md`**: Command contract definition
-- **`frontmatter-reference.md`**: Field specifications and validation rules
+- **`frontmatter-reference.md`**: Field specifications and validation rules (commands)
+- **`skill-specification.md`**: Skill contract definition
 - **`hook-patterns.md`**: Best practices for hook scripts
-- **`naming-conventions.md`**: Naming standards for commands, files, and commits
+- **`naming-conventions.md`**: Naming standards for commands, skills, files, and commits
 - **`repository-structure.md`**: This file
 - **`validation-guide.md`**: How to run validators and fix common issues
 
 ### `tools/`
 Validation and utility scripts:
 - **`check-frontmatter.sh`**: Validates frontmatter fields in commands
+- **`check-skill-frontmatter.sh`**: Validates frontmatter fields in skills
 - **`validate-command.sh`**: Validates command structure and contracts
 - **`validate-hook-paths.sh`**: Verifies hook paths follow safety rules
 - **`generate-index.sh`**: Generates COMMANDS.md from command frontmatter
@@ -88,7 +98,7 @@ Code generation templates:
 ## Path Contracts
 
 ### Command Discovery
-Commands are discovered from the canonical source: `.claude/commands/`
+Commands are discovered from the canonical source: `commands/`
 
 Each command file must:
 - Be a markdown file with valid frontmatter
@@ -119,14 +129,14 @@ Commands do not rely on `~/.claude/*` for correctness. All required state is pas
 ## File Organization Conventions
 
 ### Command Files
-- Location: `.claude/commands/`
+- Location: `commands/`
 - Format: Markdown with YAML frontmatter
 - Naming: `category:action.md` (e.g., `obsidian:write.scan.md`)
 
 ### Skill Files
-- Location: `.claude/skills/`
-- Format: Markdown with skill definitions
-- Naming: Descriptive names (e.g., `plan.md`, `work.md`)
+- Location: `skills/<name>/SKILL.md`
+- Format: Markdown with YAML frontmatter (see [Skill Specification](./skill-specification.md))
+- Naming: `<name>` MUST equal the skill's directory name (e.g., `skills/plan/SKILL.md` has `name: plan`)
 
 ### Documentation Files
 - Location: `docs/`
