@@ -68,12 +68,13 @@ Checks required fields, formats, name-to-directory match, and description constr
 ```
 
 **What it checks**:
+- Frontmatter is present and properly closed (a missing closing `---` is an error)
 - Required fields present (`name`, `description`, `version`, `context`)
 - `name` is kebab-case and matches the skill's directory name
 - `version` is valid semver
 - `context` is `fork` or `inline`
-- `description` length (≤1024 UTF-8 codepoints) and when-to-use trigger phrase (warning only — see [Skill Specification](./skill-specification.md))
-- `agent` is only set when `context: fork` (warning otherwise)
+- `description` length (≤1024 UTF-8 codepoints, correctly measuring folded/literal YAML block scalars) and when-to-use trigger phrase (warning only — see [Skill Specification](./skill-specification.md))
+- `agent` is only set when `context: fork`, and its value is one of `general-purpose`, `Explore`, or `Plan` (warning otherwise)
 
 #### Structure Validation
 
@@ -329,6 +330,15 @@ ERROR: Legacy command root 'commands/obsidian-workflows/' detected at commands/o
 
 and remove `commands/obsidian-workflows/*.md`.
 
+### Unterminated Skill Frontmatter
+
+**Error**:
+```
+ERROR: skills/plan/SKILL.md - Unterminated frontmatter (missing closing ---)
+```
+
+**Fix**: Add the closing `---` delimiter after the YAML block. Without it, the validator cannot tell where frontmatter ends and the document body begins.
+
 ### Skill Name Does Not Match Directory
 
 **Error**:
@@ -355,6 +365,11 @@ ERROR: skills/plan/SKILL.md - description is 1200 chars (exceeds 1024 limit)
 **Warning**:
 ```
 WARNING: skills/plan/SKILL.md - context is 'inline' but 'agent' is set (agent is only meaningful for 'fork'; remove it)
+```
+
+**Fix**: Also applies when `agent` is set but its value isn't one of `general-purpose`, `Explore`, or `Plan`:
+```
+WARNING: skills/plan/SKILL.md - agent 'nonsense' is not one of general-purpose|Explore|Plan
 ```
 
 **Fix**: Remove `agent` when `context: inline`, or set `agent` when `context: fork`. See [Skill Specification](./skill-specification.md).

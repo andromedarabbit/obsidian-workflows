@@ -12,11 +12,9 @@ else
     USE_TEMP_FILES=0
 fi
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/frontmatter.sh
+source "$SCRIPT_DIR/lib/frontmatter.sh"
 
 # Counters
 ERRORS=0
@@ -25,21 +23,6 @@ CHECKED=0
 
 # Required fields
 REQUIRED_FIELDS=("name" "description" "argument-hint" "allowed-tools" "created" "updated")
-
-# Function to extract frontmatter field
-extract_field() {
-    local file="$1"
-    local field="$2"
-
-    # Extract YAML frontmatter between --- markers
-    awk -v field="$field" '
-        /^---$/ { if (++count == 2) exit }
-        count == 1 && $0 ~ "^" field ":" {
-            sub("^" field ": *", "")
-            print
-        }
-    ' "$file"
-}
 
 # Function to validate ISO 8601 date format
 validate_date() {
@@ -72,6 +55,14 @@ check_command() {
     first_line=$(head -n 1 "$file" 2>/dev/null || true)
     if [[ "$first_line" != "---" ]]; then
         echo -e "${RED}ERROR${NC}: $file - Missing frontmatter"
+        ((ERRORS++))
+        return 1
+    fi
+
+    local delimiter_count
+    delimiter_count=$(count_frontmatter_delimiters "$file")
+    if [[ "$delimiter_count" -lt 2 ]]; then
+        echo -e "${RED}ERROR${NC}: $file - Unterminated frontmatter (missing closing ---)"
         ((ERRORS++))
         return 1
     fi

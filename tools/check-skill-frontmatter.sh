@@ -6,11 +6,9 @@
 
 set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/frontmatter.sh
+source "$SCRIPT_DIR/lib/frontmatter.sh"
 
 # Counters
 ERRORS=0
@@ -20,19 +18,8 @@ CHECKED=0
 # Required fields (ERROR if missing)
 REQUIRED_FIELDS=("name" "description" "version" "context")
 
-# Function to extract frontmatter field
-extract_field() {
-    local file="$1"
-    local field="$2"
-
-    awk -v field="$field" '
-        /^---$/ { if (++count == 2) exit }
-        count == 1 && $0 ~ "^" field ":" {
-            sub("^" field ": *", "")
-            print
-        }
-    ' "$file"
-}
+# Valid values for the conditionally required `agent` field
+VALID_AGENTS=("general-purpose" "Explore" "Plan")
 
 # Function to validate kebab-case, no namespace prefix (skill names are plain,
 # unlike command names which allow ':'/'.' namespace separators)
@@ -65,6 +52,14 @@ check_skill() {
     first_line=$(head -n 1 "$file" 2>/dev/null || true)
     if [[ "$first_line" != "---" ]]; then
         echo -e "${RED}ERROR${NC}: $file - Missing frontmatter"
+        ((ERRORS++))
+        return 1
+    fi
+
+    local delimiter_count
+    delimiter_count=$(count_frontmatter_delimiters "$file")
+    if [[ "$delimiter_count" -lt 2 ]]; then
+        echo -e "${RED}ERROR${NC}: $file - Unterminated frontmatter (missing closing ---)"
         ((ERRORS++))
         return 1
     fi
@@ -112,9 +107,15 @@ check_skill() {
                 fi
                 ;;
             description)
+                # Use the block-scalar-aware extractor so a folded/literal
+                # YAML description (`description: >` etc.) is measured by its
+                # actual joined content, not just the scalar indicator.
+                local desc_value
+                desc_value=$(extract_description "$file")
+
                 # Length: UTF-8 codepoint count, official cap 1024
                 local desc_length
-                desc_length=$(printf '%s' "$value" | LC_ALL=C tr -d '\200-\277' | LC_ALL=C wc -c | tr -d ' ')
+                desc_length=$(printf '%s' "$desc_value" | LC_ALL=C tr -d '\200-\277' | LC_ALL=C wc -c | tr -d ' ')
                 if [[ "$desc_length" -gt 1024 ]]; then
                     echo -e "${RED}ERROR${NC}: $file - description is ${desc_length} chars (exceeds 1024 limit)"
                     ((ERRORS++))
@@ -123,7 +124,7 @@ check_skill() {
 
                 # When-to-use trigger phrase: WARNING only (see docs/skill-specification.md
                 # "Diverged" section for why this is not an ERROR in this repository)
-                if ! printf '%s' "$value" | grep -qiE "할 때|일 때|요청 시|트리거|when.to.use|use when|trigger"; then
+                if ! printf '%s' "$desc_value" | grep -qiE "할 때|일 때|요청 시|트리거|when.to.use|use when|trigger"; then
                     echo -e "${YELLOW}WARNING${NC}: $file - description has no when-to-use trigger phrase"
                     ((WARNINGS++))
                 fi
@@ -142,6 +143,17 @@ check_skill() {
     elif [[ "$context_value" == "inline" && -n "$agent_value" ]]; then
         echo -e "${YELLOW}WARNING${NC}: $file - context is 'inline' but 'agent' is set (agent is only meaningful for 'fork'; remove it)"
         ((WARNINGS++))
+    fi
+
+    if [[ -n "$agent_value" ]]; then
+        local agent_valid=0
+        for valid in "${VALID_AGENTS[@]}"; do
+            [[ "$agent_value" == "$valid" ]] && agent_valid=1 && break
+        done
+        if [[ "$agent_valid" -eq 0 ]]; then
+            echo -e "${YELLOW}WARNING${NC}: $file - agent '$agent_value' is not one of general-purpose|Explore|Plan"
+            ((WARNINGS++))
+        fi
     fi
 
     return $has_error
