@@ -15,4 +15,5 @@ COMMANDS.md.tmp
 .claude/settings.local.json
 .claude/state/*.json
 !.claude/state/*.json.example
+.claude/skills/
 obsidian-workflows-eval
