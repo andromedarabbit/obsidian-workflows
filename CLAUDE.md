@@ -37,9 +37,10 @@ Run validators before committing:
 
 ```bash
 # Shell validators
-./tools/check-frontmatter.sh      # Validate frontmatter fields
-./tools/validate-command.sh       # Validate command structure
-./tools/validate-hook-paths.sh    # Verify hook paths
+./tools/check-frontmatter.sh          # Validate command frontmatter fields
+./tools/check-skill-frontmatter.sh    # Validate skill frontmatter fields
+./tools/validate-command.sh           # Validate command structure
+./tools/validate-hook-paths.sh        # Verify hook paths
 
 # Node.js validators
 npm run validate:all              # Run all validations

@@ -68,6 +68,10 @@ A skill directory contains only `SKILL.md`. `README.md`, `GUIDELINES.md`, and `s
 #### `user-invocable` (boolean)
 - **Purpose**: Repository-specific extension field (not part of the oh-my-skills schema). Documents that this skill is meant to be invoked directly by the user (typically mirroring a slash command) rather than discovered autonomously
 
+#### `created` / `updated` (string)
+- **Format**: ISO 8601 date-time (matches the command frontmatter convention in [Frontmatter Reference](./frontmatter-reference.md))
+- **Purpose**: Track when the skill was authored and when it was last modified. Not currently validated by `tools/check-skill-frontmatter.sh` (unlike the command validator, which enforces both fields as required and format-checked)
+
 ## Relationship to oh-my-skills House Rules
 
 The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a stricter house layer on top of the public Agent Skills spec. obsidian-workflows adopts most of it, but diverges where the house rule assumes a scale or execution model this repository doesn't have.

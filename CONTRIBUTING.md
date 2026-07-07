@@ -113,6 +113,7 @@ GitHub Actions workflows validate all changes on PR and push to main:
 
 ### Validate Commands Workflow
 - Validates command and skill frontmatter fields
+- Checks for duplicate command/skill names and command-skill collisions
 - Checks command structure
 - Verifies hook paths
 

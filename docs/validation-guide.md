@@ -231,6 +231,7 @@ Runs on: PR and push to main (triggers on `commands/**`, `skills/**`, `tools/**`
 
 Jobs:
 - `validate-frontmatter` - Check command and skill frontmatter fields
+- `validate-no-duplicates` - Check duplicate command/skill names and command-skill collisions via `npm run validate:no-duplicates`
 - `validate-structure` - Check command structure
 - `validate-hook-paths` - Check hook paths
 
