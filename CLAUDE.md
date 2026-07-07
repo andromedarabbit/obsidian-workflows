@@ -23,6 +23,7 @@ This repository contains the **plugin core** for Obsidian writing workflows.
 - `config/`: example configuration templates
 - `assets/`: template assets (SOUL/policy)
 - `docs/`: migration/contracts/runtime documentation
+- `docs/solutions/`: documented solutions to past problems (bugs, best practices, workflow conventions), organized by category with YAML frontmatter (`module`, `tags`, `problem_type`); relevant when implementing or debugging in documented areas
 - `tools/`: validation scripts
 - `.github/workflows/`: CI/CD automation
 
