@@ -72,6 +72,7 @@ See [Validation Guide](docs/validation-guide.md) for details.
 
 - [Command Specification](docs/command-specification.md) - Command contract definition
 - [Frontmatter Reference](docs/frontmatter-reference.md) - Field specifications
+- [Policy Specification](docs/policy-specification.md) - Writing policy schema (SSOT)
 - [Hook Patterns](docs/hook-patterns.md) - Best practices for hooks
 - [Naming Conventions](docs/naming-conventions.md) - Naming standards
 - [Validation Guide](docs/validation-guide.md) - Validation and troubleshooting

@@ -23,6 +23,7 @@ obsidian-workflows/
 │   ├── frontmatter-reference.md
 │   ├── hook-patterns.md
 │   ├── naming-conventions.md
+│   ├── policy-specification.md
 │   ├── repository-structure.md (this file)
 │   ├── skill-specification.md
 │   └── validation-guide.md
@@ -80,6 +81,7 @@ Comprehensive documentation for developers and contributors:
 - **`skill-specification.md`**: Skill contract definition
 - **`hook-patterns.md`**: Best practices for hook scripts
 - **`naming-conventions.md`**: Naming standards for commands, skills, files, and commits
+- **`policy-specification.md`**: Writing policy schema (frontmatter fields, body structure, config registration) — the SSOT for policies
 - **`repository-structure.md`**: This file
 - **`validation-guide.md`**: How to run validators and fix common issues
 

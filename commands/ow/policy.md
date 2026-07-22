@@ -4,12 +4,14 @@ description: 새 writing policy를 대화형으로 생성하고 확인 후 writi
 argument-hint: "[policy=<name>] [output_type=<type>] [--register] [--overwrite]"
 allowed-tools: Read, Glob, Grep, Write, Edit, AskUserQuestion
 created: 2026-07-22T00:00
-updated: 2026-07-22T00:00
+updated: 2026-07-22T01:00
 ---
 
 `obsidian-workflows:ow:policy`는 대화형 문답으로 새 writing policy 파일을 생성하고, 사용자 확인을 받아 vault의 `writing-config.md`에 등록합니다.
 
 생성된 policy는 `obsidian:write.review.policy` 게이트가 그대로 검증할 수 있는 형태여야 합니다. 즉 이 커맨드가 쓰는 frontmatter 필드는 review.policy가 읽는 필드(`required_sections`, `target_length`, `cta_required`, `policy_type`)와 정합해야 합니다.
+
+policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하는 frontmatter/본문 구조는 이 명세를 따릅니다.
 
 ## 보안/권한 원칙
 

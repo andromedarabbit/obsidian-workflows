@@ -4,11 +4,11 @@ description: 새 writing policy를 대화형으로 생성하고 확인 후 writi
 version: 0.1.0
 context: inline
 mirrors: commands/ow/policy.md
-mirror_hash: bc08fd4a7c787f72
+mirror_hash: ab6f577c00c353e5
 language: korean
 user-invocable: true
 created: 2026-07-22T00:00
-updated: 2026-07-22T00:00
+updated: 2026-07-22T01:00
 ---
 
 # POLICY Track Entry Point
@@ -16,6 +16,8 @@ updated: 2026-07-22T00:00
 > 미러 파일: 동작 정본은 `commands/ow/policy.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
 
 `obsidian-workflows:ow:policy`는 대화형 문답으로 새 writing policy 파일을 생성하고, 사용자 확인을 받아 vault의 `writing-config.md`에 등록합니다. 생성된 policy는 `obsidian:write.review.policy` 게이트가 그대로 검증할 수 있는 형태여야 합니다.
+
+policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하는 frontmatter/본문 구조는 이 명세를 따릅니다.
 
 ## 보안/권한 원칙
 
