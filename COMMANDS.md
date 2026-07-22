@@ -23,6 +23,14 @@ PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 
 
 **Source:** [`commands/ow/plan.md`](commands/ow/plan.md)
 
+#### `/ow:policy`
+
+새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다.
+
+**Usage:** `"[policy=<name>] [output_type=<type>] [--register] [--overwrite]"`
+
+**Source:** [`commands/ow/policy.md`](commands/ow/policy.md)
+
 #### `/ow:review`
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
