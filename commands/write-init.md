@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.init
+name: write-init
 description: 글쓰기 워크플로우 초기화. 설정/정책/SOUL 템플릿 존재 여부를 점검하고 생성합니다.
 argument-hint: "[--force]"
 allowed-tools: Read, Write, Edit, Glob, Grep

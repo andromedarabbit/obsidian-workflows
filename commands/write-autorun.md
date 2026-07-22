@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.autorun
+name: write-autorun
 description: 일일 자동 제안 실행. 비대화형(passive) 자동 실행 전용 오케스트레이터입니다.
 argument-hint: "[--trigger session-start]"
 allowed-tools: Read, Write, Edit, Glob, Grep
@@ -23,8 +23,8 @@ updated: 2026-03-01T23:40
 실행 순서:
 1. `writing-config.md` 로드
 2. 기준 시점 계산 (`final_path` 최신 파일 또는 window fallback)
-3. `obsidian:write.scan` 수행
-4. `obsidian:write.propose` 수행
+3. `write-scan` 수행
+4. `write-propose` 수행
 5. 상태 파일 업데이트
 
 실패 정책:
@@ -34,5 +34,5 @@ updated: 2026-03-01T23:40
 - 조용한 fallback 없이 fail-fast로 동작합니다.
 
 역할 경계:
-- `obsidian-workflows:ow:plan`은 의도 확인형(질문 가능) 진입점입니다.
-- `obsidian:write.autorun`은 훅 기반 자동 실행에서만 사용하는 deterministic passive 오케스트레이터입니다.
+- `obsidian-workflows:ow-plan`은 의도 확인형(질문 가능) 진입점입니다.
+- `write-autorun`은 훅 기반 자동 실행에서만 사용하는 deterministic passive 오케스트레이터입니다.

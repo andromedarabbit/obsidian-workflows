@@ -44,7 +44,7 @@ repos:
         entry: tools/check-skill-sync.sh
         language: script
         pass_filenames: false
-        files: '^(skills/.*/SKILL\.md|commands/ow/.*\.md)$'
+        files: '^(skills/.*/SKILL\.md|commands/.*\.md)$'
 
       - id: validate-command
         name: Validate command structure

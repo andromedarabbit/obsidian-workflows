@@ -2,7 +2,7 @@
 
 ## Objective
 
-Verify `/obsidian-workflows:ow:work mode=draft` auto-detects proposal by status priority.
+Verify `/obsidian-workflows:ow-work mode=draft` auto-detects proposal by status priority.
 
 ## Steps
 
@@ -10,7 +10,7 @@ Verify `/obsidian-workflows:ow:work mode=draft` auto-detects proposal by status 
    - `in-progress`
    - `pending`
    - no status
-2. Run `/obsidian-workflows:ow:work mode=draft` without explicit proposal.
+2. Run `/obsidian-workflows:ow-work mode=draft` without explicit proposal.
 3. Observe selected proposal.
 
 ## Expected

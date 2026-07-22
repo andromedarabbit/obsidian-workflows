@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const commandPath = path.join(root, 'commands/ow/plan.md');
+const commandPath = path.join(root, 'commands/ow-plan.md');
 const fixturePath = path.join(root, 'tests/migration/fixtures/plan-passive-default.json');
 
 const commandText = fs.readFileSync(commandPath, 'utf8');
@@ -116,7 +116,7 @@ function evaluateScenario(scenario) {
     result.requiresAskUserQuestionHandoff = sections.branchRules.includes('Active Handoff Menu')
       && sections.branchRules.includes('AskUserQuestion')
       && sections.branchRules.includes('바로 실행')
-      && sections.branchRules.includes('obsidian-workflows:ow:work');
+      && sections.branchRules.includes('obsidian-workflows:ow-work');
   }
 
   if (result.branch === 'passive') {
@@ -125,7 +125,7 @@ function evaluateScenario(scenario) {
     result.requiresAskUserQuestionHandoff = sections.branchRules.includes('Passive Handoff Menu')
       && sections.branchRules.includes('AskUserQuestion')
       && sections.branchRules.includes('Idea 선택해서 draft')
-      && sections.branchRules.includes('obsidian-workflows:ow:work');
+      && sections.branchRules.includes('obsidian-workflows:ow-work');
   }
 
   if (result.branch !== expected.branch) {

@@ -37,9 +37,9 @@ function validateCommand(filePath) {
       errors++;
     }
 
-    // Validate name format (kebab-case with optional namespace)
-    if (frontmatter.name && !/^[a-z0-9]+([:-][a-z0-9]+)*(\.[a-z0-9]+)*$/.test(frontmatter.name)) {
-      console.warn(`WARNING: ${filePath} - name '${frontmatter.name}' should be kebab-case`);
+    // Validate name format (flat kebab-case, dash-separated, no ':' or '.')
+    if (frontmatter.name && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(frontmatter.name)) {
+      console.warn(`WARNING: ${filePath} - name '${frontmatter.name}' should be flat kebab-case (dash-separated, no ':' or '.')`);
       warnings++;
     }
 

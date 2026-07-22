@@ -5,7 +5,7 @@
 Provide explicit transition from legacy invocation paths to canonical workflow entrypoints.
 
 > Note: the legacy aliases listed below are documented on purpose for migration tracking. They are not the current canonical commands.
-> Current canonical entrypoints live under the `ow:` namespace such as `/obsidian-workflows:ow:plan`, `/obsidian-workflows:ow:work`, `/obsidian-workflows:ow:review`, `/obsidian-workflows:ow:compound`.
+> Current canonical entrypoints live under the `ow-` prefix such as `/obsidian-workflows:ow-plan`, `/obsidian-workflows:ow-work`, `/obsidian-workflows:ow-review`, `/obsidian-workflows:ow-compound`.
 
 ## Mapping
 

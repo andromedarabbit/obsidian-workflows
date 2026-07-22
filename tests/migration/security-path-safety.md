@@ -12,11 +12,11 @@ Ensure all file/path input entrypoints fail fast for unsafe inputs.
 
 ## Entry Commands
 
-- `/obsidian:write.scan`
-- `/obsidian:write.draft`
-- `/obsidian:write.refine`
-- `/obsidian:write.route`
-- `/obsidian-workflows:ow:review`
+- `/write-scan`
+- `/write-draft`
+- `/write-refine`
+- `/write-route`
+- `/obsidian-workflows:ow-review`
 
 ## Expected
 

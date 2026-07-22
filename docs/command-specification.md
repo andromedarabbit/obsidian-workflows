@@ -12,15 +12,20 @@ Commands are stored in `commands/` with the following structure:
 
 ```
 commands/
-├── obsidian:write.active.md
-├── obsidian:write.draft.md
-├── obsidian-workflows/
-│   ├── work.md
-│   ├── plan.md
-│   ├── review.md
-│   └── compound.md
+├── ow-plan.md
+├── ow-work.md
+├── ow-review.md
+├── ow-compound.md
+├── ow-policy.md
+├── write-active.md
+├── write-draft.md
 └── ...
 ```
+
+Commands are flat files directly under `commands/`. A `commands/obsidian-workflows/`
+subdirectory (the plugin namespace) is forbidden — it produces a doubled namespace at
+discovery. The runtime slash name is `obsidian-workflows:<filename>` (e.g.
+`commands/ow-plan.md` → `/obsidian-workflows:ow-plan`).
 
 ## Frontmatter Contract
 
@@ -29,13 +34,13 @@ Each command file MUST include YAML frontmatter with the following required fiel
 ### Required Fields
 
 #### `name` (string)
-- **Format**: kebab-case with optional namespace prefix
-- **Pattern**: `^[a-z0-9]+([:-][a-z0-9]+)*(\.[a-z0-9]+)*$`
+- **Format**: flat kebab-case, dash-separated, no `:` or `.`
+- **Pattern**: `^[a-z0-9]+(-[a-z0-9]+)*$`
 - **Examples**:
-  - `work`
-  - `obsidian:write.active`
-  - `plan-review`
-- **Uniqueness**: Must be unique across all commands
+  - `ow-plan`
+  - `write-active`
+  - `write-review-policy`
+- **Uniqueness**: Must be unique across all commands, and must not collide with a skill name
 
 #### `description` (string)
 - **Purpose**: Brief description of what the command does

@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.route
+name: write-route
 description: 초안/최종본 경로 라우팅 및 이동/복사를 수행합니다.
 argument-hint: file=path to=draft|final [mode=move|copy]
 allowed-tools: Read, Write, Edit, Glob, Grep

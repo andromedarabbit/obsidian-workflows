@@ -1,5 +1,5 @@
 ---
-name: ow:plan
+name: ow-plan
 description: PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 argument-hint: "[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Skill
@@ -7,7 +7,7 @@ created: 2026-03-01T17:28
 updated: 2026-05-23T00:00
 ---
 
-`obsidian-workflows:ow:plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
+`obsidian-workflows:ow-plan`은 PLAN 트랙의 의도 선택형 엔트리포인트입니다.
 
 > **Critical contract — Plan 종료 출력**
 >
@@ -25,7 +25,7 @@ updated: 2026-05-23T00:00
 > 자세한 옵션 정의, 동작, completion check, negative/positive example은 아래 "Active Handoff Menu" / "Passive Handoff Menu" 절을 참조하세요. **이 두 절은 non-optional load입니다 — 분기 종료 단계에 도달하면 반드시 읽어야 합니다.**
 
 주의:
-- 이 명령은 로컬 플러그인 엔트리포인트입니다 (`/obsidian-workflows:ow:plan`).
+- 이 명령은 로컬 플러그인 엔트리포인트입니다 (`/obsidian-workflows:ow-plan`).
 - `/compound-engineering:workflows:plan`은 다른 플러그인의 스킬이므로, 이 플러그인의 plan 분기를 실행하지 않습니다.
 
 Scope Guard (repo-only):
@@ -73,14 +73,14 @@ Helper Script Path Resolution:
 - optional helper script 단계는 경고 후 건너뛰고, 본래 단계의 fail-safe 정책을 따릅니다.
 
 Preflight Gate (fail-fast):
-- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
+- 초기화 대상 목록의 canonical source는 `commands/write-init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
 - **Fast mode가 아닐 때만** 전체 검증을 수행합니다:
 1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
 2. `writing-config.md`에서 `enabled_policies`, `policy_dir`를 읽고 각 policy에 대해 `policy_dir/writing-policy.<policy>.md` 존재를 검증합니다.
-3. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
+3. 누락 파일이 있으면 `/write-init`를 먼저 실행해 초기화 프로세스를 시작합니다.
 4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
 5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
 - **Fast mode일 때**: `writing-config.md` 존재만 확인하고 즉시 진행합니다.
@@ -105,7 +105,7 @@ Intent Gate:
    - free-form 작성 지시는 명령 인자에 자연어 topic과 즉시 작성 동사가 함께 있는 경우입니다.
    - 한국어 동사 예: `작성`, `작성하자`, `써`, `써줘`, `정리해줘`.
    - 영어 동사 예: `write`, `draft`, `compose`.
-   - 예: `/obsidian-workflows:ow:plan 팀스탠드업을 작성하자` → `topic="팀스탠드업"`, `intent=active`.
+   - 예: `/obsidian-workflows:ow-plan 팀스탠드업을 작성하자` → `topic="팀스탠드업"`, `intent=active`.
 4. `--intent`가 없고 free-form 작성 지시도 없으면 기본값으로 `passive`를 사용합니다.
 5. `--intent` 값이 유효하지 않으면 즉시 `FAIL`로 종료합니다.
 
@@ -121,9 +121,9 @@ Intent Gate:
      - 메뉴 옵션, 동작, completion check는 아래 "Active Handoff Menu" 절 참조. **이 절을 읽지 않고 분기를 완료하지 마세요 (non-optional load).**
 - `passive` 분기:
   1. `writing-config.md`에서 `source_paths`, `exclude_paths`, `proposal_path`, `final_path`를 확인합니다.
-  2. `obsidian:write.scan` 규칙으로 후보 파일을 수집합니다.
+  2. `write-scan` 규칙으로 후보 파일을 수집합니다.
      - 성능 최적화 helper script는 Helper Script Path Resolution 규칙으로 plugin/repo root를 해석한 뒤에만 사용합니다.
-  3. `obsidian:write.propose` 규칙으로 아이디어 3~5개를 제안 노트로 저장합니다.
+  3. `write-propose` 규칙으로 아이디어 3~5개를 제안 노트로 저장합니다.
   4. **생성된 proposal 파일을 읽어서** 각 아이디어의 상세 내용을 추출합니다.
   5. proposal 요약 출력 후 **STOP. 반드시 `AskUserQuestion` 도구를 fire하여 4-옵션 Handoff 메뉴를 표시합니다.**
      - **금지**: "Next:", "다음 단계:"처럼 텍스트 slash command를 안내하는 출력. 메뉴 fire 없이 종료하면 명세 위반입니다.
@@ -162,13 +162,13 @@ Active Handoff Menu (active 분기 종료 직후):
      - 동작:
        1. plan 단계에서 사용자가 넘긴 active 분기용 추가 인자(`--source`, `--window-days`, `--skip` 등)를 `extra_args` dict로 묶습니다. 이 키 집합은 옵션 4("나중에")가 상태 파일에 저장하는 `extra_args`와 동일합니다.
        2. `.claude/state/obsidian-write-active-handoff.json`을 `status: consumed`로 *사전에* 기록합니다. 이는 `mode=active`로 work를 호출하면 work의 자동 추론(step #2)이 적용되지 않아 상태 파일을 읽지 않으므로, 다음 세션에서 같은 handoff가 자동 재실행되지 않게 하기 위함입니다.
-       3. 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow:work`를 **즉시 fire하세요** (Claude Code에서는 `Skill` 도구, Codex에서는 동일하게 `Skill`, Gemini/Pi는 해당 플랫폼의 primitive). 사용자에게 "이제 `/work`를 입력하세요"라고 안내하지 마세요 — 이 세션에서 곧바로 호출합니다. 인자: `mode=active, topic="<plan의 topic>", policy="<plan의 policy>", **extra_args`.
+       3. 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow-work`를 **즉시 fire하세요** (Claude Code에서는 `Skill` 도구, Codex에서는 동일하게 `Skill`, Gemini/Pi는 해당 플랫폼의 primitive). 사용자에게 "이제 `/work`를 입력하세요"라고 안내하지 마세요 — 이 세션에서 곧바로 호출합니다. 인자: `mode=active, topic="<plan의 topic>", policy="<plan의 policy>", **extra_args`.
   2. **계획 다듬기** — topic / 소스 범위 / policy 한 번 더 정제
      - 동작: 사용자에게 어떤 부분을 다듬을지(`topic` 구체화, 소스 범위 조정, policy 변경 등) 후속 질문한 뒤, 답변을 반영해 active 분기를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   3. **다른 정책으로** — policy 변경 후 plan 재실행
      - 동작: 사용자에게 사용할 policy 후보(현재 enabled_policies)를 제시하고 선택을 받아 active 분기를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   4. **나중에** — handoff 상태만 저장하고 종료
-     - 동작: `.claude/state/obsidian-write-active-handoff.json`을 아래 스키마로 저장하고 종료합니다(`status: pending`). 이후 `/obsidian-workflows:ow:work`가 mode 없이 호출되면 이 파일을 자동 감지해 active 모드로 진행합니다.
+     - 동작: `.claude/state/obsidian-write-active-handoff.json`을 아래 스키마로 저장하고 종료합니다(`status: pending`). 이후 `/obsidian-workflows:ow-work`가 mode 없이 호출되면 이 파일을 자동 감지해 active 모드로 진행합니다.
 - Active handoff 상태 파일 스키마는 `docs/runtime/state-schema.md`의 "Active handoff state fields" 절을 참조합니다.
 - **Completion check** — active 분기는 다음 3가지가 모두 완료되어야 끝납니다.
   1. `AskUserQuestion` 도구로 위 4-옵션 메뉴를 fire함
@@ -203,13 +203,13 @@ Passive Handoff Menu (passive 분기 종료 직후):
   1. **Idea 선택해서 draft** — 1~N 중 선택
      - 동작:
        1. 사용자에게 idea 번호를 묻고(또는 stem에서 바로 받음) proposal frontmatter의 `status`를 `in-progress`, `selected_idea`를 선택된 번호로 갱신합니다.
-       2. 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow:work`를 **즉시 fire하세요** (Claude Code의 `Skill` 도구). 사용자에게 "이제 `/work proposal=... idea=N`을 입력하세요"라고 안내하지 마세요 — 이 세션에서 곧바로 호출합니다. 인자: `mode=draft, proposal="<proposal 파일 경로>", idea=N`.
+       2. 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow-work`를 **즉시 fire하세요** (Claude Code의 `Skill` 도구). 사용자에게 "이제 `/work proposal=... idea=N`을 입력하세요"라고 안내하지 마세요 — 이 세션에서 곧바로 호출합니다. 인자: `mode=draft, proposal="<proposal 파일 경로>", idea=N`.
   2. **proposal 다듬기** — 아이디어 추가/교체
      - 동작: 사용자에게 어떤 아이디어를 빼거나 추가할지 후속 질문한 뒤, 답변을 반영해 propose를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   3. **다른 정책으로** — proposal 재생성
      - 동작: 사용자에게 policy 후보를 제시하고 선택을 받아 propose를 재실행합니다. 재실행 후 다시 본 메뉴를 출력합니다.
   4. **나중에** — proposal만 저장하고 종료
-     - 동작: proposal frontmatter는 `status: pending` 그대로 유지하고 종료합니다. 이후 `/obsidian-workflows:ow:work`가 호출되면 기존 "Proposal 자동 감지" 흐름으로 이어집니다.
+     - 동작: proposal frontmatter는 `status: pending` 그대로 유지하고 종료합니다. 이후 `/obsidian-workflows:ow-work`가 호출되면 기존 "Proposal 자동 감지" 흐름으로 이어집니다.
 - **Completion check** — passive 분기는 다음 3가지가 모두 완료되어야 끝납니다.
   1. proposal 요약 출력 후 `AskUserQuestion` 도구로 위 4-옵션 메뉴를 fire함
   2. 사용자 선택을 수신함
@@ -220,9 +220,9 @@ Passive Handoff Menu (passive 분기 종료 직후):
   - 옵션 1이 선택됐는데 Skill 도구로 fire하지 않고 텍스트로 명령어를 안내하는 것
 
 Pipeline / 자동 환경 예외:
-- `/obsidian:write.autorun` 같은 hook 기반 자동 실행에서는 Handoff 메뉴를 skip합니다. 자동 환경에는 동기적으로 답할 사용자가 없으므로 메뉴 fire가 의미 없습니다.
+- `/write-autorun` 같은 hook 기반 자동 실행에서는 Handoff 메뉴를 skip합니다. 자동 환경에는 동기적으로 답할 사용자가 없으므로 메뉴 fire가 의미 없습니다.
 - 자동 환경의 default 동작:
-  - Active 분기: 옵션 4 "나중에" 동등 — handoff 상태 파일을 `status: pending`으로 저장하고 종료. 다음 인터랙티브 세션의 `/ow:work`가 자동 감지.
+  - Active 분기: 옵션 4 "나중에" 동등 — handoff 상태 파일을 `status: pending`으로 저장하고 종료. 다음 인터랙티브 세션의 `/ow-work`가 자동 감지.
   - Passive 분기: 옵션 4 "나중에" 동등 — proposal을 `status: pending`으로 저장하고 종료.
 - 메뉴 fire와 인라인 routing은 사용자가 동기적으로 응답 가능한 대화 컨텍스트에서만 수행합니다.
 

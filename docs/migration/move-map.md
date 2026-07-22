@@ -12,8 +12,9 @@
 
 ### Commands
 
-- `commands/obsidian-workflows/*.md` -> `commands/obsidian-workflows/*.md`
-- `commands/obsidian:write.*.md` -> `commands/obsidian:write.*.md`
+- Command definitions live flat under `commands/` (canonical). Track entrypoints use the `ow-` prefix (`commands/ow-plan.md`, …); execution commands use the `write-` prefix (`commands/write-active.md`, …).
+  <!-- 이름은 이후 콜론 제거 리팩터로 평탄화됨: 구 `commands/ow/*.md`(name `ow:*`)·`commands/obsidian-write/obsidian:write.*.md` → flat `commands/ow-*.md`·`commands/write-*.md`. -->
+- `.claude/skills/*/SKILL.md` -> `skills/*/SKILL.md`
 
 ### Skills
 

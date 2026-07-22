@@ -24,7 +24,7 @@ Use only:
 
 - Missing init prerequisites:
   - show missing files list
-  - next action: `/obsidian:write.init`
+  - next action: `/write-init`
 - Invalid mode:
   - show allowed values: `active|passive|draft|refine|route`
 - Path safety violation:

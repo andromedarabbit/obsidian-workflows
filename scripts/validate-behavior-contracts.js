@@ -10,32 +10,32 @@ function readRelative(relativePath) {
 
 const docs = {
   commandPlan: {
-    path: 'commands/ow/plan.md',
-    text: readRelative('commands/ow/plan.md'),
+    path: 'commands/ow-plan.md',
+    text: readRelative('commands/ow-plan.md'),
   },
   skillPlan: {
     path: 'skills/plan/SKILL.md',
     text: readRelative('skills/plan/SKILL.md'),
   },
   commandWork: {
-    path: 'commands/ow/work.md',
-    text: readRelative('commands/ow/work.md'),
+    path: 'commands/ow-work.md',
+    text: readRelative('commands/ow-work.md'),
   },
   commandCompound: {
-    path: 'commands/ow/compound.md',
-    text: readRelative('commands/ow/compound.md'),
+    path: 'commands/ow-compound.md',
+    text: readRelative('commands/ow-compound.md'),
   },
   commandReview: {
-    path: 'commands/ow/review.md',
-    text: readRelative('commands/ow/review.md'),
+    path: 'commands/ow-review.md',
+    text: readRelative('commands/ow-review.md'),
   },
   skillWork: {
     path: 'skills/work/SKILL.md',
     text: readRelative('skills/work/SKILL.md'),
   },
   scanCommand: {
-    path: 'commands/obsidian-write/obsidian:write.scan.md',
-    text: readRelative('commands/obsidian-write/obsidian:write.scan.md'),
+    path: 'commands/write-scan.md',
+    text: readRelative('commands/write-scan.md'),
   },
 };
 
@@ -104,8 +104,8 @@ function validatePlanContract(doc) {
   );
 
   check(
-    `${doc.path} instructs immediate ow:work skill invocation instead of copy-paste handoff`,
-    doc.text.includes('obsidian-workflows:ow:work') && /즉시\s*(fire|호출)/.test(doc.text),
+    `${doc.path} instructs immediate ow-work skill invocation instead of copy-paste handoff`,
+    doc.text.includes('obsidian-workflows:ow-work') && /즉시\s*(fire|호출)/.test(doc.text),
     doc.path,
   );
 }
@@ -115,7 +115,7 @@ function validateNoStalePatterns(doc) {
     'Next: /obsidian-workflows:work',
     '다음 단계: /obsidian-workflows:work',
     'Explicitly handoff to next execution command',
-    '/obsidian:write.active topic=',
+    '/obsidian-workflows:write-active topic=',
     'User should review ideas and choose',
     '/obsidian-workflows:plan',
     'obsidian-workflows:plan',

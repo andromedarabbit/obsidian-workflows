@@ -1,5 +1,5 @@
 ---
-name: ow:work
+name: ow-work
 description: WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 argument-hint: "[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Skill
@@ -7,7 +7,7 @@ created: 2026-03-01T17:28
 updated: 2026-05-22T00:00
 ---
 
-`obsidian-workflows:ow:work`는 `obsidian:write.*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
+`obsidian-workflows:ow-work`는 `write-*` 실행 명령으로 라우팅하는 WORK 트랙 엔트리포인트입니다.
 
 주의:
 - 로컬 워크플로우는 `/obsidian-workflows:*`를 사용합니다.
@@ -73,24 +73,24 @@ External Tools Detection:
 - **Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.
 
 Preflight Gate (fail-fast):
-- 초기화 대상 목록의 canonical source는 `commands/obsidian-write/obsidian:write.init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
+- 초기화 대상 목록의 canonical source는 `commands/write-init.md`의 `초기화 대상(코어)`/`초기화 대상(동적 정책)` 섹션입니다.
 - **Fast mode가 아닐 때만** 전체 검증을 수행합니다:
 1. 실행 시작 시 코어 대상 파일 존재를 먼저 검증합니다.
    - `writing-config.md`
    - `Workflows/SOUL.md`
    - `.claude/state/obsidian-write-passive.json`
 2. `writing-config.md`에서 `enabled_policies`, `policy_dir`를 읽고 각 policy에 대해 `policy_dir/writing-policy.<policy>.md` 존재를 검증합니다.
-3. 누락 파일이 있으면 `/obsidian:write.init`를 먼저 실행해 초기화 프로세스를 시작합니다.
+3. 누락 파일이 있으면 `/write-init`를 먼저 실행해 초기화 프로세스를 시작합니다.
 4. 초기화 후 동일한 코어/동적 정책 대상을 재검증합니다.
 5. 여전히 누락이 남아있으면 `FAIL`로 종료하고 누락 목록을 출력합니다.
 - **Fast mode일 때**: `writing-config.md` 존재만 확인하고 즉시 진행합니다.
 
 모드 매핑(mode 지정 시 질문 없는 deterministic 실행):
-- `mode=active` -> `obsidian:write.active` (policy의 `source_strategy`/`missing_source_behavior` 계약을 따름; 예: daily-note에서 직전 노트가 없으면 `SKIP` + 최근 파일 후보 제시)
-- `mode=passive` -> `obsidian-workflows:ow:plan --intent passive` (`scan -> propose`)
-- `mode=draft` -> `obsidian:write.draft`
-- `mode=refine` -> `obsidian:write.refine`
-- `mode=route` -> `obsidian:write.route`
+- `mode=active` -> `write-active` (policy의 `source_strategy`/`missing_source_behavior` 계약을 따름; 예: daily-note에서 직전 노트가 없으면 `SKIP` + 최근 파일 후보 제시)
+- `mode=passive` -> `obsidian-workflows:ow-plan --intent passive` (`scan -> propose`)
+- `mode=draft` -> `write-draft`
+- `mode=refine` -> `write-refine`
+- `mode=route` -> `write-route`
 
 Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
 1. `writing-config.md`에서 `proposal_path` 읽기
@@ -112,8 +112,8 @@ Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
   1. `proposal` 또는 `idea` 인자가 있으면 `mode=draft` (변경 없음).
   2. **Active handoff 상태 파일 확인**: `.claude/state/obsidian-write-active-handoff.json`이 존재하고 `status: pending`이면 다음 순서로 진행합니다.
      1. 파일에서 `topic`, `policy`, `extra_args`를 로드합니다.
-     2. **하위 명령(`obsidian:write.active`) 실행 *전에* 즉시 `status: consumed`로 전이합니다.** 전이 실패 시 fail-fast로 종료합니다. 이 순서를 지키지 않으면 active 실행이 실패할 때 상태 파일이 `pending` 그대로 남아 같은 handoff가 다음 호출에서 자동으로 다시 잡혀 무한 재실행이 발생합니다.
-     3. 로드한 인자로 하위 명령(`obsidian:write.active`)을 실행합니다.
+     2. **하위 명령(`write-active`) 실행 *전에* 즉시 `status: consumed`로 전이합니다.** 전이 실패 시 fail-fast로 종료합니다. 이 순서를 지키지 않으면 active 실행이 실패할 때 상태 파일이 `pending` 그대로 남아 같은 handoff가 다음 호출에서 자동으로 다시 잡혀 무한 재실행이 발생합니다.
+     3. 로드한 인자로 하위 명령(`write-active`)을 실행합니다.
      - 스키마는 `docs/runtime/state-schema.md`의 "Active handoff state fields" 절을 참조합니다.
   3. `proposal_path` 디렉토리 스캔에서 pending/in-progress proposal이 감지되면 `mode=draft` (아래 "Proposal 자동 감지" 절과 동일한 규칙을 적용).
   4. 직전 PLAN 대화 문맥이 passive proposal 생성 완료를 가리키면 `mode=draft` (대화 문맥 fallback).
@@ -128,7 +128,7 @@ Proposal 자동 감지 (mode=draft이고 proposal 미지정 시):
 - 사용자가 명령어를 복사해 실행하는 흐름이 아닙니다. 현재 세션에서 routing을 수행할 수 있으면 플랫폼의 skill-invocation primitive를 사용합니다.
 
 Mode 질문 형식:
-- 이 지점은 새 규칙 6이 이미 "모호하지 않은 직접 지시"를 걸러낸 뒤에만 도달하는 예외 경로다 — 즉 여기 남는 건 정말로 신호가 부족한 경우뿐이다. 이번 버그의 실제 증상이 바로 이 지점에서 구조화된 질문 대신 장문 설명 프로즈("mode=active로 실행하시겠습니까? 아니면 다른 모드(draft...")로 새어나간 것이었다. 그래서 이 지점만큼은 `ow:plan.md`와 동일한 강도로 못박는다:
+- 이 지점은 새 규칙 6이 이미 "모호하지 않은 직접 지시"를 걸러낸 뒤에만 도달하는 예외 경로다 — 즉 여기 남는 건 정말로 신호가 부족한 경우뿐이다. 이번 버그의 실제 증상이 바로 이 지점에서 구조화된 질문 대신 장문 설명 프로즈("mode=active로 실행하시겠습니까? 아니면 다른 모드(draft...")로 새어나간 것이었다. 그래서 이 지점만큼은 `ow-plan.md`와 동일한 강도로 못박는다:
 - **STOP.** 반드시 `AskUserQuestion` 도구를 fire하여 선택지를 제시합니다. 장문 설명 문단으로 질문을 대신하는 것은 명세 위반입니다.
 - `AskUserQuestion` 스키마가 미리 로드되지 않았으면 `ToolSearch`에 `select:AskUserQuestion`을 먼저 호출해 로드한 뒤 fire합니다. 스키마 로드가 번거롭다는 이유로 텍스트 안내로 fallback하지 마세요 — 학습된 default 패턴에 빠지는 가장 흔한 경로입니다.
 - Question stem: 이번 턴 요청·인자에서 topic을 특정할 수 있으면 `"{topic}을(를) 어떤 모드로 진행할까요?"`를, 특정할 수 없으면 `"이 작업을 어떤 모드로 진행할까요?"`를 쓴다. (규칙 2의 handoff 경로는 `topic` 로드 후 곧장 active를 실행하거나 fail-fast로 종료하므로 이 질문 지점에는 도달하지 않는다 — topic 출처를 handoff로 한정하지 말 것.)

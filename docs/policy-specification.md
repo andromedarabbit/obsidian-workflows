@@ -3,11 +3,11 @@
 This document is the canonical source of truth for the **writing policy** schema in
 the obsidian-workflows plugin. Before this file existed, the schema was defined only
 implicitly — by the example files in `assets/Workflows/policy/*.md` and by whatever
-`commands/obsidian-write/obsidian:write.review.policy.md` happened to check. That
+`commands/write-review-policy.md` happened to check. That
 implicit definition is a drift hazard: a policy can carry fields the review gate never
 reads, and the review gate can expect fields no example demonstrates. This file makes
-the contract explicit so both the generator (`commands/ow/policy.md`) and the consumer
-(`obsidian:write.review.policy`) reference one definition.
+the contract explicit so both the generator (`commands/ow-policy.md`) and the consumer
+(`write-review-policy`) reference one definition.
 
 ## What a policy is
 
@@ -30,7 +30,7 @@ together: policy is the structure gate, SOUL is the voice layer.
 
 ### Core fields (read by the review gate)
 
-These are the fields `obsidian:write.review.policy` inspects; keep them well-formed or
+These are the fields `write-review-policy` inspects; keep them well-formed or
 the structure gate silently degrades.
 
 | Field | Type | Notes |
@@ -56,7 +56,7 @@ concrete usage):
 |---|---|---|
 | `reference_style` | `wikilink-first` | blog — how sources are cited |
 | `line_style` | `short` | x-thread — per-post line discipline |
-| `topic_required` | `false` | `ow:plan` active branch fail-fast contract |
+| `topic_required` | `false` | `ow-plan` active branch fail-fast contract |
 | `source_strategy` | `previous-note` | draft/active — where to seed content from |
 | `source_path_key` | `daily_notes_path` | config key that resolves the source directory |
 | `missing_source_behavior` | `skip-and-prompt-recent` | what to do when the source is absent (drives `SKIP`) |
@@ -67,7 +67,7 @@ concrete usage):
 
 The list is intentionally open: a new channel may introduce a new field. New fields
 that the review gate should enforce must be added to the Core table above **and** to
-`obsidian:write.review.policy`, not just to an example file.
+`write-review-policy`, not just to an example file.
 
 ## Body structure
 
@@ -94,20 +94,20 @@ section check and the human-readable outline do not disagree.
 A policy file existing on disk is necessary but not sufficient. To be usable it must be
 registered in the vault config:
 
-- `enabled_policies` — the policy must appear here for `write.review.policy` and the
-  `ow` tracks to accept it.
+- `enabled_policies` — the policy must appear here for `write-review-policy` and the
+  `ow-*` tracks to accept it.
 - `default_policy` — optional; the fallback when no policy is specified.
 - `proposal_policy_allowlist` — optional; policies eligible for passive proposals.
 - `filename_rule.<name>` — the output filename template (e.g. `{{date}}-{{slug}}`).
 
 ## Producers and consumers
 
-- **Producer**: `commands/ow/policy.md` (`ow:policy`) generates a policy file
+- **Producer**: `commands/ow-policy.md` (`ow-policy`) generates a policy file
   interactively and, on confirmation, registers it in `writing-config.md`.
-- **Validator**: `commands/obsidian-write/obsidian:write.review.policy.md` reads the
+- **Validator**: `commands/write-review-policy.md` reads the
   Core fields to run the structure/length gate.
-- **Other consumers**: `write.active`, `write.draft`, `write.refine`, `write.propose`,
-  `write.init`, and the `ow:plan`/`ow:work`/`ow:review` tracks all resolve and validate
+- **Other consumers**: `write-active`, `write-draft`, `write-refine`, `write-propose`,
+  `write-init`, and the `ow-plan`/`ow-work`/`ow-review` tracks all resolve and validate
   policies through the same `policy_dir/writing-policy.<name>.md` path.
 
 ## Examples

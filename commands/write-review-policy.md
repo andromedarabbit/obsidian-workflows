@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.review.policy
+name: write-review-policy
 description: 정책 기반 품질 게이트. 채널별 구조/길이/섹션을 점검합니다.
 argument-hint: file=path [policy=<policy-name>]
 allowed-tools: Read, Glob, Grep
@@ -28,7 +28,7 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 검사하
 - `file` 경로는 절대 경로 금지, `..` 금지, resolve 후 vault root 하위만 허용, 심볼릭 링크로 root 밖 탈출 금지 규칙을 강제합니다.
 - `policy`와 `policy_type`이 모두 비어 있으면 즉시 종료합니다.
 - 이 명령은 검증 리포트만 반환하며 파일을 수정하지 않습니다.
-- 향후 auto-fix 기능이 추가되면 별도 명령(예: `obsidian:write.review.final`)로 권한을 분리합니다.
+- 향후 auto-fix 기능이 추가되면 별도 명령(예: `write-review-final`)로 권한을 분리합니다.
 
 외부 도구 활용 (External Tools Integration):
 정책 기반 리뷰 완료 후, `writing-config.md`의 `auto_use_external_tools` 설정에 따라 외부 도구를 활용합니다.
@@ -64,7 +64,7 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 검사하
    - style-guide: 1 inconsistency found
      • Use "사용자" instead of "유저" (line 42)
 
-   Next: /obsidian-workflows:ow:compound file="..."
+   Next: /obsidian-workflows:ow-compound file="..."
    ```
 
 5. **Fail-safe 원칙**:

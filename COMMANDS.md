@@ -5,130 +5,130 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 ## Available Commands
 
 
-### General
+### Obsidian Workflows
 
-#### `/ow:compound`
+#### `/obsidian-workflows:ow-compound`
 
 COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
 
 **Usage:** `"[file=path] [latest] [--fast] [--skip external-tools,context-card]"`
 
-**Source:** [`commands/ow/compound.md`](commands/ow/compound.md)
+**Source:** [`commands/ow-compound.md`](commands/ow-compound.md)
 
-#### `/ow:plan`
+#### `/obsidian-workflows:ow-plan`
 
 PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
 
 **Usage:** `"[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"`
 
-**Source:** [`commands/ow/plan.md`](commands/ow/plan.md)
+**Source:** [`commands/ow-plan.md`](commands/ow-plan.md)
 
-#### `/ow:policy`
+#### `/obsidian-workflows:ow-policy`
 
 새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다.
 
 **Usage:** `"[policy=<name>] [output_type=<type>] [--register] [--overwrite]"`
 
-**Source:** [`commands/ow/policy.md`](commands/ow/policy.md)
+**Source:** [`commands/ow-policy.md`](commands/ow-policy.md)
 
-#### `/ow:review`
+#### `/obsidian-workflows:ow-review`
 
 REVIEW 트랙 진입점. 정책/문체 품질 게이트를 수행합니다.
 
 **Usage:** `file=path [policy=<policy-name>] [--fast] [--skip external-tools,context-card]`
 
-**Source:** [`commands/ow/review.md`](commands/ow/review.md)
+**Source:** [`commands/ow-review.md`](commands/ow-review.md)
 
-#### `/ow:work`
+#### `/obsidian-workflows:ow-work`
 
 WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
 
 **Usage:** `"[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"`
 
-**Source:** [`commands/ow/work.md`](commands/ow/work.md)
+**Source:** [`commands/ow-work.md`](commands/ow-work.md)
 
 
 ### Obsidian Write
 
-#### `/obsidian:write.active`
+#### `/obsidian-workflows:write-active`
 
 Active 모드. 사용자 입력(topic/sources/policy)으로 즉시 초안을 생성합니다.
 
 **Usage:** `topic=... [policy=<policy-name>] [sources=[[노트A]],[[노트B]]] [soul=false]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.active.md`](commands/obsidian-write/obsidian:write.active.md)
+**Source:** [`commands/write-active.md`](commands/write-active.md)
 
-#### `/obsidian:write.autorun`
+#### `/obsidian-workflows:write-autorun`
 
 일일 자동 제안 실행. 비대화형(passive) 자동 실행 전용 오케스트레이터입니다.
 
 **Usage:** `"[--trigger session-start]"`
 
-**Source:** [`commands/obsidian-write/obsidian:write.autorun.md`](commands/obsidian-write/obsidian:write.autorun.md)
+**Source:** [`commands/write-autorun.md`](commands/write-autorun.md)
 
-#### `/obsidian:write.compound.capture`
+#### `/obsidian-workflows:write-compound-capture`
 
 완성본에서 학습 포인트를 캡처해 누적합니다(MVP 스켈레톤).
 
 **Usage:** `file=path [append=true]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.compound.capture.md`](commands/obsidian-write/obsidian:write.compound.capture.md)
+**Source:** [`commands/write-compound-capture.md`](commands/write-compound-capture.md)
 
-#### `/obsidian:write.draft`
+#### `/obsidian-workflows:write-draft`
 
 선택된 아이디어 기반으로 초안을 생성합니다.
 
 **Usage:** `proposal=path idea=ID [policy=<policy-name>] [soul=true|false]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.draft.md`](commands/obsidian-write/obsidian:write.draft.md)
+**Source:** [`commands/write-draft.md`](commands/write-draft.md)
 
-#### `/obsidian:write.init`
+#### `/obsidian-workflows:write-init`
 
 글쓰기 워크플로우 초기화. 설정/정책/SOUL 템플릿 존재 여부를 점검하고 생성합니다.
 
 **Usage:** `"[--force]"`
 
-**Source:** [`commands/obsidian-write/obsidian:write.init.md`](commands/obsidian-write/obsidian:write.init.md)
+**Source:** [`commands/write-init.md`](commands/write-init.md)
 
-#### `/obsidian:write.propose`
+#### `/obsidian-workflows:write-propose`
 
 Passive 제안 생성. 스캔 결과를 아이디어 카드(3~5개)로 제안 노트에 저장합니다.
 
 **Usage:** `"[--from-scan] [--ideas N] [--draft idea-id]"`
 
-**Source:** [`commands/obsidian-write/obsidian:write.propose.md`](commands/obsidian-write/obsidian:write.propose.md)
+**Source:** [`commands/write-propose.md`](commands/write-propose.md)
 
-#### `/obsidian:write.refine`
+#### `/obsidian-workflows:write-refine`
 
 기존 초안을 SOUL 규칙으로 리라이트/정제합니다.
 
 **Usage:** `file=path [soul=true|false] [policy=<policy-name>]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.refine.md`](commands/obsidian-write/obsidian:write.refine.md)
+**Source:** [`commands/write-refine.md`](commands/write-refine.md)
 
-#### `/obsidian:write.review.policy`
+#### `/obsidian-workflows:write-review-policy`
 
 정책 기반 품질 게이트. 채널별 구조/길이/섹션을 점검합니다.
 
 **Usage:** `file=path [policy=<policy-name>]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.review.policy.md`](commands/obsidian-write/obsidian:write.review.policy.md)
+**Source:** [`commands/write-review-policy.md`](commands/write-review-policy.md)
 
-#### `/obsidian:write.route`
+#### `/obsidian-workflows:write-route`
 
 초안/최종본 경로 라우팅 및 이동/복사를 수행합니다.
 
 **Usage:** `file=path to=draft|final [mode=move|copy]`
 
-**Source:** [`commands/obsidian-write/obsidian:write.route.md`](commands/obsidian-write/obsidian:write.route.md)
+**Source:** [`commands/write-route.md`](commands/write-route.md)
 
-#### `/obsidian:write.scan`
+#### `/obsidian-workflows:write-scan`
 
 Passive 스캔. 기준 시점 이후 변경 파일을 source_paths에서 수집합니다.
 
 **Usage:** `"[--since ISO_DATE] [--window-days N] [--source path1,path2]"`
 
-**Source:** [`commands/obsidian-write/obsidian:write.scan.md`](commands/obsidian-write/obsidian:write.scan.md)
+**Source:** [`commands/write-scan.md`](commands/write-scan.md)
 
 
 ---

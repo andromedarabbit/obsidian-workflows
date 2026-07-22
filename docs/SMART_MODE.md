@@ -69,7 +69,7 @@ auto_mode_rules:
 
 ```bash
 # 첫 실행 - 초기화 필요
-/obsidian-workflows:ow:plan --intent passive
+/obsidian-workflows:ow-plan --intent passive
 
 # 자동 감지: Full mode
 # 이유: writing-config.md 없음
@@ -80,7 +80,7 @@ auto_mode_rules:
 
 ```bash
 # 동일한 policy로 3번째 실행
-/obsidian-workflows:ow:work mode=draft policy=daily-note
+/obsidian-workflows:ow-work mode=draft policy=daily-note
 
 # 자동 감지: Fast mode
 # 이유: daily-note를 최근 24시간 내 3회 사용
@@ -91,7 +91,7 @@ auto_mode_rules:
 
 ```bash
 # 복잡한 주제
-/obsidian-workflows:ow:plan --intent active topic="Distributed system architecture design patterns and trade-offs"
+/obsidian-workflows:ow-plan --intent active topic="Distributed system architecture design patterns and trade-offs"
 
 # 자동 감지: Full mode
 # 이유: topic이 20단어 이상 + "architecture", "design" 키워드
@@ -102,7 +102,7 @@ auto_mode_rules:
 
 ```bash
 # 초안 리뷰
-/obsidian-workflows:ow:review file="Workflows/Drafts/my-draft.md"
+/obsidian-workflows:ow-review file="Workflows/Drafts/my-draft.md"
 
 # 자동 감지: Fast mode
 # 이유: 초안 작성 후 리뷰
@@ -115,10 +115,10 @@ auto_mode_rules:
 
 ```bash
 # Fast mode 강제
-/obsidian-workflows:ow:plan --fast --intent passive
+/obsidian-workflows:ow-plan --fast --intent passive
 
 # Full mode 강제 (verbose)
-/obsidian-workflows:ow:plan --verbose --intent passive
+/obsidian-workflows:ow-plan --verbose --intent passive
 ```
 
 ## 모드 선택 로직
@@ -163,7 +163,7 @@ graph TD
   "auto_mode_history": [
     {
       "timestamp": "2026-03-04T20:00:00+09:00",
-      "command": "ow:work",
+      "command": "ow-work",
       "policy": "daily-note",
       "detected_mode": "fast",
       "reason": "repeated task"
@@ -187,7 +187,7 @@ graph TD
 
 ```bash
 # 수동으로 모드 지정
-/obsidian-workflows:ow:plan --fast --intent passive
+/obsidian-workflows:ow-plan --fast --intent passive
 
 # 또는 설정 변경
 workflow_mode: fast  # auto 대신 fast 고정

@@ -36,8 +36,9 @@ validate_date() {
 # Function to validate kebab-case
 validate_kebab_case() {
     local name="$1"
-    # Allow kebab-case with optional namespace prefix (e.g., "obsidian:write.active")
-    if [[ ! "$name" =~ ^[a-z0-9]+([:-][a-z0-9]+)*(\.[a-z0-9]+)*$ ]]; then
+    # Flat kebab-case, dash-separated, no ':' or '.' (runtime slash name is path-derived;
+    # internal colons/dots add extra namespace segments). Group with a dash prefix instead.
+    if [[ ! "$name" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
         return 1
     fi
     return 0

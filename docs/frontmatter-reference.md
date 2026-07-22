@@ -10,20 +10,20 @@ Complete reference for command frontmatter fields, validation rules, and common 
 
 **Type**: `string`
 **Required**: Yes
-**Format**: kebab-case with optional namespace prefix
+**Format**: flat kebab-case, dash-separated, no `:` or `.`
 
 **Validation Rules**:
-- Must match pattern: `^[a-z0-9]+([:-][a-z0-9]+)*(\.[a-z0-9]+)*$`
-- Must be unique across all commands
+- Must match pattern: `^[a-z0-9]+(-[a-z0-9]+)*$`
+- Must be unique across all commands, and must not collide with a skill name
 - Should be descriptive and concise
 
 **Valid Examples**:
 ```yaml
-name: work
-name: plan
-name: obsidian:write.active
-name: obsidian:write.draft
-name: compound-learning
+name: ow-plan
+name: ow-work
+name: write-active
+name: write-draft
+name: write-review-policy
 ```
 
 **Invalid Examples**:

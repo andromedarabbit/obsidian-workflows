@@ -11,7 +11,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 최근 작성한 노트를 분석해서 블로그 아이디어를 제안받습니다.
 
 ```bash
-/obsidian-workflows:ow:plan --fast --intent passive
+/obsidian-workflows:ow-plan --fast --intent passive
 ```
 
 **Fast mode 효과:**
@@ -25,7 +25,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 제안받은 아이디어 중 하나를 선택해서 초안을 작성합니다.
 
 ```bash
-/obsidian-workflows:ow:work --fast proposal="Workflows/Proposals/passive-proposals/2026-03-04-ideas.md" idea=1
+/obsidian-workflows:ow-work --fast proposal="Workflows/Proposals/passive-proposals/2026-03-04-ideas.md" idea=1
 ```
 
 **Fast mode 효과:**
@@ -39,7 +39,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 작성된 초안이 정책을 준수하는지 빠르게 검토합니다.
 
 ```bash
-/obsidian-workflows:ow:review --fast file="Workflows/Drafts/my-draft.md"
+/obsidian-workflows:ow-review --fast file="Workflows/Drafts/my-draft.md"
 ```
 
 **Fast mode 효과:**
@@ -61,7 +61,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 주제를 정하고 웹 리서치를 수행합니다.
 
 ```bash
-/obsidian-workflows:ow:plan --intent active topic="Kubernetes 1.32 새로운 기능"
+/obsidian-workflows:ow-plan --intent active topic="Kubernetes 1.32 새로운 기능"
 ```
 
 **Full mode 동작:**
@@ -75,7 +75,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 선택한 정책에 맞춰 초안을 작성합니다.
 
 ```bash
-/obsidian-workflows:ow:work mode=active topic="Kubernetes 1.32 새로운 기능" policy=technical-blog
+/obsidian-workflows:ow-work mode=active topic="Kubernetes 1.32 새로운 기능" policy=technical-blog
 ```
 
 **Full mode 동작:**
@@ -89,7 +89,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 정책 준수 여부를 상세하게 검토합니다.
 
 ```bash
-/obsidian-workflows:ow:review file="Workflows/Drafts/kubernetes-1-32.md" --verbose
+/obsidian-workflows:ow-review file="Workflows/Drafts/kubernetes-1-32.md" --verbose
 ```
 
 **Full mode 동작:**
@@ -103,7 +103,7 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 완성본에서 패턴을 학습하고 SOUL을 개선합니다.
 
 ```bash
-/obsidian-workflows:ow:compound file="Workflows/Final/kubernetes-1-32.md"
+/obsidian-workflows:ow-compound file="Workflows/Final/kubernetes-1-32.md"
 ```
 
 **총 소요 시간: ~15분** (리서치 포함)
@@ -132,13 +132,13 @@ Fast mode는 속도를 최우선으로 하는 간소화된 워크플로우입니
 
 ```mermaid
 graph TD
-    A[ow:plan] -->|passive| B[Scan + Propose]
+    A[ow-plan] -->|passive| B[Scan + Propose]
     A -->|active| C[Research + Confirm]
-    B --> D[ow:work draft]
+    B --> D[ow-work draft]
     C --> D
-    D --> E[ow:review]
-    E -->|PASS| F[ow:compound]
-    E -->|FAIL| G[ow:work refine]
+    D --> E[ow-review]
+    E -->|PASS| F[ow-compound]
+    E -->|FAIL| G[ow-work refine]
     G --> E
 
     style A fill:#e1f5ff
@@ -151,7 +151,7 @@ graph TD
 
 ## 다음 단계
 
-- [명령어 상세 가이드](../commands/ow/) - 각 명령어의 전체 옵션
+- [명령어 상세 가이드](../commands/) - 각 명령어의 전체 옵션
 - [설정 가이드](../config/writing-config.example.md) - 워크플로우 커스터마이징
 - [정책 작성](../assets/writing-policy.template.md) - 커스텀 정책 만들기
 - [SOUL 가이드](../assets/SOUL.template.md) - 글쓰기 스타일 정의
@@ -165,7 +165,7 @@ graph TD
 Fast mode에서는 초기화 검증을 건너뛰므로, 첫 실행 시 full mode로 초기화하세요:
 
 ```bash
-/obsidian-workflows:ow:plan --intent passive
+/obsidian-workflows:ow-plan --intent passive
 ```
 
 ### Fast mode가 너무 느림

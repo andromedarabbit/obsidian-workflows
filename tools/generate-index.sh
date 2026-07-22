@@ -52,11 +52,11 @@ EOF
         argument_hint=$(extract_field "$file" "argument-hint")
 
         if [[ -n "$name" ]]; then
-            # Determine category from file path or name
+            # Determine category from the dash-prefixed name
             local category="General"
-            if [[ "$name" =~ ^(plan|work|review|compound)$ ]]; then
+            if [[ "$name" =~ ^ow- ]]; then
                 category="Obsidian-Workflows"
-            elif [[ "$file" =~ obsidian:write ]]; then
+            elif [[ "$name" =~ ^write- ]]; then
                 category="Obsidian-Write"
             fi
 
@@ -80,10 +80,9 @@ EOF
         # Output commands in this category
         while IFS='|' read -r cat name file description argument_hint; do
             if [[ "$cat" == "$category" ]]; then
-                local display_name="$name"
-                if [[ "$cat" == "Obsidian-Workflows" && "$name" != *:* ]]; then
-                    display_name="obsidian-workflows:${name}"
-                fi
+                # All commands live in the obsidian-workflows plugin; the runtime slash
+                # name is the plugin prefix plus the flat filename-derived name.
+                local display_name="obsidian-workflows:${name}"
 
                 echo "#### \`/$display_name\`" >> "$temp_file"
                 echo "" >> "$temp_file"

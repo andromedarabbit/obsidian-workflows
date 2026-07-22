@@ -154,7 +154,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ### Examples
 
 ```
-feat(commands): add obsidian:write.scan command
+feat(commands): add write-scan command
 fix(validation): handle missing frontmatter gracefully
 docs(hooks): add hook patterns documentation
 chore(deps): update dependencies

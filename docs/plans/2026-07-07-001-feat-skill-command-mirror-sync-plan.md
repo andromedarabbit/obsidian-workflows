@@ -38,7 +38,7 @@ origin: docs/ideation/2026-06-16-skill-authoring-compliance-ideation.html
 
 ## Key Technical Decisions
 
-- **KTD1 — 해시 대상은 command "본문"(frontmatter 이후 전체).** command frontmatter의 `created`/`updated` 타임스탬프는 자주 바뀌므로 전체 파일 해시는 오탐을 낸다. 행위 정본은 본문(`commands/ow/plan.md` 기준 8번째 줄 종료 delimiter 이후)이므로 본문만 해시한다. command의 인터페이스 필드(`description`/`argument-hint`)는 이미 `check-frontmatter.sh`가 독립 검증하므로 이 검사 범위 밖. *대안(향후):* 인터페이스 필드까지 포함하려면 본문 + `description` + `argument-hint`를 정규화해 해시(타임스탬프 제외).
+- **KTD1 — 해시 대상은 command "본문"(frontmatter 이후 전체).** command frontmatter의 `created`/`updated` 타임스탬프는 자주 바뀌므로 전체 파일 해시는 오탐을 낸다. 행위 정본은 본문(`commands/ow-plan.md` 기준 8번째 줄 종료 delimiter 이후)이므로 본문만 해시한다. command의 인터페이스 필드(`description`/`argument-hint`)는 이미 `check-frontmatter.sh`가 독립 검증하므로 이 검사 범위 밖. *대안(향후):* 인터페이스 필드까지 포함하려면 본문 + `description` + `argument-hint`를 정규화해 해시(타임스탬프 제외).
 - **KTD2 — 알고리즘·정규화.** `shasum -a 256`(macOS/Linux 공통) 또는 `sha256sum` 폴백. 해시 전 후행 공백/최종 개행을 정규화(`pre-commit`의 end-of-file-fixer와 충돌 방지). 짧은 표기를 위해 앞 16 hex만 기록해도 충돌 위험은 무시 가능.
 - **KTD3 — 쉘 검증기 + 기존 헬퍼 재사용.** `tools/lib/frontmatter.sh`의 `extract_field()`로 `mirrors`/`mirror_hash`를 읽는다. Node가 아니라 쉘로 구현해 기존 `check-*.sh` 계열과 일관.
 - **KTD4 — pre-commit `files` 글롭은 양쪽을 포함.** `^(skills/.*/SKILL\.md|commands/ow/.*\.md)$` — command만 바뀌어도 훅이 발동해야 하므로. 훅은 인자를 무시하고 4개 쌍 전부를 결정적으로 검사한다.

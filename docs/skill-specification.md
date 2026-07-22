@@ -53,7 +53,7 @@ A skill directory contains only `SKILL.md`. `README.md`, `GUIDELINES.md`, and `s
 #### `mirrors` (string)
 - **Format**: repo-relative path to the paired canonical command, `commands/....md`
 - **Purpose**: Declares which command this skill mirrors. The `mirrors` field is the canonical statement of the mirror relationship (the skill body carries a human-readable note, but this field is what tooling reads)
-- **Example**: `commands/ow/plan.md`
+- **Example**: `commands/ow-plan.md`
 
 #### `mirror_hash` (string)
 - **Format**: lowercase hex, ≥16 chars
@@ -99,7 +99,7 @@ The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a s
 - **No mandatory `README.md`/`GUIDELINES.md` per skill.** This repository centralizes the skill contract in `docs/` (this file), the same way `docs/command-specification.md` centralizes the command contract instead of requiring per-command documentation files. Scattering the same contract across 4+ per-skill files would create drift surface without adding information.
 - **No `scripts/tests/run.sh` mandate.** No skill in this repository ships a `scripts/` directory today. The rule only applies once a skill introduces one.
 - **No re-adoption of `.claude/skills/` as the canonical path.** This repository intentionally uses a commands-centric model (`commands/` is the canonical, hook-path-relevant root); skills live at top-level `skills/<name>/SKILL.md`, not under `.claude/`.
-- **The when-to-use trigger phrase is a WARNING, not an ERROR.** oh-my-skills treats a missing trigger phrase as an error because its skills rely primarily on Claude's autonomous description-matching for discovery. This repository's skills are invoked primarily via explicit slash commands (e.g. `/obsidian-workflows:ow:plan`); autonomous discovery only matters for the secondary case of one skill handing off to another via the `Skill` tool. A missing trigger phrase degrades a secondary path, not the primary one, so a hard CI block is disproportionate — but the trigger phrase is still cheap to add and should be added when writing or editing a skill's description.
+- **The when-to-use trigger phrase is a WARNING, not an ERROR.** oh-my-skills treats a missing trigger phrase as an error because its skills rely primarily on Claude's autonomous description-matching for discovery. This repository's skills are invoked primarily via explicit slash commands (e.g. `/obsidian-workflows:ow-plan`); autonomous discovery only matters for the secondary case of one skill handing off to another via the `Skill` tool. A missing trigger phrase degrades a secondary path, not the primary one, so a hard CI block is disproportionate — but the trigger phrase is still cheap to add and should be added when writing or editing a skill's description.
 - **Korean content style rules (em-dash ban, 외래어 표기법, terminology consistency) are NOT enforced by tooling — convention only.** oh-my-skills documents these as house rules. This repository is Korean-first and follows them as convention (see the root `CLAUDE.md` guidance on natural 우리말), but there is no lint gating them today. This is a deliberate "not yet", not "not applicable" — a terminology/em-dash linter over both `skills/` and `commands/` is a reasonable future addition; it is out of scope until the maintenance value clearly exceeds a per-author convention.
 
 ### Not Applicable
@@ -110,11 +110,11 @@ The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a s
 
 ## Skill Body Conventions
 
-Each of the four existing skills mirrors a canonical command file (`skills/plan/SKILL.md` mirrors `commands/ow/plan.md`, and so on for `work`, `review`, `compound`). This is intentional: the command is the single source of behavioral truth, and the skill file mirrors that behavior for the cases where the `Skill` tool (rather than the slash command) is the entry point. A skill's body MUST NOT diverge into independent behavior — if the command and skill disagree, the command wins, and the skill file must be updated to match.
+Each of the four existing skills mirrors a canonical command file (`skills/plan/SKILL.md` mirrors `commands/ow-plan.md`, and so on for `work`, `review`, `compound`). This is intentional: the command is the single source of behavioral truth, and the skill file mirrors that behavior for the cases where the `Skill` tool (rather than the slash command) is the entry point. A skill's body MUST NOT diverge into independent behavior — if the command and skill disagree, the command wins, and the skill file must be updated to match.
 
 This principle was already established the hard way: see `docs/solutions/logic-errors/ow-plan-passive-default-regression.md`, where a skill file drifted from its canonical command and caused a real regression.
 
-**Enforcement (`mirror_hash`).** The mirror is no longer defended by discipline alone. Each SKILL.md records `mirrors` (its paired command) and `mirror_hash` (a hash of that command's body, per the field definitions above). `tools/check-skill-sync.sh` recomputes the command body hash and fails — in pre-commit and CI — when it no longer matches the recorded value. So a behavioral change to `commands/ow/<name>.md` cannot land without someone re-examining `skills/<name>/SKILL.md` and regenerating the hash:
+**Enforcement (`mirror_hash`).** The mirror is no longer defended by discipline alone. Each SKILL.md records `mirrors` (its paired command) and `mirror_hash` (a hash of that command's body, per the field definitions above). `tools/check-skill-sync.sh` recomputes the command body hash and fails — in pre-commit and CI — when it no longer matches the recorded value. So a behavioral change to `commands/ow-<name>.md` cannot land without someone re-examining `skills/<name>/SKILL.md` and regenerating the hash:
 
 1. Edit the command (and update the skill body to match).
 2. Run `tools/update-skill-hash.sh <name>` to regenerate the recorded hash.
@@ -130,7 +130,7 @@ name: plan
 description: PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
 version: 0.1.0
 context: inline
-mirrors: commands/ow/plan.md
+mirrors: commands/ow-plan.md
 mirror_hash: 2ff00d0c9cfdcb60
 language: korean
 user-invocable: true

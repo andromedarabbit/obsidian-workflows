@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.active
+name: write-active
 description: Active 모드. 사용자 입력(topic/sources/policy)으로 즉시 초안을 생성합니다.
 argument-hint: topic=... [policy=<policy-name>] [sources=[[노트A]],[[노트B]]] [soul=false]
 allowed-tools: Read, Write, Edit, Glob, Grep

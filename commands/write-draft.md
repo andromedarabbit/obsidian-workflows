@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.draft
+name: write-draft
 description: 선택된 아이디어 기반으로 초안을 생성합니다.
 argument-hint: proposal=path idea=ID [policy=<policy-name>] [soul=true|false]
 allowed-tools: Read, Write, Edit, Glob, Grep
@@ -61,7 +61,7 @@ updated: 2026-03-03T19:00
    External tools applied:
    - humanizer: 5 AI patterns naturalized
 
-   Next: /obsidian-workflows:oe:refine file="..." policy=...
+   Next: /obsidian-workflows:write-refine file="..." policy=...
    ```
 
 5. **Fail-safe 원칙**:

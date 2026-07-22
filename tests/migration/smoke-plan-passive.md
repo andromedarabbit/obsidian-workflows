@@ -7,11 +7,11 @@ Verify the passive plan flow is deterministic both when passive is explicit and 
 ## Steps
 
 1. Ensure vault runtime profile is configured.
-2. Run `/obsidian-workflows:ow:plan --intent passive`.
+2. Run `/obsidian-workflows:ow-plan --intent passive`.
 3. Verify proposal output path and idea list rendering.
-4. Run `/obsidian-workflows:ow:plan` with omitted `--intent` and no free-form writing request.
+4. Run `/obsidian-workflows:ow-plan` with omitted `--intent` and no free-form writing request.
 5. Verify it follows the same passive branch behavior without showing an intent-selection prompt.
-6. Run `/obsidian-workflows:ow:plan 팀스탠드업을 작성하자`.
+6. Run `/obsidian-workflows:ow-plan 팀스탠드업을 작성하자`.
 7. Verify the free-form writing request routes to the active branch without showing an intent-selection prompt.
 
 ## Expected

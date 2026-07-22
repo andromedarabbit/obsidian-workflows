@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.propose
+name: write-propose
 description: Passive 제안 생성. 스캔 결과를 아이디어 카드(3~5개)로 제안 노트에 저장합니다.
 argument-hint: "[--from-scan] [--ideas N] [--draft idea-id]"
 allowed-tools: Read, Write, Edit, Glob, Grep
@@ -8,10 +8,10 @@ updated: 2026-03-03T19:00
 ---
 
 동작:
-1. `obsidian:write.scan`의 최신 결과를 입력으로 사용합니다.
+1. `write-scan`의 최신 결과를 입력으로 사용합니다.
 2. scan 결과가 없으면 오류가 아니라 `SKIP`으로 즉시 종료하고, 아래 다음 액션을 안내합니다.
-   - `/obsidian-workflows:ow:plan` 실행 후 B(주제 제안 받기) 선택
-   - `/obsidian-workflows:ow:plan --intent passive --window-days 7` (필요 시 window/source 조정)
+   - `/obsidian-workflows:ow-plan` 실행 후 B(주제 제안 받기) 선택
+   - `/obsidian-workflows:ow-plan --intent passive --window-days 7` (필요 시 window/source 조정)
    - `writing-config.md`의 `source_paths`/`exclude_paths` 점검
 3. `writing-config.md`에서 `enabled_policies`, `proposal_policy_allowlist`를 읽고 제안 가능한 policy 집합을 확정합니다.
 4. 후보 파일을 주제별로 묶어 아이디어 3~5개를 생성합니다.
@@ -28,7 +28,7 @@ updated: 2026-03-03T19:00
 - 실패 시에도 가능한 범위에서 동일 키로 Context Card를 남깁니다.
 - 상태 의미는 `PASS|SKIP|FAIL`로만 사용합니다(빈 scan 결과는 `SKIP`).
 - 기본값은 제안 노트 생성까지만 수행합니다.
-- `--draft`로 명시된 아이디어만 `obsidian:write.draft` 흐름으로 이어갈 수 있습니다.
+- `--draft`로 명시된 아이디어만 `write-draft` 흐름으로 이어갈 수 있습니다.
 - 자동 실행에서도 제안 노트까지만 생성합니다.
 
 Daily Note 정책 가이드:

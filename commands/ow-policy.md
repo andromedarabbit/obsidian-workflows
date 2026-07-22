@@ -1,5 +1,5 @@
 ---
-name: ow:policy
+name: ow-policy
 description: 새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다.
 argument-hint: "[policy=<name>] [output_type=<type>] [--register] [--overwrite]"
 allowed-tools: Read, Glob, Grep, Write, Edit, AskUserQuestion
@@ -7,9 +7,9 @@ created: 2026-07-22T00:00
 updated: 2026-07-22T01:00
 ---
 
-`obsidian-workflows:ow:policy`는 대화형 문답으로 새 writing policy 파일을 생성하고, 사용자 확인을 받아 vault의 `writing-config.md`에 등록합니다.
+`obsidian-workflows:ow-policy`는 대화형 문답으로 새 writing policy 파일을 생성하고, 사용자 확인을 받아 vault의 `writing-config.md`에 등록합니다.
 
-생성된 policy는 `obsidian:write.review.policy` 게이트가 그대로 검증할 수 있는 형태여야 합니다. 즉 이 커맨드가 쓰는 frontmatter 필드는 review.policy가 읽는 필드(`required_sections`, `target_length`, `cta_required`, `policy_type`)와 정합해야 합니다.
+생성된 policy는 `write-review-policy` 게이트가 그대로 검증할 수 있는 형태여야 합니다. 즉 이 커맨드가 쓰는 frontmatter 필드는 review.policy가 읽는 필드(`required_sections`, `target_length`, `cta_required`, `policy_type`)와 정합해야 합니다.
 
 policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하는 frontmatter/본문 구조는 이 명세를 따릅니다.
 
@@ -48,7 +48,7 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하
 
 ## 자체 검증
 
-파일을 쓴 뒤, `obsidian:write.review.policy`가 읽는 필드가 well-formed인지 점검합니다.
+파일을 쓴 뒤, `write-review-policy`가 읽는 필드가 well-formed인지 점검합니다.
 
 - `required_sections`가 비어 있지 않은 목록인지, `target_length`가 값이 있는지, `cta_required`가 boolean인지 확인합니다.
 - 본문 섹션 헤더가 `required_sections`와 정합하는지 확인합니다.
@@ -73,12 +73,12 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하
   - `SKIP`: 생성 대상이 이미 존재하고 덮어쓰기를 하지 않은 정상 종료.
   - `FAIL`: preflight/입력/자체 검증 오류.
 - 실패 시 조용한 fallback 없이 즉시 종료합니다.
-- 종료 시 요약과 다음 단계를 안내합니다(예: 이 policy로 초안을 작성하려면 `obsidian-workflows:ow:plan`을 policy와 함께 사용).
+- 종료 시 요약과 다음 단계를 안내합니다(예: 이 policy로 초안을 작성하려면 `obsidian-workflows:ow-plan`을 policy와 함께 사용).
 
 ## Usage
 
 ```
-/obsidian-workflows:ow:policy
-/obsidian-workflows:ow:policy policy=linkedin output_type=linkedin-post
-/obsidian-workflows:ow:policy policy=newsletter --register
+/obsidian-workflows:ow-policy
+/obsidian-workflows:ow-policy policy=linkedin output_type=linkedin-post
+/obsidian-workflows:ow-policy policy=newsletter --register
 ```

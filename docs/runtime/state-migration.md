@@ -16,7 +16,7 @@ Preserve passive/scan continuity when moving plugin runtime from vault-coupled l
 ## Validation Commands (manual)
 
 - Run session-start autorun once <!-- 제거됨: session-start 자동 트리거는 이 저장소에 배선되지 않음. autorun은 명시 호출 전용 -->
-- Run `/obsidian-workflows:ow:plan --intent passive`
+- Run `/obsidian-workflows:ow-plan --intent passive`
 - Confirm status semantics (`PASS|SKIP|FAIL`) unchanged
 
 ## Rollback Trigger

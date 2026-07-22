@@ -1,5 +1,5 @@
 ---
-title: ow:plan passive-default regression
+title: ow-plan passive-default regression
 category: logic-errors
 date: 2026-03-13
 tags:
@@ -15,7 +15,7 @@ tags:
 
 ## Problem
 
-`/obsidian-workflows:ow:plan` should default to the passive branch when `--intent` is omitted. After updating the command contract, the flow was still reported as interactive in real use.
+`/obsidian-workflows:ow-plan` should default to the passive branch when `--intent` is omitted. After updating the command contract, the flow was still reported as interactive in real use.
 
 This looked like a branch-selection regression, but the visible prompt was not always the intent gate itself.
 
@@ -42,7 +42,7 @@ So the real failure mode was not only “wrong branch routing,” but also “we
 
 Treat this file as the behavioral source of truth:
 
-- `commands/ow/plan.md`
+- `commands/ow-plan.md`
 
 Important contract points in the canonical command:
 
@@ -85,7 +85,7 @@ This added two different protections:
 
 #### Canonical contract validation
 
-`validate-behavior-contracts.js` checks the structure of `commands/ow/plan.md` only.
+`validate-behavior-contracts.js` checks the structure of `commands/ow-plan.md` only.
 
 It verifies that the canonical command contract still contains:
 
@@ -146,7 +146,7 @@ This prevents the original class of regression:
 
 ### 1. Keep behavioral truth in one place
 
-Use `commands/ow/plan.md` as the single behavioral source of truth.
+Use `commands/ow-plan.md` as the single behavioral source of truth.
 
 Reference files like `skills/plan/SKILL.md`, README examples, and smoke docs should mirror that behavior, but they should not become independent sources of CI truth.
 
@@ -191,7 +191,7 @@ make validate-ci
 ## Files Involved
 
 ### Canonical behavior
-- `commands/ow/plan.md`
+- `commands/ow-plan.md`
 
 ### Reference and user-facing docs
 - `skills/plan/SKILL.md`

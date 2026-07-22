@@ -22,7 +22,7 @@ related_components:
 
 ## Context
 
-`obsidian-workflows`는 git 마켓플레이스(`andromedarabbit` → `github.com/andromedarabbit/obsidian-workflows.git`, `autoUpdate: true`)로 설치돼 있다. `ow:work` 동작을 고쳐 커밋·push까지 마쳤는데(`24645db`, origin/main), Claude Code는 계속 **옛 코드**로 동작했다.
+`obsidian-workflows`는 git 마켓플레이스(`andromedarabbit` → `github.com/andromedarabbit/obsidian-workflows.git`, `autoUpdate: true`)로 설치돼 있다. `ow-work` 동작을 고쳐 커밋·push까지 마쳤는데(`24645db`, origin/main), Claude Code는 계속 **옛 코드**로 동작했다.
 
 원인을 추적해 보니 실제로 실행되는 플러그인은 소스 repo가 아니라 **버전으로 이름 붙은 스냅샷 복사본**이었다:
 
@@ -75,7 +75,7 @@ print([v for k,v in d['plugins'].items() if 'obsidian-workflows' in k])"
 
 # 캐시된 파일에 내 변경이 들어있는지 직접 grep (없으면 캐시가 낡은 것)
 grep -c "내가-추가한-문구" \
-  ~/.claude/plugins/cache/andromedarabbit/obsidian-workflows/*/commands/ow/work.md
+  ~/.claude/plugins/cache/andromedarabbit/obsidian-workflows/*/commands/ow-work.md
 ```
 
 ### 반영 절차 (이번 사례 그대로)

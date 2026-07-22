@@ -6,35 +6,42 @@ Consistent naming conventions for commands, files, and git commits in obsidian-w
 
 ### Format
 
-Command names MUST follow kebab-case with optional namespace prefix:
+Command names MUST be flat kebab-case (dash-separated, no `:` or `.`):
 
 ```
-^[a-z0-9]+([:-][a-z0-9]+)*(\.[a-z0-9]+)*$
+^[a-z0-9]+(-[a-z0-9]+)*$
 ```
+
+The runtime slash name is derived from the command's file path under `commands/`, then
+prefixed with the plugin namespace automatically (`commands/ow-plan.md` →
+`/obsidian-workflows:ow-plan`). Because path segments become `:` separators, keep every
+command as a single flat file directly under `commands/` and express grouping with a
+dash prefix, not a subdirectory or an internal colon.
 
 ### Patterns
 
-**Simple names** (preferred for top-level commands):
+**Track entrypoints** (the workflow tracks, mirrored by same-named skills) use the `ow-` prefix:
 ```
-work
-plan
-review
-compound
+ow-plan
+ow-work
+ow-review
+ow-compound
+ow-policy
 ```
 
-**Namespaced names** (for related command groups):
+**Execution commands** (invoked by the tracks) use the `write-` prefix:
 ```
-obsidian:write.active
-obsidian:write.draft
-obsidian:write.refine
-obsidian-workflows:ow:work
+write-active
+write-draft
+write-refine
+write-review-policy
 ```
 
 ### Guidelines
 
 1. **Be descriptive**: Name should indicate what the command does
 2. **Be concise**: Prefer shorter names when clear
-3. **Use namespaces**: Group related commands with `:` or `-`
+3. **Use namespaces**: Group related commands with a `-` prefix (e.g. `ow-`, `write-`). Do not put `:` or `.` in a command name — the runtime slash name is derived from the file path, so an internal colon adds an extra segment (`commands/ow/plan.md` → `/obsidian-workflows:ow:plan`). Keep names flat and dash-only; the `obsidian-workflows:` plugin prefix is added automatically.
 4. **Avoid abbreviations**: Unless widely understood (e.g., `init`, `config`)
 5. **Use verbs**: For action commands (e.g., `scan`, `generate`, `validate`)
 
@@ -42,7 +49,7 @@ obsidian-workflows:ow:work
 
 ✅ **Good**:
 - `work` - Clear, concise
-- `obsidian:write.active` - Well-namespaced
+- `write-active` - Well-namespaced
 - `validate-frontmatter` - Descriptive
 - `generate-index` - Action-oriented
 
@@ -78,31 +85,34 @@ See [Skill Specification](./skill-specification.md) for the full frontmatter con
 
 ### Command Files
 
-Command definition files follow the pattern:
+Command definition files are flat, directly under `commands/`:
 
 ```
-commands/<namespace>/<name>.md
+commands/<name>.md
 ```
 
 **Examples**:
 ```
-commands/obsidian:write.active.md
-commands/obsidian-workflows/work.md
-commands/obsidian-workflows/plan.md
+commands/ow-plan.md
+commands/write-active.md
 ```
+
+A `commands/<plugin-name>/` subdirectory (`commands/obsidian-workflows/`) is forbidden —
+it produces a doubled namespace at discovery and is rejected by
+`scripts/check-duplicates.js`.
 
 ### Hook Scripts
 
-Hook scripts follow the pattern:
+Hook scripts live under `commands/` (all hook paths must start with `commands/`):
 
 ```
-commands/<namespace>/hooks/<name>.sh
+commands/hooks/<name>.sh
 ```
 
 **Examples**:
 ```
-commands/obsidian-workflows/hooks/scan.sh
-commands/obsidian-workflows/hooks/validate.sh
+commands/hooks/scan.sh
+commands/hooks/validate.sh
 ```
 
 ### Documentation Files
@@ -166,7 +176,7 @@ Common scopes for this repository:
 
 ✅ **Good**:
 ```
-feat(commands): add obsidian:write.scan command
+feat(commands): add write-scan command
 fix(validation): handle missing frontmatter gracefully
 docs(hooks): add hook patterns documentation
 chore(ci): update GitHub Actions to v4
@@ -199,8 +209,8 @@ Implements automatic proposal generation based on file changes.
 The scan command monitors source_paths and generates proposals
 when new content is detected.
 
-- Add obsidian:write.scan command
-- Add obsidian:write.propose command
+- Add write-scan command
+- Add write-propose command
 - Update work command to support passive mode
 
 Closes #42
@@ -291,7 +301,7 @@ tests/                 # Test files
 
 | Context | Convention | Example |
 |---------|-----------|---------|
-| Command names | kebab-case | `work`, `obsidian:write.active` |
+| Command names | kebab-case | `work`, `write-active` |
 | Skill names | kebab-case, == directory name | `plan`, `work` |
 | File names | kebab-case | `command-specification.md` |
 | Directory names | kebab-case | `obsidian-workflows/` |

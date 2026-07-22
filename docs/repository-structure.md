@@ -133,7 +133,7 @@ Commands do not rely on `~/.claude/*` for correctness. All required state is pas
 ### Command Files
 - Location: `commands/`
 - Format: Markdown with YAML frontmatter
-- Naming: `category:action.md` (e.g., `obsidian:write.scan.md`)
+- Naming: `category:action.md` (e.g., `write-scan.md`)
 
 ### Skill Files
 - Location: `skills/<name>/SKILL.md`

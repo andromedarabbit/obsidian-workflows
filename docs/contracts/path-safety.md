@@ -21,9 +21,9 @@ Apply the same path safety checks to every command that accepts user-provided fi
 
 Must be consistent across:
 
-- `obsidian:write.scan`
-- `obsidian:write.draft`
-- `obsidian:write.refine`
-- `obsidian:write.route`
-- `obsidian-workflows:ow:review`
+- `write-scan`
+- `write-draft`
+- `write-refine`
+- `write-route`
+- `obsidian-workflows:ow-review`
 - Any new command with file/path arguments

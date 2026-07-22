@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.scan
+name: write-scan
 description: Passive 스캔. 기준 시점 이후 변경 파일을 source_paths에서 수집합니다.
 argument-hint: "[--since ISO_DATE] [--window-days N] [--source path1,path2]"
 allowed-tools: Read, Glob, Grep

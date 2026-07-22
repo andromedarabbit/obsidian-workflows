@@ -15,13 +15,13 @@ obsidian-workflows를 다양한 상황에서 효과적으로 사용하는 방법
 
 ```bash
 # 1. Fast mode로 아이디어 제안
-/obsidian-workflows:ow:plan --fast --intent passive
+/obsidian-workflows:ow-plan --fast --intent passive
 
 # 2. 첫 번째 아이디어로 빠른 초안
-/obsidian-workflows:ow:work --fast mode=draft idea=1
+/obsidian-workflows:ow-work --fast mode=draft idea=1
 
 # 3. 간단한 검토
-/obsidian-workflows:ow:review --fast file="Workflows/Drafts/my-draft.md"
+/obsidian-workflows:ow-review --fast file="Workflows/Drafts/my-draft.md"
 ```
 
 **최적화 팁:**
@@ -46,20 +46,20 @@ obsidian-workflows를 다양한 상황에서 효과적으로 사용하는 방법
 
 ```bash
 # 1. Full mode로 리서치 포함 계획
-/obsidian-workflows:ow:plan --intent active topic="..." policy=technical-blog
+/obsidian-workflows:ow-plan --intent active topic="..." policy=technical-blog
 
 # 2. 정책 준수 초안 작성
-/obsidian-workflows:ow:work mode=active topic="..." policy=technical-blog
+/obsidian-workflows:ow-work mode=active topic="..." policy=technical-blog
 
 # 3. 상세 검토
-/obsidian-workflows:ow:review file="..." --verbose
+/obsidian-workflows:ow-review file="..." --verbose
 
 # 4. 수정 후 재검토
-/obsidian-workflows:ow:work mode=refine file="..."
-/obsidian-workflows:ow:review file="..."
+/obsidian-workflows:ow-work mode=refine file="..."
+/obsidian-workflows:ow-review file="..."
 
 # 5. 학습 캡처
-/obsidian-workflows:ow:compound file="Workflows/Final/..."
+/obsidian-workflows:ow-compound file="Workflows/Final/..."
 ```
 
 **최적화 팁:**
@@ -84,20 +84,20 @@ obsidian-workflows를 다양한 상황에서 효과적으로 사용하는 방법
 
 ```bash
 # 1. 첫 문서 (Full mode)
-/obsidian-workflows:ow:plan --intent active topic="Part 1: ..."
-/obsidian-workflows:ow:work mode=active topic="Part 1: ..."
-/obsidian-workflows:ow:review file="..."
-/obsidian-workflows:ow:compound file="..."
+/obsidian-workflows:ow-plan --intent active topic="Part 1: ..."
+/obsidian-workflows:ow-work mode=active topic="Part 1: ..."
+/obsidian-workflows:ow-review file="..."
+/obsidian-workflows:ow-compound file="..."
 
 # 2. 두 번째 문서 (Auto mode - 자동으로 Fast 선택)
-/obsidian-workflows:ow:plan --intent active topic="Part 2: ..."
+/obsidian-workflows:ow-plan --intent active topic="Part 2: ..."
 # 자동으로 fast mode 선택 (반복 작업 감지)
-/obsidian-workflows:ow:work mode=active topic="Part 2: ..."
-/obsidian-workflows:ow:review file="..."
-/obsidian-workflows:ow:compound file="..."
+/obsidian-workflows:ow-work mode=active topic="Part 2: ..."
+/obsidian-workflows:ow-review file="..."
+/obsidian-workflows:ow-compound file="..."
 
 # 3. 세 번째 문서 (캐시 활용으로 더 빠름)
-/obsidian-workflows:ow:plan --intent active topic="Part 3: ..."
+/obsidian-workflows:ow-plan --intent active topic="Part 3: ..."
 # 캐시 히트로 80% 빠름
 ```
 
@@ -133,7 +133,7 @@ skip_steps:
   work: [external-tools, context-card]
 
 # 매일 실행
-/obsidian-workflows:ow:work mode=active policy=daily-note
+/obsidian-workflows:ow-work mode=active policy=daily-note
 # 자동으로 fast mode + 캐시 활용
 # 소요 시간: 30초
 ```
@@ -141,7 +141,7 @@ skip_steps:
 **최적화 팁:**
 - `proposal_auto_select: true`로 자동 선택
 - `skip_steps`로 불필요한 단계 제거
-- `/obsidian:write.autorun`으로 자동 제안 실행
+- `/write-autorun`으로 자동 제안 실행
 
 **예상 시간:** 30초 (첫 실행: 2분)
 
@@ -160,26 +160,26 @@ skip_steps:
 
 ```bash
 # 1. 리서치 중심 계획
-/obsidian-workflows:ow:plan --intent active \
+/obsidian-workflows:ow-plan --intent active \
   topic="Distributed system architecture patterns" \
   --verbose
 
 # 2. 외부 도구 활용 초안
-/obsidian-workflows:ow:work mode=active \
+/obsidian-workflows:ow-work mode=active \
   topic="..." \
   policy=technical-blog
 
 # 3. 상세 검토 (외부 도구 포함)
-/obsidian-workflows:ow:review file="..." --verbose
+/obsidian-workflows:ow-review file="..." --verbose
 
 # 4. 정제 (humanizer + grammar-checker)
-/obsidian-workflows:ow:work mode=refine file="..."
+/obsidian-workflows:ow-work mode=refine file="..."
 
 # 5. 최종 검토
-/obsidian-workflows:ow:review file="..."
+/obsidian-workflows:ow-review file="..."
 
 # 6. 학습 캡처
-/obsidian-workflows:ow:compound file="..."
+/obsidian-workflows:ow-compound file="..."
 ```
 
 **최적화 팁:**
@@ -204,22 +204,22 @@ skip_steps:
 
 ```bash
 # 1. 시리즈 계획 (한 번만)
-/obsidian-workflows:ow:plan --intent active \
+/obsidian-workflows:ow-plan --intent active \
   topic="Series: Kubernetes Deep Dive - Part 1" \
   policy=technical-blog
 
 # 2. 첫 포스트 작성 (Full mode)
-/obsidian-workflows:ow:work mode=active topic="..." policy=technical-blog
-/obsidian-workflows:ow:review file="..."
-/obsidian-workflows:ow:compound file="..."
+/obsidian-workflows:ow-work mode=active topic="..." policy=technical-blog
+/obsidian-workflows:ow-review file="..."
+/obsidian-workflows:ow-compound file="..."
 
 # 3. 두 번째 포스트 (Fast mode - 자동 선택)
-/obsidian-workflows:ow:plan --intent active \
+/obsidian-workflows:ow-plan --intent active \
   topic="Series: Kubernetes Deep Dive - Part 2"
 # 자동으로 fast mode (반복 작업 + 캐시)
-/obsidian-workflows:ow:work mode=active topic="..." policy=technical-blog
-/obsidian-workflows:ow:review file="..."
-/obsidian-workflows:ow:compound file="..."
+/obsidian-workflows:ow-work mode=active topic="..." policy=technical-blog
+/obsidian-workflows:ow-review file="..."
+/obsidian-workflows:ow-compound file="..."
 
 # 4. 나머지 포스트들 (더 빠름)
 # 캐시 + auto mode로 각 포스트 5분 이내
@@ -321,10 +321,10 @@ auto_mode_rules:
 
 ```bash
 # 1. Fast mode 강제
-/obsidian-workflows:ow:plan --fast --intent passive
+/obsidian-workflows:ow-plan --fast --intent passive
 
 # 2. 단계 건너뛰기
-/obsidian-workflows:ow:plan --skip preflight,external-tools --intent passive
+/obsidian-workflows:ow-plan --skip preflight,external-tools --intent passive
 
 # 3. 설정 변경
 workflow_mode: fast
@@ -336,7 +336,7 @@ skip_steps:
 
 ```bash
 # 1. Full mode 강제
-/obsidian-workflows:ow:plan --verbose --intent active
+/obsidian-workflows:ow-plan --verbose --intent active
 
 # 2. 외부 도구 활성화
 external_tools:

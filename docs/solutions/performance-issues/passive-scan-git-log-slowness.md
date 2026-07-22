@@ -10,8 +10,8 @@ tags:
   - git-log
   - fd
 components:
-  - obsidian:write.scan
-  - ow:plan
+  - write-scan
+  - ow-plan
 severity: medium
 status: resolved
 root_cause: git log parsing for recent file discovery
@@ -19,15 +19,15 @@ solution: fd-based filesystem scanning with find fallback
 performance_gain: 10-100x faster (0.386s for 66 files)
 files_modified:
   - src/scan-recent-files.sh
-  - commands/obsidian-write/obsidian:write.scan.md
-  - commands/ow/plan.md
+  - commands/write-scan.md
+  - commands/ow-plan.md
 ---
 
 > Historical note: this document preserves the helper script examples and command text that were current when the performance issue was analyzed. If an example below shows a cwd-relative helper invocation such as `./src/scan-recent-files.sh`, read it as historical context; current contracts require resolving the plugin/repo root first and executing helper scripts by absolute path.
 
 ## Problem
 
-The `/ow:plan --intent passive` command was experiencing significant slowdowns when scanning for recently modified files. The workflow used `git log` to find files changed after a specific timestamp, which required traversing commit history, parsing metadata, and filtering results.
+The `/ow-plan --intent passive` command was experiencing significant slowdowns when scanning for recently modified files. The workflow used `git log` to find files changed after a specific timestamp, which required traversing commit history, parsing metadata, and filtering results.
 
 **Symptoms:**
 - Passive mode planning took 5-10+ seconds
@@ -109,11 +109,11 @@ done | jq -s '.'
 ```json
 [
   {
-    "path": "./commands/obsidian-write/obsidian:write.scan.md",
+    "path": "./commands/write-scan.md",
     "mtime": "2026-03-18T10:45:16"
   },
   {
-    "path": "./commands/ow/plan.md",
+    "path": "./commands/ow-plan.md",
     "mtime": "2026-03-18T10:44:32"
   }
 ]
@@ -121,7 +121,7 @@ done | jq -s '.'
 
 ### Integration
 
-Updated `commands/obsidian-write/obsidian:write.scan.md`:
+Updated `commands/write-scan.md`:
 
 ```markdown
 성능 최적화:
@@ -130,11 +130,11 @@ Updated `commands/obsidian-write/obsidian:write.scan.md`:
 - `fd` 설치: `brew install fd` (선택사항, 없으면 자동으로 find 사용)
 ```
 
-Updated `commands/ow/plan.md`:
+Updated `commands/ow-plan.md`:
 
 ```markdown
 - `passive` 분기:
-  2. `obsidian:write.scan` 규칙으로 후보 파일을 수집합니다.
+  2. `write-scan` 규칙으로 후보 파일을 수집합니다.
      - 성능: `src/scan-recent-files.sh` 스크립트 사용 권장 (git log보다 훨씬 빠름)
 ```
 

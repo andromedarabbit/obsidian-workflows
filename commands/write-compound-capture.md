@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.compound.capture
+name: write-compound-capture
 description: 완성본에서 학습 포인트를 캡처해 누적합니다(MVP 스켈레톤).
 argument-hint: file=path [append=true]
 allowed-tools: Read, Write, Edit, Glob, Grep

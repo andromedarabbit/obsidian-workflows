@@ -1,5 +1,5 @@
 ---
-name: obsidian:write.refine
+name: write-refine
 description: 기존 초안을 SOUL 규칙으로 리라이트/정제합니다.
 argument-hint: file=path [soul=true|false] [policy=<policy-name>]
 allowed-tools: Read, Write, Edit, Glob, Grep
@@ -57,7 +57,7 @@ updated: 2026-03-03T19:00
    - grammar-checker: 2 errors fixed
    - style-guide: All checks passed
 
-   Next: /obsidian-workflows:ow:review file="..." policy=...
+   Next: /obsidian-workflows:ow-review file="..." policy=...
    ```
 
 5. **Fail-safe 원칙**:
