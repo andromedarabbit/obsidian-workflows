@@ -6,7 +6,7 @@ context: inline
 mirrors: commands/ow-compound.md
 mirror_hash: f19a36b49fd161dd
 language: korean
-user-invocable: false
+ce_platforms: []
 created: 2026-03-02T14:58
 updated: 2026-07-07T00:00
 ---

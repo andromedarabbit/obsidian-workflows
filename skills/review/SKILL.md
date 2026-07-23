@@ -6,7 +6,7 @@ context: inline
 mirrors: commands/ow-review.md
 mirror_hash: ce48b2dabb6c5a15
 language: korean
-user-invocable: false
+ce_platforms: []
 created: 2026-03-02T14:58
 updated: 2026-07-22T02:00
 ---

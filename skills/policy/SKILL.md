@@ -6,7 +6,7 @@ context: inline
 mirrors: commands/ow-policy.md
 mirror_hash: 49038f6fb9d762a7
 language: korean
-user-invocable: false
+ce_platforms: []
 created: 2026-07-22T00:00
 updated: 2026-07-22T01:00
 ---
