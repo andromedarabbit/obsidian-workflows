@@ -1,12 +1,9 @@
 ---
-name: work
+name: ow-work
 description: WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다. WORK 트랙 실행이 필요하거나 모드를 판단해야 할 때 사용합니다.
-version: 0.1.0
+version: 0.2.0
 context: inline
-mirrors: commands/ow-work.md
-mirror_hash: 880e9c02beca6173
 language: korean
-ce_platforms: []
 created: 2026-03-02T14:58
 updated: 2026-07-07T00:00
 ---
@@ -88,6 +85,15 @@ When `mode=draft` and `proposal` parameter is not provided:
 - Question stem: 이번 턴 요청·인자에서 topic을 특정할 수 있으면 `"{topic}을(를) 어떤 모드로 진행할까요?"`를, 특정할 수 없으면 `"이 작업을 어떤 모드로 진행할까요?"`를 쓴다. (규칙 2 handoff 경로는 이 질문 지점에 도달하지 않으므로 topic 출처를 handoff로 한정하지 않는다.)
 - 옵션(라벨은 그대로): `active`(지금 바로 반영) / `draft`(초안 먼저) / `passive`(제안만) / `refine`(문체 다듬기). `route`는 메뉴에 넣지 않음 — `AskUserQuestion`의 "Other"로 흡수.
 - 사용자 선택을 받으면 즉시 해당 mode 경로를 실행합니다.
+
+## Helper Script Path Resolution
+
+Helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
+
+1. 먼저 `obsidian-workflows` plugin/repo root를 해석합니다.
+2. helper script를 사용할 때는 해석된 root 아래의 절대 경로로 실행합니다.
+3. root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
+4. optional helper script 단계는 경고 후 건너뛰고, 본래 command의 fail-fast/fail-safe 정책을 따릅니다.
 
 ## Status/Output Rules
 

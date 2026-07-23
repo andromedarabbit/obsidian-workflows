@@ -74,7 +74,7 @@ This will:
 
 There is no scaffolder for skills yet (skill count is currently small enough that this is not worth automating — revisit if the count grows past roughly 8-10). To add a new skill:
 
-1. Copy an existing skill directory, e.g. `skills/plan/` to `skills/<new-name>/`
+1. Copy an existing skill directory, e.g. `skills/ow-plan/` to `skills/<new-name>/`
 2. Rename the file's directory to `<new-name>` and update the frontmatter `name` field to match it exactly
 3. Update `description`, `version`, `context`, and other fields per [Skill Specification](docs/skill-specification.md)
 4. Run `bash tools/check-skill-frontmatter.sh` to validate

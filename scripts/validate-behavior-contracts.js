@@ -10,28 +10,28 @@ function readRelative(relativePath) {
 
 const docs = {
   commandPlan: {
-    path: 'commands/ow-plan.md',
-    text: readRelative('commands/ow-plan.md'),
+    path: 'skills/ow-plan/SKILL.md',
+    text: readRelative('skills/ow-plan/SKILL.md'),
   },
   skillPlan: {
-    path: 'skills/plan/SKILL.md',
-    text: readRelative('skills/plan/SKILL.md'),
+    path: 'skills/ow-plan/SKILL.md',
+    text: readRelative('skills/ow-plan/SKILL.md'),
   },
   commandWork: {
-    path: 'commands/ow-work.md',
-    text: readRelative('commands/ow-work.md'),
+    path: 'skills/ow-work/SKILL.md',
+    text: readRelative('skills/ow-work/SKILL.md'),
   },
   commandCompound: {
-    path: 'commands/ow-compound.md',
-    text: readRelative('commands/ow-compound.md'),
+    path: 'skills/ow-compound/SKILL.md',
+    text: readRelative('skills/ow-compound/SKILL.md'),
   },
   commandReview: {
-    path: 'commands/ow-review.md',
-    text: readRelative('commands/ow-review.md'),
+    path: 'skills/ow-review/SKILL.md',
+    text: readRelative('skills/ow-review/SKILL.md'),
   },
   skillWork: {
-    path: 'skills/work/SKILL.md',
-    text: readRelative('skills/work/SKILL.md'),
+    path: 'skills/ow-work/SKILL.md',
+    text: readRelative('skills/ow-work/SKILL.md'),
   },
   scanCommand: {
     path: 'commands/write-scan.md',

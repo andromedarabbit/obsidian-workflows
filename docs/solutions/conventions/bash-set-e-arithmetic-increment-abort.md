@@ -23,6 +23,10 @@ related_components:
 
 ## Context
 
+> **Note (2026-07-23):** `tools/check-skill-sync.sh`는 v0.3.0에서 제거됐습니다. 스킬이 정본으로 승격되어 커맨드↔스킬 미러 구조가 폐기됐기 때문입니다. 이 문서는 `(( count++ ))`의 bash `set -e` 트랩에 대한 일반적인 교훈으로서 보존됩니다.
+
+## Context (Original)
+
 `tools/check-skill-sync.sh`(SKILL↔command 미러 드리프트 검증기)를 추가·머지·push했는데, 로컬에서는 모든 검증이 통과했지만 GitHub Actions의 `Validate Commands` 워크플로가 **첫 번째 skill 파일에서** 실패했다:
 
 ```text

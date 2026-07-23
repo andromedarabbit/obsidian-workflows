@@ -1,12 +1,9 @@
 ---
-name: policy
+name: ow-policy
 description: 새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다. 새 채널/글 유형의 policy를 만들거나 추가해야 할 때 사용합니다.
-version: 0.1.0
+version: 0.2.0
 context: inline
-mirrors: commands/ow-policy.md
-mirror_hash: 49038f6fb9d762a7
 language: korean
-ce_platforms: []
 created: 2026-07-22T00:00
 updated: 2026-07-22T01:00
 ---

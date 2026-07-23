@@ -1,12 +1,9 @@
 ---
-name: plan
+name: ow-plan
 description: PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
-version: 0.1.0
+version: 0.2.0
 context: inline
-mirrors: commands/ow-plan.md
-mirror_hash: 68c4934fd18ed0a3
 language: korean
-ce_platforms: []
 created: 2026-03-02T01:34
 updated: 2026-07-07T00:00
 ---

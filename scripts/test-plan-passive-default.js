@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const commandPath = path.join(root, 'commands/ow-plan.md');
+const commandPath = path.join(root, 'skills/ow-plan/SKILL.md');
 const fixturePath = path.join(root, 'tests/migration/fixtures/plan-passive-default.json');
 
 const commandText = fs.readFileSync(commandPath, 'utf8');
@@ -26,10 +26,9 @@ function getSection(text, heading, nextHeadingCandidates = []) {
 }
 
 const sectionOrder = [
-  'External Tools Detection:',
-  'Intent Gate:',
-  '분기 실행 규칙:',
-  '상태/출력 규칙:',
+  '## Intent Gate',
+  '## Branch Execution Rules',
+  '## Status/Output Rules',
 ];
 
 function getOrderedSection(text, heading) {
@@ -39,10 +38,10 @@ function getOrderedSection(text, heading) {
 }
 
 const sections = {
-  externalTools: getOrderedSection(commandText, 'External Tools Detection:'),
-  intentGate: getOrderedSection(commandText, 'Intent Gate:'),
-  branchRules: getOrderedSection(commandText, '분기 실행 규칙:'),
-  statusRules: getOrderedSection(commandText, '상태/출력 규칙:'),
+  externalTools: '',
+  intentGate: getOrderedSection(commandText, '## Intent Gate'),
+  branchRules: getOrderedSection(commandText, '## Branch Execution Rules'),
+  statusRules: getOrderedSection(commandText, '## Status/Output Rules'),
 };
 
 const errors = [];
@@ -105,8 +104,8 @@ function evaluateScenario(scenario) {
     result.asksExternalTools = !sections.externalTools.includes('**Fast mode일 때**: 외부 도구 탐지를 건너뜁니다.') && result.asksExternalTools;
   }
 
-  const activeBranchDocumented = sections.branchRules.includes('- `active` 분기:');
-  const passiveBranchDocumented = sections.branchRules.includes('- `passive` 분기:');
+  const activeBranchDocumented = sections.branchRules.includes('### Active Branch');
+  const passiveBranchDocumented = sections.branchRules.includes('### Passive Branch');
   const passDocumented = sections.statusRules.includes('- `PASS`: 분기 실행이 정상 완료됨');
   const skipDocumented = sections.statusRules.includes('- `SKIP`: passive 후보가 0건인 정상 empty case');
 

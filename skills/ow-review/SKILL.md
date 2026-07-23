@@ -1,12 +1,9 @@
 ---
-name: review
+name: ow-review
 description: '게시·발행 직전의 초안을 정책 검증과 문체 리뷰까지 한 번에 통과시키고 싶을 때 사용합니다. Obsidian vault 초안(블로그·뉴스레터·스레드·데일리 노트)이나 writing-config policy로 검증할 draft가 대상입니다. 채널 정책 게이트(구조·길이·필수 섹션 검증)에 이어 문체·윤문 점검(AI 티·번역투 진단, 필요 시 사람처럼 다듬기)까지 한 번에 수행합니다. 정책 검증하고 문체까지, 발행 전 최종 점검, 리뷰하고 AI 티 있으면 다듬어줘 같은 요청에 적합합니다. 제외 — 맞춤법·오탈자만 교정, policy 신규 생성, 코드·PR 리뷰, 새 글 작성, 정책 검증 없이 문장만 윤문(AI 티만 빼줘)하려는 요청.'
-version: 0.2.0
+version: 0.3.0
 context: inline
-mirrors: commands/ow-review.md
-mirror_hash: ce48b2dabb6c5a15
 language: korean
-ce_platforms: []
 created: 2026-03-02T14:58
 updated: 2026-07-22T02:00
 ---

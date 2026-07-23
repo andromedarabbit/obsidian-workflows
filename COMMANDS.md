@@ -9,43 +9,33 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 
 #### `/obsidian-workflows:ow-compound`
 
-COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다.
+COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다. 완성된 문서에서 학습 포인트를 축적해야 할 때 사용합니다.
 
-**Usage:** `"[file=path] [latest] [--fast] [--skip external-tools,context-card]"`
-
-**Source:** [`commands/ow-compound.md`](commands/ow-compound.md)
+**Source:** [`skills/ow-compound/SKILL.md`](skills/ow-compound/SKILL.md)
 
 #### `/obsidian-workflows:ow-plan`
 
-PLAN 트랙 진입점. 의도를 먼저 확인해 active handoff 또는 passive 제안을 수행합니다.
+PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
 
-**Usage:** `"[--intent active|passive] [topic=...|<free-form writing request>] [policy=<policy-name>] [--window-days N] [--source path1,path2] [--verbose] [--fast] [--skip preflight,external-tools,research,context-card]"`
-
-**Source:** [`commands/ow-plan.md`](commands/ow-plan.md)
+**Source:** [`skills/ow-plan/SKILL.md`](skills/ow-plan/SKILL.md)
 
 #### `/obsidian-workflows:ow-policy`
 
-새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다.
+새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다. 새 채널/글 유형의 policy를 만들거나 추가해야 할 때 사용합니다.
 
-**Usage:** `"[policy=<name>] [output_type=<type>] [--register] [--overwrite]"`
-
-**Source:** [`commands/ow-policy.md`](commands/ow-policy.md)
+**Source:** [`skills/ow-policy/SKILL.md`](skills/ow-policy/SKILL.md)
 
 #### `/obsidian-workflows:ow-review`
 
 '게시·발행 직전의 초안을 정책 검증과 문체 리뷰까지 한 번에 통과시키고 싶을 때 사용합니다. Obsidian vault 초안(블로그·뉴스레터·스레드·데일리 노트)이나 writing-config policy로 검증할 draft가 대상입니다. 채널 정책 게이트(구조·길이·필수 섹션 검증)에 이어 문체·윤문 점검(AI 티·번역투 진단, 필요 시 사람처럼 다듬기)까지 한 번에 수행합니다. 정책 검증하고 문체까지, 발행 전 최종 점검, 리뷰하고 AI 티 있으면 다듬어줘 같은 요청에 적합합니다. 제외 — 맞춤법·오탈자만 교정, policy 신규 생성, 코드·PR 리뷰, 새 글 작성, 정책 검증 없이 문장만 윤문(AI 티만 빼줘)하려는 요청.'
 
-**Usage:** `file=path [policy=<policy-name>] [--fast] [--humanize] [--skip external-tools,voice,context-card]`
-
-**Source:** [`commands/ow-review.md`](commands/ow-review.md)
+**Source:** [`skills/ow-review/SKILL.md`](skills/ow-review/SKILL.md)
 
 #### `/obsidian-workflows:ow-work`
 
-WORK 트랙 진입점. mode를 명시하거나 문맥에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다.
+WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다. WORK 트랙 실행이 필요하거나 모드를 판단해야 할 때 사용합니다.
 
-**Usage:** `"[mode=<active|passive|draft|refine|route>] [args...] [--fast] [--skip preflight,external-tools,validation,context-card]"`
-
-**Source:** [`commands/ow-work.md`](commands/ow-work.md)
+**Source:** [`skills/ow-work/SKILL.md`](skills/ow-work/SKILL.md)
 
 
 ### Obsidian Write

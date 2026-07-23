@@ -335,7 +335,7 @@ and remove `commands/obsidian-workflows/*.md`.
 
 **Error**:
 ```
-ERROR: skills/plan/SKILL.md - Unterminated frontmatter (missing closing ---)
+ERROR: skills/ow-plan/SKILL.md - Unterminated frontmatter (missing closing ---)
 ```
 
 **Fix**: Add the closing `---` delimiter after the YAML block. Without it, the validator cannot tell where frontmatter ends and the document body begins.
@@ -344,19 +344,19 @@ ERROR: skills/plan/SKILL.md - Unterminated frontmatter (missing closing ---)
 
 **Error**:
 ```
-ERROR: skills/plan/SKILL.md - name 'workflow-plan-reference' does not match directory name 'plan'
+ERROR: skills/ow-plan/SKILL.md - name 'workflow-plan-reference' does not match directory name 'ow-plan'
 ```
 
 **Fix**: Set `name` to the directory name:
 ```yaml
-name: plan
+name: ow-plan
 ```
 
 ### Skill Description Too Long
 
 **Error**:
 ```
-ERROR: skills/plan/SKILL.md - description is 1200 chars (exceeds 1024 limit)
+ERROR: skills/ow-plan/SKILL.md - description is 1200 chars (exceeds 1024 limit)
 ```
 
 **Fix**: Shorten the description to 1024 UTF-8 codepoints or fewer.
@@ -365,12 +365,12 @@ ERROR: skills/plan/SKILL.md - description is 1200 chars (exceeds 1024 limit)
 
 **Warning**:
 ```
-WARNING: skills/plan/SKILL.md - context is 'inline' but 'agent' is set (agent is only meaningful for 'fork'; remove it)
+WARNING: skills/ow-plan/SKILL.md - context is 'inline' but 'agent' is set (agent is only meaningful for 'fork'; remove it)
 ```
 
 **Fix**: Also applies when `agent` is set but its value isn't one of `general-purpose`, `Explore`, or `Plan`:
 ```
-WARNING: skills/plan/SKILL.md - agent 'nonsense' is not one of general-purpose|Explore|Plan
+WARNING: skills/ow-plan/SKILL.md - agent 'nonsense' is not one of general-purpose|Explore|Plan
 ```
 
 **Fix**: Remove `agent` when `context: inline`, or set `agent` when `context: fork`. See [Skill Specification](./skill-specification.md).

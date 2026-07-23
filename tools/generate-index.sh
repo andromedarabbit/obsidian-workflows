@@ -45,6 +45,18 @@ EOF
     temp_data=$(mktemp)
     trap "rm -f $temp_data" EXIT
 
+    # Scan ow-* track entrypoints from skills/ow-*/SKILL.md
+    while IFS= read -r -d '' file; do
+        local name description
+        name=$(extract_field "$file" "name")
+        description=$(extract_field "$file" "description")
+
+        if [[ -n "$name" ]] && [[ "$name" =~ ^ow- ]]; then
+            echo "Obsidian-Workflows|${name}|${file}|${description}|" >> "$temp_data"
+        fi
+    done < <(find skills -type f -name "SKILL.md" -print0 | sort -z)
+
+    # Scan write-* execution commands from commands/
     while IFS= read -r -d '' file; do
         local name description argument_hint
         name=$(extract_field "$file" "name")
@@ -52,11 +64,8 @@ EOF
         argument_hint=$(extract_field "$file" "argument-hint")
 
         if [[ -n "$name" ]]; then
-            # Determine category from the dash-prefixed name
             local category="General"
-            if [[ "$name" =~ ^ow- ]]; then
-                category="Obsidian-Workflows"
-            elif [[ "$name" =~ ^write- ]]; then
+            if [[ "$name" =~ ^write- ]]; then
                 category="Obsidian-Write"
             fi
 

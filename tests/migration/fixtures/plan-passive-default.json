@@ -12,7 +12,10 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS", "SKIP"]
+        "status": [
+          "PASS",
+          "SKIP"
+        ]
       }
     },
     {
@@ -28,7 +31,10 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS", "SKIP"]
+        "status": [
+          "PASS",
+          "SKIP"
+        ]
       }
     },
     {
@@ -43,7 +49,10 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS", "SKIP"]
+        "status": [
+          "PASS",
+          "SKIP"
+        ]
       }
     },
     {
@@ -59,7 +68,9 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS"]
+        "status": [
+          "PASS"
+        ]
       }
     },
     {
@@ -75,7 +86,9 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS"]
+        "status": [
+          "PASS"
+        ]
       }
     },
     {
@@ -91,7 +104,9 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS"]
+        "status": [
+          "PASS"
+        ]
       }
     },
     {
@@ -107,7 +122,9 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS"]
+        "status": [
+          "PASS"
+        ]
       }
     },
     {
@@ -120,9 +137,12 @@
       "expected": {
         "branch": "passive",
         "asksIntentSelection": false,
-        "asksExternalTools": true,
+        "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS", "SKIP"]
+        "status": [
+          "PASS",
+          "SKIP"
+        ]
       }
     },
     {
@@ -137,7 +157,10 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS", "SKIP"]
+        "status": [
+          "PASS",
+          "SKIP"
+        ]
       }
     },
     {
@@ -152,7 +175,9 @@
         "asksIntentSelection": false,
         "asksExternalTools": false,
         "requiresAskUserQuestionHandoff": true,
-        "status": ["PASS"]
+        "status": [
+          "PASS"
+        ]
       }
     }
   ]

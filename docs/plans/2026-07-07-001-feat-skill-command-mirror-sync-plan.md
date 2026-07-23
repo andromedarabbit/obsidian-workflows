@@ -10,6 +10,8 @@ origin: docs/ideation/2026-06-16-skill-authoring-compliance-ideation.html
 
 # feat: SKILL↔command 미러 드리프트 해시 동기 검사
 
+> **Note (2026-07-23):** This plan has been superseded. The mirror/sync architecture it describes was removed in v0.3.0. Skills are now the canonical source; `commands/ow-*.md` files were deleted. See `docs/skill-specification.md` for the current structure.
+
 ## Summary
 
 각 `skills/<name>/SKILL.md`는 짝이 되는 `commands/ow/<name>.md`의 행위를 손으로 미러링한다. `docs/skill-specification.md`는 이 관계를 명시하고 command를 단일 정본으로 규정하지만, **동기화는 순수 산문 규칙("편집할 때 유념하라")으로만 강제**된다. 이 미러는 이미 한 번 갈라져 실제 회귀를 냈다(`docs/solutions/logic-errors/ow-plan-passive-default-regression.md`). 이 계획은 SKILL frontmatter에 짝 command **본문의 콘텐츠 해시**를 기록하고, command가 바뀌었는데 해시가 갱신되지 않으면 pre-commit·CI가 실패하게 만들어 드리프트를 자동 검출한다.

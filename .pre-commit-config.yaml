@@ -23,7 +23,7 @@ repos:
         entry: tools/generate-index.sh
         language: script
         pass_filenames: false
-        files: '^commands/.*\.md$'
+        files: '^(commands/.*\.md|skills/ow-.*/SKILL\.md)$'
 
       - id: check-command-frontmatter
         name: Check command frontmatter
@@ -38,13 +38,6 @@ repos:
         language: script
         pass_filenames: false
         files: '^skills/.*/SKILL\.md$'
-
-      - id: check-skill-sync
-        name: Check skill<->command mirror sync
-        entry: tools/check-skill-sync.sh
-        language: script
-        pass_filenames: false
-        files: '^(skills/.*/SKILL\.md|commands/.*\.md)$'
 
       - id: validate-command
         name: Validate command structure

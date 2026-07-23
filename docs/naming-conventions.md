@@ -20,7 +20,7 @@ dash prefix, not a subdirectory or an internal colon.
 
 ### Patterns
 
-**Track entrypoints** (the workflow tracks, mirrored by same-named skills) use the `ow-` prefix:
+**Track entrypoints** (the workflow tracks; skills are the canonical entrypoints, no separate command files) use the `ow-` prefix:
 ```
 ow-plan
 ow-work
@@ -72,12 +72,12 @@ Skill names MUST follow kebab-case with no namespace prefix, and MUST equal the 
 ### Examples
 
 ✅ **Good**:
-- `skills/plan/SKILL.md` with `name: plan`
-- `skills/work/SKILL.md` with `name: work`
+- `skills/ow-plan/SKILL.md` with `name: ow-plan`
+- `skills/ow-work/SKILL.md` with `name: ow-work`
 
 ❌ **Bad**:
-- `skills/plan/SKILL.md` with `name: workflow-plan-reference` — does not match the directory name
-- `skills/Plan/SKILL.md` — capital letters not allowed in the directory name
+- `skills/ow-plan/SKILL.md` with `name: workflow-plan-reference` — does not match the directory name
+- `skills/Ow-Plan/SKILL.md` — capital letters not allowed in the directory name
 
 See [Skill Specification](./skill-specification.md) for the full frontmatter contract.
 
@@ -302,7 +302,7 @@ tests/                 # Test files
 | Context | Convention | Example |
 |---------|-----------|---------|
 | Command names | kebab-case | `work`, `write-active` |
-| Skill names | kebab-case, == directory name | `plan`, `work` |
+| Skill names | kebab-case, == directory name | `ow-plan`, `ow-work` |
 | File names | kebab-case | `command-specification.md` |
 | Directory names | kebab-case | `obsidian-workflows/` |
 | Script names | kebab-case | `check-frontmatter.sh` |

@@ -16,7 +16,7 @@ WARNINGS=0
 CHECKED=0
 
 # Required fields (ERROR if missing)
-REQUIRED_FIELDS=("name" "description" "version" "context" "mirrors" "mirror_hash")
+REQUIRED_FIELDS=("name" "description" "version" "context")
 
 # Valid values for the conditionally required `agent` field
 VALID_AGENTS=("general-purpose" "Explore" "Plan")
@@ -102,23 +102,6 @@ check_skill() {
             context)
                 if [[ "$value" != "fork" && "$value" != "inline" ]]; then
                     echo -e "${RED}ERROR${NC}: $file - context '$value' must be 'fork' or 'inline'"
-                    ((ERRORS++))
-                    has_error=1
-                fi
-                ;;
-            mirrors)
-                # Paired canonical command path (see docs/skill-specification.md).
-                if [[ ! "$value" =~ ^commands/.*\.md$ ]]; then
-                    echo -e "${RED}ERROR${NC}: $file - mirrors '$value' must be a repo-relative command path (commands/....md)"
-                    ((ERRORS++))
-                    has_error=1
-                fi
-                ;;
-            mirror_hash)
-                # Content hash of the paired command body; regenerate with
-                # tools/update-skill-hash.sh. Drift is caught by check-skill-sync.sh.
-                if [[ ! "$value" =~ ^[0-9a-f]{16,}$ ]]; then
-                    echo -e "${RED}ERROR${NC}: $file - mirror_hash '$value' must be lowercase hex (>=16 chars); run tools/update-skill-hash.sh"
                     ((ERRORS++))
                     has_error=1
                 fi

@@ -4,7 +4,7 @@ This document defines the contract for Agent Skill definitions in the obsidian-w
 
 ## Overview
 
-Skills are entrypoint routers that mirror the behavior of a canonical command. Each skill is defined by a single `SKILL.md` file with YAML frontmatter that specifies its metadata.
+Skills are track entrypoints and the canonical source of behavioral truth. Each skill is defined by a single `SKILL.md` file with YAML frontmatter that specifies its metadata.
 
 ## File Structure
 
@@ -12,13 +12,13 @@ Skills are stored in `skills/<name>/` with the following structure:
 
 ```
 skills/
-├── plan/
+├── ow-plan/
 │   └── SKILL.md
-├── work/
+├── ow-work/
 │   └── SKILL.md
-├── review/
+├── ow-review/
 │   └── SKILL.md
-└── compound/
+└── ow-compound/
     └── SKILL.md
 ```
 
@@ -29,10 +29,10 @@ A skill directory contains only `SKILL.md`. `README.md`, `GUIDELINES.md`, and `s
 ### Required Fields
 
 #### `name` (string)
-- **Format**: kebab-case, no namespace prefix
+- **Format**: kebab-case, with `ow-` prefix for track entrypoints
 - **Pattern**: `^[a-z0-9-]+$`
 - **Rule**: MUST equal the skill's directory name
-- **Examples**: `plan`, `work`, `review`, `compound`
+- **Examples**: `ow-plan`, `ow-work`, `ow-review`, `ow-compound`
 
 #### `description` (string)
 - **Purpose**: What the skill does and when to use it
@@ -48,17 +48,7 @@ A skill directory contains only `SKILL.md`. `README.md`, `GUIDELINES.md`, and `s
 - **Values**: `fork` | `inline`
 - **`fork`**: the skill runs as an isolated sub-agent
 - **`inline`**: the skill runs in the main conversation and shares its context — required when the skill calls `AskUserQuestion`, invokes the `Skill` tool to hand off to another skill within the same turn, or reads/writes session state
-- All four skills in this repository (`plan`, `work`, `review`, `compound`) are `context: inline` for exactly this reason
-
-#### `mirrors` (string)
-- **Format**: repo-relative path to the paired canonical command, `commands/....md`
-- **Purpose**: Declares which command this skill mirrors. The `mirrors` field is the canonical statement of the mirror relationship (the skill body carries a human-readable note, but this field is what tooling reads)
-- **Example**: `commands/ow-plan.md`
-
-#### `mirror_hash` (string)
-- **Format**: lowercase hex, ≥16 chars
-- **Purpose**: Content hash of the paired command's **body** (everything after the closing frontmatter delimiter), used to detect mirror drift. Command frontmatter is deliberately excluded so volatile `created`/`updated` timestamps don't churn the hash
-- **Regenerate**: `tools/update-skill-hash.sh <name>` after intentionally re-syncing the skill; drift is caught by `tools/check-skill-sync.sh`
+- All four skills in this repository (`ow-plan`, `ow-work`, `ow-review`, `ow-compound`) are `context: inline` for exactly this reason
 
 ### Conditionally Required Fields
 
@@ -92,7 +82,6 @@ The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a s
 - `name` MUST be kebab-case and MUST equal the directory name
 - `version` MUST be valid semver
 - `agent` is meaningful, and set, only when `context: fork`
-- The skill↔command mirror relationship is **enforced**, not just documented — see [Skill Body Conventions](#skill-body-conventions). (oh-my-skills states the mirror rule as prose; this repository additionally checks it in CI via `mirror_hash` + `tools/check-skill-sync.sh`.)
 
 ### Diverged
 
@@ -110,32 +99,22 @@ The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a s
 
 ## Skill Body Conventions
 
-Each of the four existing skills mirrors a canonical command file (`skills/plan/SKILL.md` mirrors `commands/ow-plan.md`, and so on for `work`, `review`, `compound`). This is intentional: the command is the single source of behavioral truth, and the skill file mirrors that behavior for the cases where the `Skill` tool (rather than the slash command) is the entry point. A skill's body MUST NOT diverge into independent behavior — if the command and skill disagree, the command wins, and the skill file must be updated to match.
+Each of the four track skills (`skills/ow-plan/SKILL.md`, `skills/ow-work/SKILL.md`, `skills/ow-review/SKILL.md`, `skills/ow-compound/SKILL.md`) is the canonical source of behavioral truth for its track. The skill is what tooling, the `Skill` tool, and slash-command invocations all read — there is no separate command file that takes precedence.
 
-This principle was already established the hard way: see `docs/solutions/logic-errors/ow-plan-passive-default-regression.md`, where a skill file drifted from its canonical command and caused a real regression.
-
-**Enforcement (`mirror_hash`).** The mirror is no longer defended by discipline alone. Each SKILL.md records `mirrors` (its paired command) and `mirror_hash` (a hash of that command's body, per the field definitions above). `tools/check-skill-sync.sh` recomputes the command body hash and fails — in pre-commit and CI — when it no longer matches the recorded value. So a behavioral change to `commands/ow-<name>.md` cannot land without someone re-examining `skills/<name>/SKILL.md` and regenerating the hash:
-
-1. Edit the command (and update the skill body to match).
-2. Run `tools/update-skill-hash.sh <name>` to regenerate the recorded hash.
-3. Commit both together — the sync check passes.
-
-**Known limitation — this is a forcing function, not a proof of equivalence.** A matching `mirror_hash` proves only that the author re-acknowledged the command's *current* body when they last synced; it does not prove the skill body was actually updated correctly. It reliably catches the historical failure mode (command edited, skill silently forgotten) by forcing the author's attention back to the skill, but semantic correctness of the mirror still relies on human judgment at sync time.
+This model replaced the previous mirror/sync architecture (v0.3.0). Under the old model a `commands/ow-<name>.md` file was the behavioral source and the skill mirrored it; that relationship created drift risk and was removed. See `docs/solutions/logic-errors/ow-plan-passive-default-regression.md` for the regression that motivated the original enforcement mechanism, and `docs/plans/2026-07-07-001-feat-skill-command-mirror-sync-plan.md` for the superseded plan.
 
 ## Example Skill
 
 ```markdown
 ---
-name: plan
+name: ow-plan
 description: PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
 version: 0.1.0
 context: inline
-mirrors: commands/ow-plan.md
-mirror_hash: 2ff00d0c9cfdcb60
 language: korean
 user-invocable: true
 created: 2026-03-02T01:34
-updated: 2026-07-07T00:00
+updated: 2026-07-23T00:00
 ---
 
 # PLAN Track Entry Point
@@ -147,8 +126,7 @@ updated: 2026-07-07T00:00
 
 Skills are validated using:
 
-1. **Frontmatter validation**: `tools/check-skill-frontmatter.sh` (required fields including `mirrors`/`mirror_hash`, `name`==directory, formats)
-2. **Mirror sync**: `tools/check-skill-sync.sh` (fails when a command body changed but its skill's `mirror_hash` was not regenerated; fix with `tools/update-skill-hash.sh <name>`)
-3. **Duplicate/collision detection**: `npm run validate:no-duplicates` (`scripts/check-duplicates.js` — checks duplicate skill names and skill/command name collisions; not re-implemented in the shell validator)
+1. **Frontmatter validation**: `tools/check-skill-frontmatter.sh` (required fields, `name`==directory, formats)
+2. **Duplicate/collision detection**: `npm run validate:no-duplicates` (`scripts/check-duplicates.js` — checks duplicate skill names and skill/command name collisions; not re-implemented in the shell validator)
 
 See [Validation Guide](./validation-guide.md) for details.

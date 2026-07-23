@@ -1,12 +1,9 @@
 ---
-name: compound
+name: ow-compound
 description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다. 완성된 문서에서 학습 포인트를 축적해야 할 때 사용합니다.
-version: 0.1.0
+version: 0.2.0
 context: inline
-mirrors: commands/ow-compound.md
-mirror_hash: f19a36b49fd161dd
 language: korean
-ce_platforms: []
 created: 2026-03-02T14:58
 updated: 2026-07-07T00:00
 ---
@@ -26,6 +23,15 @@ updated: 2026-07-07T00:00
 1. Select target document (if not specified, use latest file from final_path).
 2. Execute `write-compound-capture`.
 3. Briefly summarize policy/SOUL improvement candidates.
+
+## Helper Script Path Resolution
+
+Helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
+
+1. 먼저 `obsidian-workflows` plugin/repo root를 해석합니다.
+2. helper script를 사용할 때는 해석된 root 아래의 절대 경로로 실행합니다.
+3. root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
+4. optional helper script 단계는 경고 후 건너뛰고, 본래 command의 fail-fast/fail-safe 정책을 따릅니다.
 
 ## Rules
 
