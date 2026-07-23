@@ -6,7 +6,7 @@ context: inline
 mirrors: commands/ow-work.md
 mirror_hash: 880e9c02beca6173
 language: korean
-user-invocable: true
+user-invocable: false
 created: 2026-03-02T14:58
 updated: 2026-07-07T00:00
 ---

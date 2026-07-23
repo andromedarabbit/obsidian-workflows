@@ -6,7 +6,7 @@ context: inline
 mirrors: commands/ow-plan.md
 mirror_hash: 68c4934fd18ed0a3
 language: korean
-user-invocable: true
+user-invocable: false
 created: 2026-03-02T01:34
 updated: 2026-07-07T00:00
 ---
