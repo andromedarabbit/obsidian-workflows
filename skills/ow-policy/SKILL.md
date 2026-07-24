@@ -10,8 +10,6 @@ updated: 2026-07-22T01:00
 
 # POLICY Track Entry Point
 
-> 미러 파일: 동작 정본은 `commands/ow-policy.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
-
 `obsidian-workflows:ow-policy`는 대화형 문답으로 새 writing policy 파일을 생성하고, 사용자 확인을 받아 vault의 `writing-config.md`에 등록합니다. 생성된 policy는 `write-review-policy` 게이트가 그대로 검증할 수 있는 형태여야 합니다.
 
 policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하는 frontmatter/본문 구조는 이 명세를 따릅니다.
@@ -19,7 +17,7 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하
 ## 보안/권한 원칙
 
 - 이 스킬은 파일을 생성/수정합니다(read-only 아님): 새 policy 파일 Write와 `writing-config.md` Edit.
-- 모든 경로 입력과 쓰기 대상에 path safety를 강제합니다: 절대 경로 금지, `..` 금지, resolve 후 vault root 하위만 허용, 심볼릭 링크로 root 밖 탈출 금지.
+- 모든 경로 입력과 쓰기 대상에 path safety(`docs/contracts/path-safety.md`)를 강제합니다.
 - config 편집은 사용자의 명시적 확인 없이는 수행하지 않습니다.
 
 ## Preflight (경로 해석)

@@ -10,8 +10,6 @@ updated: 2026-07-07T00:00
 
 # WORK Track Entry Point
 
-> 미러 파일: 동작 정본은 `commands/ow-work.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
-
 ## Mode Routing
 
 ### With mode parameter
@@ -79,7 +77,7 @@ When `mode=draft` and `proposal` parameter is not provided:
 
 위 자동 추론의 7번이 발동할 때(신호가 정말로 부족한 경우):
 
-- 이 지점은 규칙 6이 이미 "모호하지 않은 직접 지시"를 걸러낸 뒤에만 도달하는 예외 경로다. 이번 버그의 실제 증상이 바로 이 지점에서 구조화된 질문 대신 장문 설명으로 새어나간 것이었다. 그래서 `ow-plan.md`와 동일한 강도로 못박는다:
+- 이 지점은 규칙 6이 직접 지시를 걸러낸 뒤에만 도달하는 예외 경로이며, 과거 장문 설명으로 새는 결함이 있었으므로 `skills/ow-plan/SKILL.md`와 동일한 강도로 명시합니다:
 - **STOP.** 반드시 `AskUserQuestion` 도구를 fire하여 선택지를 제시합니다. 장문 설명으로 질문을 대신하는 것은 명세 위반입니다.
 - `AskUserQuestion` 스키마가 미리 로드되지 않았으면 `ToolSearch`에 `select:AskUserQuestion`을 먼저 호출해 로드합니다.
 - Question stem: 이번 턴 요청·인자에서 topic을 특정할 수 있으면 `"{topic}을(를) 어떤 모드로 진행할까요?"`를, 특정할 수 없으면 `"이 작업을 어떤 모드로 진행할까요?"`를 쓴다. (규칙 2 handoff 경로는 이 질문 지점에 도달하지 않으므로 topic 출처를 handoff로 한정하지 않는다.)
@@ -88,12 +86,7 @@ When `mode=draft` and `proposal` parameter is not provided:
 
 ## Helper Script Path Resolution
 
-Helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
-
-1. 먼저 `obsidian-workflows` plugin/repo root를 해석합니다.
-2. helper script를 사용할 때는 해석된 root 아래의 절대 경로로 실행합니다.
-3. root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
-4. optional helper script 단계는 경고 후 건너뛰고, 본래 command의 fail-fast/fail-safe 정책을 따릅니다.
+Helper script는 항상 `obsidian-workflows` plugin/repo root 기준 절대 경로로 실행합니다 — 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다. root 해석 실패 시 추측하지 않고, optional 단계는 경고 후 건너뜁니다. 상세: `docs/contracts/helper-script-path.md`.
 
 ## Status/Output Rules
 

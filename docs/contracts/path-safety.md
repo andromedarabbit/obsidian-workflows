@@ -24,6 +24,8 @@ Must be consistent across:
 - `write-scan`
 - `write-draft`
 - `write-refine`
+- `write-review-policy`
 - `write-route`
 - `obsidian-workflows:ow-review`
+- `obsidian-workflows:ow-policy`
 - Any new command with file/path arguments

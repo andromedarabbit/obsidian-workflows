@@ -17,25 +17,17 @@ updated: 2026-03-02T17:34
 1. `source_paths`(다중 경로)에서 Markdown 파일을 찾습니다.
 2. `exclude_paths`와 숨김/시스템 경로(`.obsidian`, `.git`, `.trash`)를 제외합니다.
 3. `research_path`는 자동으로 제외됩니다 (자료는 주제 제안 대상 아님).
-3. 경로 안전 규칙을 적용합니다.
-   - 절대 경로 입력 금지
-   - `..` 세그먼트 포함 경로 금지
-   - 정규화(resolve) 후 vault root 하위 경로만 허용
-   - 심볼릭 링크를 통해 vault root 밖으로 벗어나는 경로 금지
-4. mtime > anchor 인 파일만 후보로 수집합니다.
-5. 결과를 구조화해 반환합니다:
+4. 경로 안전 규칙(`docs/contracts/path-safety.md`)을 적용합니다.
+5. mtime > anchor 인 파일만 후보로 수집합니다.
+6. 결과를 구조화해 반환합니다:
    - `anchor`
    - `scanned_paths`
    - `candidate_count`
    - `candidates[]` (path, modified_at)
 
 성능 최적화:
-- helper script를 사용하면 git log보다 훨씬 빠릅니다.
-- helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
-- 먼저 `obsidian-workflows` plugin/repo root를 해석하고, 해석된 root 아래의 절대 경로로 실행합니다.
-- root를 해석할 수 없으면 vault cwd에서 추측하지 말고 native `Glob`/`Grep` 기반 스캔으로 진행합니다.
-- helper script는 `fd`(빠름, 인덱싱 불필요)를 우선 사용하고, 실패 시 `find`로 fallback합니다.
-- `fd` 설치: `brew install fd` (선택사항, 없으면 자동으로 find 사용)
+- helper script(`fd` 우선, 실패 시 `find`로 fallback — 인덱싱 불필요한 `fd`가 git log보다 훨씬 빠름, 미설치 시 자동으로 `find` 사용, 설치는 `brew install fd`로 선택 가능)를 사용합니다.
+- helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다 — 먼저 `obsidian-workflows` plugin/repo root를 해석해 그 아래 절대 경로로 실행합니다. 해석 실패 시 추측하지 않고 native `Glob`/`Grep` 기반 스캔으로 진행합니다. 상세: `docs/contracts/helper-script-path.md`.
 - 출력: JSON 배열 `[{"path": "...", "mtime": "..."}]`
 
 실패 정책:

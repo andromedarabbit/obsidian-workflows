@@ -28,7 +28,7 @@ updated: 2026-03-01T23:40
 5. 상태 파일 업데이트
 
 실패 정책:
-- 시작/종료 시 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)를 출력합니다.
+- 시작/종료 시 공통 Context Card(`docs/contracts/context-card.md`)를 출력합니다.
 - 실패 시에도 가능한 범위에서 동일 키로 Context Card를 남깁니다.
 - 실패 시 원인을 상태 파일에 기록하고 즉시 종료합니다.
 - 조용한 fallback 없이 fail-fast로 동작합니다.

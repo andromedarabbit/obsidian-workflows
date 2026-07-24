@@ -24,7 +24,7 @@ updated: 2026-03-03T19:00
 - 추천 policy (`proposal_policy_allowlist` 우선, 없으면 `enabled_policies`에서 선택)
 
 기본 원칙:
-- 시작/종료 시 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)를 출력합니다.
+- 시작/종료 시 공통 Context Card(`docs/contracts/context-card.md`)를 출력합니다.
 - 실패 시에도 가능한 범위에서 동일 키로 Context Card를 남깁니다.
 - 상태 의미는 `PASS|SKIP|FAIL`로만 사용합니다(빈 scan 결과는 `SKIP`).
 - 기본값은 제안 노트 생성까지만 수행합니다.

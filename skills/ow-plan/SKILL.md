@@ -10,8 +10,6 @@ updated: 2026-07-07T00:00
 
 # PLAN Track Entry Point
 
-> 미러 파일: 동작 정본은 `commands/ow-plan.md`이며 이 파일은 그 미러입니다. 동작이 갈리면 커맨드를 정본으로 보고 이 파일을 맞춥니다. 동기화는 frontmatter `mirror_hash`로 강제됩니다(`tools/check-skill-sync.sh`).
-
 ## Intent Gate
 
 1. `--intent=active`면 질문 없이 active 분기로 진행합니다.
@@ -95,20 +93,11 @@ Passive 분기 종료 직후 proposal 요약을 출력하고 `AskUserQuestion` �
 4. **나중에**
    - proposal frontmatter를 `status: pending`으로 유지하고 종료합니다.
 
-Completion check:
-
-1. proposal 요약 출력 후 `AskUserQuestion` 도구로 위 4옵션 메뉴를 fire합니다.
-2. 사용자 선택을 수신합니다.
-3. 선택에 따른 인라인 routing을 즉시 실행합니다.
+Completion check: Active Handoff Menu의 Completion check와 동일한 절차(`AskUserQuestion` fire → 선택 수신 → 인라인 routing)를 따릅니다.
 
 ## Helper Script Path Resolution
 
-Helper script는 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.
-
-1. 먼저 `obsidian-workflows` plugin/repo root를 해석합니다.
-2. helper script를 사용할 때는 해석된 root 아래의 절대 경로로 실행합니다.
-3. root를 해석할 수 없으면 vault cwd에서 추측하지 않습니다.
-4. optional helper script 단계는 경고 후 건너뛰고, 본래 command의 fail-fast/fail-safe 정책을 따릅니다.
+Helper script는 항상 `obsidian-workflows` plugin/repo root 기준 절대 경로로 실행합니다 — 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다. root 해석 실패 시 추측하지 않고, optional 단계는 경고 후 건너뜁니다. 상세: `docs/contracts/helper-script-path.md`.
 
 ## Status/Output Rules
 

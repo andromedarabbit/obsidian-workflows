@@ -34,35 +34,8 @@ updated: 2026-03-03T19:00
 - policy 템플릿이 `creation_engine: obsidian` / `template_engine: templater`를 요구하면 관련 설정이 누락된 경우 즉시 종료합니다.
 - `creation_engine: obsidian`인 경우 `daily_notes_path`가 설정되지 않았으면 즉시 종료합니다 (fail-fast).
 - 파일명은 `writing-config.md`의 규칙을 우선 적용합니다.
-- `proposal` 경로는 절대 경로 금지, `..` 금지, resolve 후 vault root 하위만 허용, 심볼릭 링크로 root 밖 탈출 금지 규칙을 강제합니다.
+- `proposal` 경로에 path safety(`docs/contracts/path-safety.md`)를 적용합니다.
 
-외부 도구 활용 (External Tools Integration):
-초안 생성 완료 후, `writing-config.md`의 `auto_use_external_tools` 설정에 따라 외부 도구를 활용합니다.
+외부 도구 활용: 완료 후 `writing-config.md`의 `external_tools.auto_use`(ask/true/false)에 따라 humanizer를 적용합니다. 상세: `docs/contracts/external-tools-integration.md`.
 
-1. **도구 감지**:
-   - humanizer: AI 생성 텍스트를 자연스러운 인간 글쓰기로 변환
-
-2. **활용 모드**:
-   - `auto_use_external_tools: ask` (기본값): 도구 발견 시 사용 여부를 사용자에게 질문
-   - `auto_use_external_tools: true`: 자동으로 활용 (질문 없이)
-   - `auto_use_external_tools: false`: 사용하지 않음
-
-3. **실행** (auto_use_external_tools=true 또는 사용자 승인 시):
-   ```
-   humanizer 적용 (있는 경우):
-   - 생성된 초안에 humanizer 실행
-   - AI 생성 패턴을 자연스러운 인간 글쓰기로 변환
-   ```
-
-4. **출력 형식**:
-   ```
-   ✓ Draft created: [경로]
-
-   External tools applied:
-   - humanizer: 5 AI patterns naturalized
-
-   Next: /obsidian-workflows:write-refine file="..." policy=...
-   ```
-
-5. **Fail-safe 원칙**:
-   - 외부 도구 실행 실패 시 경고만 표시하고 워크플로우 계속 진행
+출력에는 적용된 도구 요약(예: `humanizer: 5 AI patterns naturalized`)과 `Next: /obsidian-workflows:write-refine file="..." policy=...`를 포함합니다.

@@ -52,7 +52,7 @@ updated: 2026-06-04T00:00
 7. soul=true이면 보이스 리라이트를 적용
 
 출력:
-- 공통 Context Card(`command`, `anchor`, `source_paths`, `exclude_paths`, `policy`, `policy_type`, `soul`, `status`)
+- 공통 Context Card(`docs/contracts/context-card.md`)
 - 생성 파일 경로
 - 적용 policy / soul 적용 여부
 - 보강 필요 TODO(있을 경우)
