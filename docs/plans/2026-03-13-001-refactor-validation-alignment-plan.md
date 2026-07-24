@@ -7,6 +7,8 @@ date: 2026-03-13
 
 ## Align local validation with CI to prevent recurring lint failures
 
+> **Note (2026-07-24):** Phases 1-3 (Makefile, `tools/` validation scripts, CI alignment) shipped in commit `77cb7489`, the same commit that originally added this plan document. Remaining open work is limited to Phase 4 (docs migration-drift cleanup) and Phase 5 (measurement) — see the Deferred / Open Questions section below for what's still unresolved.
+
 ## Overview
 
 This repository has strong validation coverage, but the validation experience is fragmented across local scripts, npm commands, pre-commit hooks, and GitHub Actions. That fragmentation makes it too easy for contributors to pass a partial local check set and still fail in CI for predictable reasons such as frontmatter syntax errors, markdown lint issues, generated `COMMANDS.md` drift, hook-path validation failures, or workflow-only YAML problems.
@@ -75,6 +77,9 @@ The refactor should center on five changes:
 5. **Make rule ownership and contributor guidance explicit**
    - Clearly state which artifacts are canonical (`commands/` and validator rules) and which are derived (`COMMANDS.md`, explanatory docs), then document exactly what contributors should run and when.
 
+6. **Document change-type-specific validation paths**
+   - Cover docs-only, command/frontmatter, validator/tooling, and workflow YAML changes, so contributors know which checks apply to their work.
+
 ## Technical Approach
 
 ### Architecture
@@ -136,7 +141,7 @@ The refactor should reduce the gap between layers rather than replacing them.
   - hook-path validation
   - command shell validation
   - generated `COMMANDS.md` freshness check
-- Decide whether workflow YAML validation should be implemented as a dedicated script such as `tools/validate-workflows.sh` and surfaced via `make validate-workflows`.
+- Workflow YAML validation is implemented via `tools/validate-workflows.sh`, surfaced through `make validate-workflows` (YAML-syntax checks; deeper semantic workflow-configuration validation remains open — see Open Questions).
 - Update CI jobs so they call the same underlying `tools/` scripts used by the `Makefile`, reducing local-vs-CI drift.
 
 #### Phase 3: Improve contributor UX and failure recovery
@@ -302,8 +307,8 @@ Measure over a defined post-rollout window:
 
 ## Dependencies & Prerequisites
 
-- agreement on canonical validation script boundaries and `Makefile` target names
-- agreement on whether pre-commit remains optional or becomes the strongly preferred default
+- confirmation of the proposed canonical validation script boundaries (frontmatter, namespace, markdown, hook-path, shell, generated-docs) and `Makefile` target names listed in Phase 2 and Acceptance Criteria
+- agreement on whether pre-commit remains optional or becomes the strongly preferred default (regardless of outcome, `make validate-ci` must remain a self-contained entrypoint that does not assume pre-commit ran)
 - agreement on how to validate workflow YAML locally
 - maintainers available to clean migration-drift documentation
 
@@ -351,6 +356,7 @@ Update, at minimum:
 - `docs/validation-guide.md`
 - `docs/command-specification.md`
 - `docs/migration/command-discovery-contract.md`
+- `CONTRIBUTING.md` (currently teaches only `npm run validate:*`; add `make help`/`make validate-ci`)
 - any contributor-facing README/quick-start references to validation entrypoints
 
 Document these explicitly:
@@ -409,6 +415,16 @@ AI tools used during planning:
 
 - No external research performed. The problem is repository-specific and local documentation/code patterns were sufficient.
 
+## Deferred / Open Questions
+
+### From 2026-07-24 review
+
+- **Parallel validation entrypoints** — should the pre-existing npm `validate:*` scripts be deprecated/aliased now that the Makefile exists, or intentionally kept as a second entrypoint? (product-lens, adversarial, cross-model)
+- **Forcing function for adoption** — should local validation gain an enforcement mechanism (auto-installed hook, required pre-push gate), given optionality was the original root cause this plan set out to fix? (product-lens, cross-model)
+- **Phase 5 measurement design** — what baseline, data source, and threshold should Phase 5 actually use, given no pre-rollout baseline was captured before Phases 1-3 shipped? (feasibility, scope-guardian, adversarial, cross-model)
+- **System-Wide Impact section scope** — should this section be trimmed now that the actual shipped diff is known to be a ~40-line Makefile plus several small wrapper scripts? (scope-guardian)
+- **Exhaustive CI-parity contract** — should the CI-parity checklist become an exhaustive contract (every CI-blocking check named or explicitly excluded), and should a toolchain/version pin (Make/Node/lint versions) be added to Dependencies? (cross-model)
+
 ## Recommended Next Step
 
-Implement this as a **standard issue / refactor plan**, starting with validation contract definition, extraction of stable `tools/` validation scripts, and introduction of a root `Makefile` before any validator rewrites.
+Phases 1-3 (validation contract definition, extraction of stable `tools/` validation scripts, introduction of the root `Makefile`) are complete. Remaining work: Phase 4 (clean migration drift in docs, including the `CONTRIBUTING.md` and `docs/command-specification.md`/`docs/repository-structure.md` stale `ow-*.md` examples) and Phase 5 (measurement), pending resolution of the Deferred / Open Questions above.
