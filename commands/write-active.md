@@ -2,15 +2,15 @@
 name: write-active
 description: Active 모드. 사용자 입력(topic/sources/policy)으로 즉시 초안을 생성합니다.
 argument-hint: topic=... [policy=<policy-name>] [sources=[[노트A]],[[노트B]]] [soul=false]
-allowed-tools: Read, Write, Edit, Glob, Grep
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(obsidian:*), Bash(sleep:*)
 created: 2026-03-01T17:29
-updated: 2026-06-04T00:00
+updated: 2026-07-28T00:00
 ---
 
 입력:
 - `topic` (기본 필수, 단 선택 policy의 `topic_required: false`면 생략 가능)
 - `policy` (선택)
-- `sources` (선택, wikilink/경로 목록)
+- `sources` (선택, wikilink/볼트 내부 상대 경로 목록. 절대 경로는 받지 않음 — `docs/contracts/path-safety.md`의 경로 안전 체크가 다른 입력과 동일하게 적용됨. 외부 도구가 만든 데이터 파일을 참조하려면 먼저 볼트 내부 경로로 복사한 뒤 상대 경로로 넘길 것)
 - `soul` (기본 true)
 
 정책 해석 규칙(설정 기반):
@@ -39,15 +39,17 @@ updated: 2026-06-04T00:00
 3. policy 메타데이터 기반 입력/소스 검증
 4. `soul_path` 로드 (soul=true일 때)
 5. policy 형식에 맞는 초안을 생성하고 `draft_path`에 저장
-6. policy가 `creation_engine: obsidian`을 요구하면 `obsidian create` 명령으로 생성
-   - 새 파일 생성 (Templater 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" silent`
+6. policy가 `creation_engine: obsidian`을 요구하면 `obsidian create` 명령으로 생성 (Bash 도구 사용, `allowed-tools`의 `Bash(obsidian:*)` 범위)
+   - 새 파일 생성 (Templater 사용 시): `obsidian create path="Daily Notes/2026-06/2026-06-24.md"`
      - `template=` 파라미터는 core Templates 플러그인 전용이며 Templater를 실행하지 않음
      - `template_engine: templater`일 때는 `template=` 없이 생성하고 Templater folder template auto-trigger에 의존
-   - 새 파일 생성 (core Templates 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" template="템플릿/Daily.md" silent`
+     - **주의(비동기 반환)**: `obsidian create`는 Templater 렌더링이 끝나기 전에 성공을 반환한다 — 생성 직후 파일은 비어 있고 Templater가 뒤이어 비동기로 채운다. 곧바로 이어서 편집하면 Templater의 삽입 내용을 덮어쓰거나 지울 수 있다. 따라서 생성 직후에는 native `Read` 툴로 기대 구조(frontmatter, 필수 섹션 등)가 실제로 채워졌는지 확인한 뒤에만 편집을 진행한다. 비어 있으면 `sleep 2`(Bash, `allowed-tools`의 `Bash(sleep:*)` 범위)로 2초 대기한 뒤 1회만 재확인하고, 그래도 비어 있으면 빈 파일에 덮어쓰지 않고 즉시 종료(FAIL)한다.
+   - 새 파일 생성 (core Templates 사용 시): `obsidian create path="Daily Notes/2026-05/2026-05-27.md" template="템플릿/Daily.md"`
    - 기존 Daily Note 읽기: `obsidian read path="Daily Notes/YYYY-MM/YYYY-MM-DD.md"`
    - 특정 섹션(스탠드업 등) 교체: native `Edit` 툴로 해당 heading 아래 블록만 교체
    - 전체 파일 재작성 필요 시: `obsidian create path="Daily Notes/YYYY-MM/YYYY-MM-DD.md" content="..." overwrite`
    - 바이너리명은 `obsidian`이며 `obsidian-cli`가 아님에 주의
+   - `silent` 옵션은 CLI(1.12.7)에 없음 — 절대 붙이지 않는다. 이 CLI는 알 수 없는 인자를 파일명으로 오인식하는 경향이 있어(예: `obsidian create --help`가 `Untitled.md`를 생성) 조용히 엉뚱한 파일을 만들 위험이 있다. `open`/`newtab`을 생략하는 것 자체가 기본 동작(파일을 열지 않음)이므로 별도의 무음 옵션은 애초에 필요 없다.
    - `daily:read`/`daily:append`는 CLI v1.12.7에 존재하지 않음 — 사용하면 "Command not found" 오류 발생
 7. soul=true이면 보이스 리라이트를 적용
 
