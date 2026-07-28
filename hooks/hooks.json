@@ -1,0 +1,17 @@
+{
+  "description": "docs/contracts/path-safety.md의 절대 경로 거부 원칙을, 커맨드 프롬프트 지시문이 아니라 실제 obsidian CLI 호출 단계에서 강제한다. Bash로 obsidian 바이너리를 호출할 때 볼트/프로젝트 루트 밖 절대 경로가 나타나면 사용자 확인을 요구한다.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PLUGIN_ROOT/hooks/guard-absolute-path.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
