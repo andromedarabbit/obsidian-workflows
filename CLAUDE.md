@@ -24,6 +24,7 @@ This repository contains the **plugin core** for Obsidian writing workflows.
 - `assets/`: template assets (SOUL/policy)
 - `docs/`: migration/contracts/runtime documentation
 - `docs/solutions/`: documented solutions to past problems (bugs, best practices, workflow conventions), organized by category with YAML frontmatter (`module`, `tags`, `problem_type`); relevant when implementing or debugging in documented areas
+- `hooks/`: Claude Code plugin-level `PreToolUse`/etc. hooks (`hooks/hooks.json` + scripts), distinct from the command-body hook scripts referenced from `commands/*.md`
 - `tools/`: validation scripts
 - `.github/workflows/`: CI/CD automation
 

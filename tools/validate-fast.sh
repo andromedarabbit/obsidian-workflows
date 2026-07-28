@@ -8,3 +8,4 @@ bash ./tools/check-frontmatter.sh
 bash ./tools/check-skill-frontmatter.sh
 bash ./tools/validate-command.sh
 bash ./tools/validate-hook-paths.sh
+bash ./tools/test-guard-absolute-path.sh

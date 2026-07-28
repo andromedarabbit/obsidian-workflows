@@ -44,6 +44,19 @@ read "Runtime Enforcement" as satisfying Required Check 1 or the
 FAIL-immediately requirement below for `Bash` calls; it is an additional,
 softer gate layered on top, not an implementation of that requirement.
 
+**When the hook cannot verify safety at all, it hard-blocks instead of
+guessing.** A missing dependency (`jq`/`python3`), an unresolvable vault
+root, or a command it cannot parse (e.g. unbalanced quotes) gives the hook no
+basis for a meaningful yes/no question, so those cases are a hard deny
+(`exit 2`), not a silent allow and not an `ask`. Only a *specific*,
+successfully-identified out-of-vault path gets the softer `ask` treatment.
+See `hooks/guard-absolute-path.sh`'s own comments and
+`tools/test-guard-absolute-path.sh` for the exact cases covered — the first
+version of this hook got the `ask` mechanics wrong (`exit 2` is always a hard
+block in Claude Code regardless of any JSON attached to it; `ask` requires
+JSON on stdout with `exit 0`) and had several detection bypasses, all fixed
+and regression-tested in the version this file describes.
+
 ## Error Handling
 
 - On any violation of the Required Checks (command-level, all commands under
