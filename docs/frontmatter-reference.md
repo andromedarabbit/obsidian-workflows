@@ -112,7 +112,17 @@ allowed-tools:
   - Edit
   - Glob
   - Grep
+
+# Scoped Bash: grants only the named binary/subcommand, not a full shell
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(obsidian:*)
 ```
+
+Prefer a scoped `Bash(<command>:*)` entry over bare `Bash` whenever the command's
+only shell need is a single external CLI (see `commands/write-active.md`, which
+needs `obsidian create` to trigger Templater's folder-template auto-trigger and
+cannot get that behavior from the `Write`/`Edit` tools alone; `obsidian read`
+needs the same CLI for a separate reason -- reading an existing Daily Note --
+and is scoped by the same `Bash(obsidian:*)` entry).
 
 ---
 
