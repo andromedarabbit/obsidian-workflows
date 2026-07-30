@@ -45,8 +45,8 @@ FAIL-immediately requirement below for `Bash` calls; it is an additional,
 softer gate layered on top, not an implementation of that requirement.
 
 **When the hook cannot verify safety at all, it hard-blocks instead of
-guessing.** A missing dependency (`jq`/`python3`), an unresolvable vault
-root, or a command it cannot parse (e.g. unbalanced quotes) gives the hook no
+guessing.** A missing dependency (`jq`, `python3`, or `uv`), an unresolvable
+vault root, or a command it cannot parse as valid bash gives the hook no
 basis for a meaningful yes/no question, so those cases are a hard deny
 (`exit 2`), not a silent allow and not an `ask`. Only a *specific*,
 successfully-identified out-of-vault path gets the softer `ask` treatment.
@@ -56,6 +56,21 @@ version of this hook got the `ask` mechanics wrong (`exit 2` is always a hard
 block in Claude Code regardless of any JSON attached to it; `ask` requires
 JSON on stdout with `exit 0`) and had several detection bypasses, all fixed
 and regression-tested in the version this file describes.
+
+**Command analysis uses `bashlex`, not a hand-rolled parser.** An earlier
+version approximated bash grammar with `shlex` plus manual token scanning,
+which correctly closed the round-3 bypasses but introduced a new false
+positive in real use: it scanned every token across an *entire* piped
+command, so a `sed`/`grep`/etc. argument after a `|` that happened to start
+with `/` (e.g. a sed address pattern) was flagged as an obsidian path
+candidate even though it belonged to a completely different command in the
+pipeline. `hooks/lib/analyze_obsidian_command.py` now parses the command with
+`bashlex` (a real port of bash's own parser) and only extracts path
+candidates from the command node(s) that actually invoke `obsidian` — correct
+across pipelines, subshells, and `if`/`while`/etc. compounds. It runs via
+`uv run`, which resolves and caches the `bashlex` dependency automatically
+(no separate `pip install` step); `uv`'s absence is therefore also a hard
+deny, alongside `jq` and `python3`.
 
 ## Error Handling
 

@@ -17,10 +17,17 @@
 #     STDOUT with exit 0 -- exit 2 is always a hard block and any JSON attached to it is
 #     ignored, regardless of stream). Used when a specific absolute, out-of-vault path (or
 #     something that could resolve to one) was actually detected -- a human can approve.
-# The obsidian-invocation check below is intentionally a broad substring match, not a
-# strict command-word regex: since this hook only ever prompts (never silently blocks a
-# legitimate call), over-triggering on an unrelated "obsidian" substring is far safer than
-# under-triggering and letting a real invocation slip past a narrow pattern.
+#
+# Command analysis (v3): a v2 hand-rolled shlex-token-scan approximation of bash grammar
+# flagged an unrelated `sed` pattern argument in a piped command (`obsidian read ... | sed
+# -n '/pattern/p'`) as an obsidian path candidate, because it scanned every token across
+# the whole command string with no awareness of which pipe segment actually invoked
+# `obsidian`. `hooks/lib/analyze_obsidian_command.py` replaces that scan with `bashlex`, a
+# real port of bash's own parser, run via `uv run` (see that script's PEP 723 header --
+# `uv` resolves/caches the `bashlex` dependency automatically, no system-wide pip install
+# needed). This correctly scopes candidate extraction to the command node(s) that actually
+# invoke `obsidian`, across pipelines, subshells, `if`/`while`/etc. compounds, and command
+# substitution alike.
 #
 # Scope note: this does NOT cover write-active's `sources` field being read via the
 # native Read tool (that path has no `obsidian` invocation to key off of, and Read is used
@@ -28,6 +35,12 @@
 # marker mechanism). See docs/contracts/path-safety.md for the tradeoff.
 
 set -euo pipefail
+
+# Local dev-time kill switch: `touch` this file to disable the hook immediately (each
+# invocation re-reads this script fresh, so no session reload is needed), `rm` it to
+# re-enable. Never commit this file -- it's a local escape hatch, not shipped behavior.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ -f "$SCRIPT_DIR/.disabled" ] && exit 0
 
 deny() {
   echo "guard-absolute-path: $1" >&2
@@ -42,6 +55,7 @@ ask() {
 
 command -v jq >/dev/null 2>&1 || deny "jq가 없어 경로 안전 확인을 할 수 없습니다."
 command -v python3 >/dev/null 2>&1 || deny "python3가 없어 경로 안전 확인을 할 수 없습니다."
+command -v uv >/dev/null 2>&1 || deny "uv가 없어 경로 안전 확인을 할 수 없습니다(bashlex 기반 명령어 분석에 필요)."
 
 input=$(cat)
 tool_name=$(printf '%s' "$input" | jq -r '.tool_name // empty') || deny "tool_name을 읽지 못했습니다."
@@ -97,42 +111,32 @@ flag_path() {
   esac
 }
 
-# Extract candidate tokens by shell-tokenizing the command. Beyond tokens that are
-# literally absolute (start with `/`), also surface tokens that could only become
-# absolute after bash's own expansion ($VAR, ~, command substitution) -- shlex has no
-# visibility into that expansion, so statically resolving it isn't safe; ask instead.
-# A shlex parse failure (e.g. unbalanced quotes) is itself ambiguous enough to ask about
-# rather than silently falling back to a naive split that can mis-tokenize and drop
-# candidates.
-candidates=$(python3 -c '
-import shlex, sys
-try:
-    tokens = shlex.split(sys.argv[1])
-except ValueError:
-    print("__PARSE_FAILURE__")
-    sys.exit(0)
-for tok in tokens:
-    val = tok.split("=", 1)[1] if "=" in tok else tok
-    if val.startswith("/") or val.startswith("$") or val.startswith("~") or "$(" in val or "`" in val:
-        print(val)
-' "$command") || deny "명령어를 분석하지 못했습니다."
+# Analyze the command with a real bash parser (see header comment) rather than a
+# hand-rolled approximation. `uv run` resolves/caches the `bashlex` dependency on first
+# use. `--quiet` suppresses uv's own resolver/install chatter from stdout.
+analysis=$(uv run --quiet "$SCRIPT_DIR/lib/analyze_obsidian_command.py" "$command") \
+  || deny "명령어를 분석하지 못했습니다(uv/bashlex 실행 실패)."
 
-if [ "$candidates" = "__PARSE_FAILURE__" ]; then
-  ask "obsidian CLI 호출이 포함된 명령어의 인자를 정확히 파싱할 수 없습니다(따옴표 불균형 등). 절대 경로 여부를 정적으로 확인할 수 없어 확인이 필요합니다. 계속할까요?"
+status=$(printf '%s' "$analysis" | jq -r '.status // empty') || deny "분석 결과를 읽지 못했습니다."
+
+if [ "$status" = "parse_error" ]; then
+  ask "obsidian CLI 호출이 포함된 명령어를 유효한 bash 구문으로 파싱할 수 없습니다. 절대 경로 여부를 확인할 수 없어 확인이 필요합니다. 계속할까요?"
 fi
+[ "$status" = "ok" ] || deny "명령어 분석 결과를 이해할 수 없습니다: $analysis"
+
+invokes_obsidian=$(printf '%s' "$analysis" | jq -r '.invokes_obsidian') || deny "분석 결과를 읽지 못했습니다."
+[ "$invokes_obsidian" = "true" ] || exit 0
 
 while IFS= read -r cand; do
   [ -z "$cand" ] && continue
-  case "$cand" in
-    /*)
-      if flag_path "$cand"; then
-        ask "obsidian CLI 호출이 참조하는 절대 경로 '$cand'는 현재 볼트/프로젝트 루트('$root') 밖입니다. docs/contracts/path-safety.md의 경로 안전 원칙에 따라 확인이 필요합니다. 계속할까요?"
-      fi
-      ;;
-    *)
-      ask "obsidian CLI 호출의 인자 '$cand'는 셸 확장(변수/틸드/커맨드 치환) 후에만 절대 경로가 될 수 있어 정적으로 안전을 확인할 수 없습니다. 확인이 필요합니다. 계속할까요?"
-      ;;
-  esac
-done <<<"$candidates"
+  if flag_path "$cand"; then
+    ask "obsidian CLI 호출이 참조하는 절대 경로 '$cand'는 현재 볼트/프로젝트 루트('$root') 밖입니다. docs/contracts/path-safety.md의 경로 안전 원칙에 따라 확인이 필요합니다. 계속할까요?"
+  fi
+done < <(printf '%s' "$analysis" | jq -r '.absolute_candidates[]')
+
+while IFS= read -r cand; do
+  [ -z "$cand" ] && continue
+  ask "obsidian CLI 호출의 인자 '$cand'는 셸 확장(변수/틸드/커맨드 치환) 후에만 절대 경로가 될 수 있어 정적으로 안전을 확인할 수 없습니다. 확인이 필요합니다. 계속할까요?"
+done < <(printf '%s' "$analysis" | jq -r '.unresolvable_candidates[]')
 
 exit 0
