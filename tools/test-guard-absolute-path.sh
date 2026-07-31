@@ -86,13 +86,21 @@ run "shell-keyword-prefixed invocation still triggers ask" 0 \
 run "traversal through an allowlisted prefix still triggers ask" 0 \
   '{"tool_name":"Bash","tool_input":{"command":"obsidian create path=/tmp/claude-501/../../etc/passwd"}}' 1
 
-# --- Fix for finding #5: shell-expansion-prone tokens ask rather than being silently dropped ---
+# --- Shell-expansion-prone tokens ($VAR, ~) are allowed, not flagged.
+# Real usage overwhelmingly passes relative vault paths through variables (for-loop
+# variables, config-derived paths, etc.). Flagging every variable reference as
+# "unresolvable" makes the hook unusable. A variable that secretly holds an out-of-vault
+# absolute path slips through -- accepted tradeoff (the agent is the caller, not an
+# attacker).
 
-run "dollar-prefixed token (shell expansion) triggers ask" 0 \
-  '{"tool_name":"Bash","tool_input":{"command":"obsidian create path=$HOME/outside.md"}}' 1
+run "dollar-prefixed token (shell variable) is allowed" 0 \
+  '{"tool_name":"Bash","tool_input":{"command":"obsidian create path=$HOME/outside.md"}}'
 
-run "tilde-prefixed token triggers ask" 0 \
-  '{"tool_name":"Bash","tool_input":{"command":"obsidian create path=~/outside.md"}}' 1
+run "tilde-prefixed token is allowed" 0 \
+  '{"tool_name":"Bash","tool_input":{"command":"obsidian create path=~/outside.md"}}'
+
+run "for-loop variable path is allowed" 0 \
+  '{"tool_name":"Bash","tool_input":{"command":"for p in Daily Notes/x.md; do obsidian create path=\"$p\"; done"}}'
 
 # --- Fix for finding #9: unparseable (unbalanced-quote) commands ask rather than mis-tokenizing ---
 

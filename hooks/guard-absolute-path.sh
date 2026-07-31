@@ -8,15 +8,17 @@
 # write-active is running." What IS unique to this plugin is invoking the `obsidian` CLI
 # itself: no unrelated task in a normal session shells out to that binary.
 #
-# Design principle (v2, after a security review found multiple bypasses in v1): fail
-# toward blocking or asking, never toward silent allow.
-#   - `deny`: a hard PreToolUse block (exit 2). Used when this hook cannot verify safety
-#     at all (missing dependency, unresolvable root, unparseable command) -- there is no
-#     meaningful question to ask, so the safe default is to stop, not to guess.
-#   - `ask`: a soft confirmation (Claude Code only honors `permissionDecision` via JSON on
-#     STDOUT with exit 0 -- exit 2 is always a hard block and any JSON attached to it is
-#     ignored, regardless of stream). Used when a specific absolute, out-of-vault path (or
-#     something that could resolve to one) was actually detected -- a human can approve.
+# Design principle: catch literal out-of-vault absolute paths, pass everything else
+# through. A path that is statically, literally absolute and resolves outside the vault
+# gets an `ask`; everything else -- including shell-expansion-prone tokens like `$p` or
+# `~/...` that can't be resolved statically -- is allowed. This trades a theoretical
+# bypass (a variable secretly holding an out-of-vault absolute path) for practical
+# usability: flagging every variable reference makes the hook unusable in real workflows.
+# The agent is the caller, not an attacker, so adversarial input is not the threat model.
+#   - `deny` (exit 2): hard block, used only when the hook itself can't run (missing
+#     dependency, unresolvable root, uv/bashlex failure).
+#   - `ask` (stdout JSON + exit 0): soft confirmation, used only when a literal absolute
+#     path resolving outside the vault is actually detected.
 #
 # Command analysis (v3): a v2 hand-rolled shlex-token-scan approximation of bash grammar
 # flagged an unrelated `sed` pattern argument in a piped command (`obsidian read ... | sed
@@ -127,16 +129,20 @@ fi
 invokes_obsidian=$(printf '%s' "$analysis" | jq -r '.invokes_obsidian') || deny "분석 결과를 읽지 못했습니다."
 [ "$invokes_obsidian" = "true" ] || exit 0
 
+# Only check absolute_candidates -- paths that are literally absolute (start with `/`).
+# Tokens that could only become absolute after shell expansion (variables like `$p`,
+# tilde `~`, command substitution) are NOT checked: they are overwhelmingly relative
+# vault paths in real usage (for-loop variables, config-derived paths, etc.), and
+# flagging every one as "unresolvable" produces false positives that make the hook
+# unusable. The tradeoff: a variable that secretly holds an out-of-vault absolute
+# path would slip through. That's accepted -- this hook is a backstop against
+# accidental out-of-vault writes, not a defense against adversarial input (the agent
+# is the caller, not an attacker).
 while IFS= read -r cand; do
   [ -z "$cand" ] && continue
   if flag_path "$cand"; then
     ask "obsidian CLI 호출이 참조하는 절대 경로 '$cand'는 현재 볼트/프로젝트 루트('$root') 밖입니다. docs/contracts/path-safety.md의 경로 안전 원칙에 따라 확인이 필요합니다. 계속할까요?"
   fi
 done < <(printf '%s' "$analysis" | jq -r '.absolute_candidates[]')
-
-while IFS= read -r cand; do
-  [ -z "$cand" ] && continue
-  ask "obsidian CLI 호출의 인자 '$cand'는 셸 확장(변수/틸드/커맨드 치환) 후에만 절대 경로가 될 수 있어 정적으로 안전을 확인할 수 없습니다. 확인이 필요합니다. 계속할까요?"
-done < <(printf '%s' "$analysis" | jq -r '.unresolvable_candidates[]')
 
 exit 0
