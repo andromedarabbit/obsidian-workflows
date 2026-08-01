@@ -10,7 +10,7 @@ updated: 2026-07-28T00:00
 입력:
 - `topic` (기본 필수, 단 선택 policy의 `topic_required: false`면 생략 가능)
 - `policy` (선택)
-- `sources` (선택, wikilink/볼트 내부 상대 경로 목록. 절대 경로는 받지 않음 — `docs/contracts/path-safety.md`의 경로 안전 체크가 다른 입력과 동일하게 적용됨. 외부 도구가 만든 데이터 파일을 참조하려면 먼저 볼트 내부 경로로 복사한 뒤 상대 경로로 넘길 것)
+- `sources` (선택, wikilink/볼트 내부 상대 경로 목록. **vault 내부 절대 경로는 vault 루트 기준 상대 경로로 변환해 받는다** — vault 루트는 cwd 또는 `writing-config.md`로 해석. vault 외부 절대 경로는 거부. `docs/contracts/path-safety.md`의 Required Check 1이 이 변환을 정의한다. 외부 도구가 만든 데이터 파일이 vault 밖에 있으면 먼저 vault 안으로 복사한 뒤 상대 경로로 넘길 것)
 - `soul` (기본 true)
 
 정책 해석 규칙(설정 기반):
@@ -36,7 +36,7 @@ updated: 2026-07-28T00:00
 실행:
 1. `writing-config.md` 로드
 2. policy 결정 및 policy 템플릿 로드
-3. policy 메타데이터 기반 입력/소스 검증
+3. policy 메타데이터 기반 입력/소스 검증. `sources` 항목이 절대 경로면 vault 루트 기준 상대 경로로 변환한 뒤 `docs/contracts/path-safety.md`의 Check 2–4(Traversal·Confinement·Symlink)를 적용한다. vault 외부로 해석되면 즉시 FAIL
 4. `soul_path` 로드 (soul=true일 때)
 5. policy 형식에 맞는 초안을 생성하고 `draft_path`에 저장
 6. policy가 `creation_engine: obsidian`을 요구하면 `obsidian create` 명령으로 생성 (Bash 도구 사용, `allowed-tools`의 `Bash(obsidian:*)` 범위)

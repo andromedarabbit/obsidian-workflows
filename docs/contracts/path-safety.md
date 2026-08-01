@@ -6,7 +6,7 @@ Apply the same path safety checks to every command that accepts user-provided fi
 
 ## Required Checks
 
-1. Reject absolute path input
+1. Accept an absolute path only if it resolves inside the vault root; rewrite it to a vault-relative path and continue with checks 2–4. Reject absolute paths that resolve outside the vault (or when the vault root cannot be determined)
 2. Reject `..` parent traversal segments
 3. Resolve normalized path and enforce vault-root confinement
 4. Reject symlink escape outside vault root
@@ -91,10 +91,10 @@ Must be consistent across:
 - `write-refine`
 - `write-review-policy`
 - `write-route`
-- `write-active` (including its `sources` field — no exception: absolute
-  paths are rejected like any other input. To reference an external tool's
-  data file, copy it into the vault first and pass the resulting relative
-  path)
+- `write-active` (including its `sources` field — no exception: an absolute
+  path is rewritten to vault-relative when it resolves inside the vault,
+  rejected when outside. For a file that lives outside the vault entirely,
+  copy it into the vault first and pass the resulting relative path)
 - `obsidian-workflows:ow-review`
 - `obsidian-workflows:ow-policy`
 - Any new command with file/path arguments
