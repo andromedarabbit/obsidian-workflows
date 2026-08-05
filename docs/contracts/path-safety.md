@@ -72,6 +72,20 @@ across pipelines, subshells, and `if`/`while`/etc. compounds. It runs via
 (no separate `pip install` step); `uv`'s absence is therefore also a hard
 deny, alongside `jq` and `python3`.
 
+**Heredoc commands are preprocessed before parsing.** bashlex cannot parse
+quoted-delimiter heredocs (`<< 'EOF'`), which previously turned any command
+containing one into a `parse_error` → `ask` — a false positive whenever the
+body merely mentioned "obsidian" (e.g. a `.obsidian/plugins/...` path). The
+analyzer now strips heredoc redirection operators and their bodies before
+parsing, so only the command structure reaches bashlex. This is safe by the
+same scope rule above — a heredoc body is stdin for another command, not a
+shell command word the hook keys on — with one acknowledged narrowing: when
+the feeding command is itself a shell/script runner (`bash`/`sh`/`eval`/
+`source`), the body is executed as shell, so an `obsidian` invocation inside
+it is no longer caught here (pre-fix it was caught only accidentally, via the
+parse_error). That is accepted under this layer's threat model (accidental,
+not adversarial, writes; command-level Required Checks still apply).
+
 ## Error Handling
 
 - On any violation of the Required Checks (command-level, all commands under
