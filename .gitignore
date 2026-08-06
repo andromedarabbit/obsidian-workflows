@@ -16,5 +16,6 @@ COMMANDS.md.tmp
 .claude/state/*.json
 !.claude/state/*.json.example
 .claude/skills/
+.claude/skill-team-rules/
 obsidian-workflows-eval
 hooks/.disabled
