@@ -123,9 +123,15 @@ check_skill() {
                 fi
 
                 # When-to-use trigger phrase: WARNING only (see docs/skill-specification.md
-                # "Diverged" section for why this is not an ERROR in this repository)
-                if ! printf '%s' "$desc_value" | grep -qiE "할 때|일 때|요청 시|트리거|when.to.use|use when|trigger"; then
-                    echo -e "${YELLOW}WARNING${NC}: $file - description has no when-to-use trigger phrase"
+                # "Diverged" section for why this is not an ERROR in this repository).
+                # Scans description AND when_to_use together: when_to_use is the listing
+                # field that carries trigger examples alongside description per the
+                # official Claude Code skill spec, so a skill that moved its trigger
+                # phrases into when_to_use should not warn.
+                local when_to_use_value
+                when_to_use_value=$(extract_field "$file" "when_to_use")
+                if ! printf '%s %s' "$desc_value" "$when_to_use_value" | grep -qiE "할 때|일 때|요청 시|트리거|when.to.use|use when|trigger"; then
+                    echo -e "${YELLOW}WARNING${NC}: $file - description/when_to_use has no when-to-use trigger phrase"
                     ((WARNINGS++))
                 fi
                 ;;

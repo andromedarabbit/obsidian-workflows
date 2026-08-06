@@ -10,7 +10,7 @@ All local commands and skills live under the single plugin namespace `obsidian-w
 (the prefix is added automatically from the plugin manifest name). Within that namespace,
 two dash-prefixed families divide the roles:
 
-- Workflow track entrypoints: `/obsidian-workflows:ow-*` (`ow-plan`, `ow-work`, `ow-review`, `ow-compound`, `ow-policy`) — each is mirrored by a same-named skill (`/obsidian-workflows:plan` etc.)
+- Workflow track entrypoints: `/obsidian-workflows:ow-*` (`ow-plan`, `ow-work`, `ow-review`, `ow-compound`, `ow-policy`) — each is a skill at `skills/ow-*/SKILL.md`, the canonical source of behavior (no command mirror; the mirror/sync architecture was removed in v0.3.0)
 - Execution commands: `/obsidian-workflows:write-*` (`write-active`, `write-draft`, …) — invoked by the tracks, not entered directly in normal flow
 - External plugin namespaces (e.g., `/compound-engineering:*`) are out-of-scope for local workflow execution
 
@@ -20,13 +20,11 @@ colon-in-filename naming and no longer exists.
 
 ## Invocation Policy
 
-1. Workflow orchestration should enter through an `ow-*` track (or its mirror skill)
+1. Workflow orchestration should enter through an `ow-*` track
 2. `write-*` execution commands are invoked by the track entrypoints
 3. Cross-plugin namespaces must not be silently substituted
 4. On wrong namespace usage, fail fast with explicit guidance
 
 ## Compatibility
 
-- During migration window, wrappers may forward old entrypoints
-- Wrappers must emit deprecation guidance
-- End-state should retain one clear canonical entry namespace
+The v0.3.0 mirror/sync removal ended the migration window: `ow-*` tracks are skills-only now (see `docs/skill-specification.md` "Skill Body Conventions"). Wrappers that forwarded old command-style entrypoints are out of support — the single canonical entry namespace is the `ow-*` skill family.

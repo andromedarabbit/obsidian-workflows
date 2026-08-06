@@ -1,7 +1,8 @@
 ---
 name: ow-compound
-description: 'COMPOUND 트랙 진입점. 완성된 글에서 학습 포인트·반복 패턴·재사용 가능한 문장 전략을 캡처해 SOUL/policy 개선 후보로 누적합니다. "학습 포인트 뽑아줘", "이 글에서 배운 거 정리해줘", "SOUL에 반영하자"처럼 완성본에서 배운 점을 정리할 때 사용합니다.'
-version: 0.2.0
+description: 'COMPOUND 트랙 진입점. 완성된 글에서 학습 포인트·반복 패턴·재사용 가능한 문장 전략을 캡처해 SOUL/policy 개선 후보로 누적합니다.'
+when_to_use: '"학습 포인트 뽑아줘", "이 글에서 배운 거 정리해줘", "SOUL에 반영하자"처럼 완성본에서 배운 점을 정리할 때 사용합니다.'
+version: 0.3.0
 context: inline
 language: korean
 created: 2026-03-02T14:58

@@ -1,7 +1,8 @@
 ---
 name: ow-work
-description: 'WORK 트랙 진입점. mode를 명시하거나 파일·상태 신호에서 active/passive/draft/refine/route 중 하나를 추론해 바로 실행합니다. "draft로 써줘", "이 proposal 진행해줘", "mode 정해줘", "refine 한 번 더"처럼 작성 트랙을 즉시 실행할 때 사용합니다.'
-version: 0.2.0
+description: 'WORK 트랙 진입점. mode를 명시하거나 파일·상태 신호에서 active/passive/draft/refine/route 중 하나를 추론해 바로 실행합니다.'
+when_to_use: '"draft로 써줘", "이 proposal 진행해줘", "mode 정해줘", "refine 한 번 더"처럼 작성 트랙을 즉시 실행할 때 사용합니다.'
+version: 0.3.0
 context: inline
 language: korean
 created: 2026-03-02T14:58

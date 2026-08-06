@@ -13,11 +13,17 @@ Skills are stored in `skills/<name>/` with the following structure:
 ```
 skills/
 ├── ow-plan/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/
 ├── ow-work/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/
 ├── ow-review/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/
+├── ow-policy/
+│   ├── SKILL.md
+│   └── references/
 └── ow-compound/
     └── SKILL.md
 ```
@@ -48,7 +54,7 @@ A skill directory MUST contain `SKILL.md`. It MAY additionally contain a `refere
 - **Values**: `fork` | `inline`
 - **`fork`**: the skill runs as an isolated sub-agent
 - **`inline`**: the skill runs in the main conversation and shares its context — required when the skill calls `AskUserQuestion`, invokes the `Skill` tool to hand off to another skill within the same turn, or reads/writes session state
-- All four skills in this repository (`ow-plan`, `ow-work`, `ow-review`, `ow-compound`) are `context: inline` for exactly this reason
+- All five skills in this repository (`ow-plan`, `ow-work`, `ow-review`, `ow-policy`, `ow-compound`) are `context: inline` for exactly this reason
 
 ### Conditionally Required Fields
 
@@ -72,6 +78,35 @@ A skill directory MUST contain `SKILL.md`. It MAY additionally contain a `refere
 - **Format**: ISO 8601 date-time (matches the command frontmatter convention in [Frontmatter Reference](./frontmatter-reference.md))
 - **Purpose**: Track when the skill was authored and when it was last modified. Not currently validated by `tools/check-skill-frontmatter.sh` (unlike the command validator, which enforces both fields as required and format-checked)
 
+### Claude Code Official Fields (optional)
+
+These fields are part of the official Claude Code skill spec ([docs](https://code.claude.com/docs/en/skills)) and are accepted by `tools/check-skill-frontmatter.sh`. This repository adopts some and merely permits others.
+
+#### `disable-model-invocation` (boolean)
+
+- **Purpose**: When `true`, Claude cannot load the skill autonomously — only an explicit slash invocation runs it. Use for workflows with side effects.
+- **Adoption: Not adopted.** The `ow-*` skills hand off to each other through the `Skill` tool (ow-plan -> ow-work active handoff, ow-work passive -> ow-plan, ow-review -> ow-compound). The official Claude Code spec blocks a model-driven `Skill` tool call to a `disable-model-invocation: true` skill just as it blocks auto-loading, so setting it on any `ow-*` entry point would sever that chain — which is this plugin's core execution order. The side-effect concern it would guard against (state writes, config edits) is real, but the handoff chain is more fundamental, so `disable-model-invocation` is not used on the `ow-*` skills. Trigger-phrase coverage now scans `description` and `when_to_use` together (see [Validation](#validation)).
+
+#### `when_to_use` (string)
+
+- **Purpose**: Additional trigger context appended to `description` in the skill listing. Move verbose trigger phrases out of `description` so `description` stays a one-line summary.
+- **Adoption**: **Adopted where descriptions run long.** `description` and `when_to_use` together are capped at 1,536 characters in the listing; this repository's own cap on `description` alone is 1,024. Splitting trigger phrases into `when_to_use` keeps `description` scannable.
+
+#### `allowed-tools` / `disallowed-tools` (string/list)
+
+- **Purpose**: Tools Claude may use without per-use approval during the turn that invokes the skill (`allowed-tools`), or tools removed from Claude's pool while the skill is active (`disallowed-tools`). The grant clears on the next message.
+- **Adoption**: **Permitted, not yet applied.** `Skill(obsidian-workflows:*)` scoped pre-approval would cut handoff prompts, but it widens the permission surface, so applying actual values is deferred to a separate review. Documented here so the validator accepts them when introduced.
+
+#### `paths` (string/list)
+
+- **Purpose**: Glob patterns that limit when Claude loads the skill automatically.
+- **Adoption**: **Permitted.** Not used today because the `ow-*` skills disable model invocation, which makes path-gated auto-loading moot.
+
+#### `model` / `effort` (string)
+
+- **Purpose**: Override the model or reasoning effort for the turn that invokes the skill.
+- **Adoption**: **Permitted, not used.** The track skills inherit the session model and effort.
+
 ## Relationship to oh-my-skills House Rules
 
 The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a stricter house layer on top of the public Agent Skills spec. obsidian-workflows adopts most of it, but diverges where the house rule assumes a scale or execution model this repository doesn't have.
@@ -94,9 +129,9 @@ The sibling repository `oh-my-skills` (배민 데이터플랫폼팀) defines a s
 
 ### Not Applicable
 
-- Per-skill semver + CHANGELOG validation — over-engineered at this repository's scale (4 skills)
+- Per-skill semver + CHANGELOG validation — over-engineered at this repository's scale (5 skills)
 - Machine-readable divergence contracts or upstream rulebook lockfiles/pinning — oh-my-skills is a same-author internal repository, not a fast-moving external dependency that needs pinning
-- `create-skill.sh` scaffolder and a generated `SKILLS.md` index — speculative tooling for a skill count (4) that shows no near-term growth signal. Revisit if the skill count grows past roughly 8–10 (see `CONTRIBUTING.md`)
+- `create-skill.sh` scaffolder and a generated `SKILLS.md` index — speculative tooling for a skill count (5) that shows no near-term growth signal. Revisit if the skill count grows past roughly 8–10 (see `CONTRIBUTING.md`)
 
 ## Skill Body Conventions
 
@@ -121,19 +156,21 @@ When a skill needs deterministic investigation that would clutter the main conte
 ```markdown
 ---
 name: ow-plan
-description: 'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다. "블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
-version: 0.1.0
+description: 'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다.'
+when_to_use: '"블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
+version: 0.3.0
 context: inline
 language: korean
-user-invocable: true
 created: 2026-03-02T01:34
-updated: 2026-07-23T00:00
+updated: 2026-08-06T00:00
 ---
 
 # PLAN Track Entry Point
 
 ...
 ```
+
+The example mirrors the current `skills/ow-plan/SKILL.md` shape: a one-line `description` plus a `when_to_use` that carries the trigger examples. The actual file is always canonical.
 
 ## Validation
 

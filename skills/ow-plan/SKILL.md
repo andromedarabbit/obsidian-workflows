@@ -1,7 +1,8 @@
 ---
 name: ow-plan
-description: 'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다. "블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
-version: 0.2.0
+description: 'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다.'
+when_to_use: '"블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
+version: 0.3.0
 context: inline
 language: korean
 created: 2026-03-02T01:34

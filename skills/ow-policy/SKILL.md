@@ -1,7 +1,8 @@
 ---
 name: ow-policy
-description: '새 writing policy 파일을 대화형으로 생성해 writing-config.md에 등록합니다. "새 채널 policy 만들어줘", "linkedin 정책 추가", "writing-config에 채널 등록"처럼 새 채널이나 글 유형의 policy를 만들거나 추가할 때 사용합니다. 기존 policy 수정이나 맞춤법 검사는 제외입니다.'
-version: 0.2.0
+description: '새 writing policy 파일을 대화형으로 생성해 writing-config.md에 등록합니다.'
+when_to_use: '"새 채널 policy 만들어줘", "linkedin 정책 추가", "writing-config에 채널 등록"처럼 새 채널이나 글 유형의 policy를 만들거나 추가할 때 사용합니다. 기존 policy 수정이나 맞춤법 검사는 제외입니다.'
+version: 0.3.0
 context: inline
 language: korean
 created: 2026-07-22T00:00
@@ -26,22 +27,9 @@ policy 스키마의 정본은 `docs/policy-specification.md`입니다. 생성하
 2. `policy_dir`가 없으면 조용한 fallback 없이 즉시 `FAIL`.
 3. policy 파일 경로는 항상 `policy_dir/writing-policy.<policy>.md`로 조합합니다.
 
-## Interactive Collection
+## Interactive Collection & File Generation
 
-인자로 값이 주어진 항목은 질문을 건너뜁니다. `AskUserQuestion`으로 핵심을 하나씩 묻습니다.
-
-1. **policy 이름** → `policy_type` + 파일명 suffix. `^[a-z0-9-]+$` 검증. 대상 파일이 이미 있으면 기본은 `FAIL`, `--overwrite` 또는 명시 확인 시에만 진행.
-2. **output_type**, **target_length**(자유 입력, 단위는 채널마다 다름), **required_sections**(목록), **cta_required**(bool).
-3. **선택적 채널 필드**는 맥락에 맞을 때만 제안: `reference_style`, `line_style`, `topic_required`, `source_strategy`/`source_path_key`/`missing_source_behavior`/`recent_candidates_limit`, `creation_engine`/`template_engine`/`template_key`.
-4. 본문 `Goal`/`Structure`/`Style`(또는 `Constraints`)는 답변을 근거로 초안하고 사용자가 검토합니다.
-
-## File Generation
-
-`assets/Workflows/policy/writing-policy.{blog,daily-note}.md` 포맷을 few-shot 기준으로 삼습니다.
-
-1. frontmatter: `created`/`updated`(ISO), `policy_type`, `output_type`, `target_length`, `required_sections`, `cta_required`, + 선택 필드.
-2. 본문: `# <Title> Policy`, `## Goal`, `## Structure`, `## Style`|`## Constraints`.
-3. `policy_dir/writing-policy.<policy>.md`에 Write.
+필드 수집 순서, 선택 필드 후보, 파일 생성 포맷은 `references/policy-fields.md`를 읽어 적용한다. policy 스키마의 정본은 `docs/policy-specification.md`이고, `assets/Workflows/policy/writing-policy.{blog,daily-note}.md`를 few-shot 기준으로 삼는다.
 
 ## Self-Validation
 
