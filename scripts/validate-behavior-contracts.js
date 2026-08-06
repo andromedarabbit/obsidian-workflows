@@ -8,30 +8,45 @@ function readRelative(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
+// Resolve a skill's full text as SKILL.md plus any references/*.md it ships, so the behavioral
+// contract follows progressively-disclosed content (e.g. ow-plan's handoff menus) into references/.
+function readSkillResolved(skillDir) {
+  let text = readRelative(`${skillDir}/SKILL.md`);
+  const refDirAbs = path.join(root, skillDir, 'references');
+  if (fs.existsSync(refDirAbs)) {
+    for (const name of fs.readdirSync(refDirAbs).sort()) {
+      if (name.endsWith('.md')) {
+        text += '\n' + readRelative(`${skillDir}/references/${name}`);
+      }
+    }
+  }
+  return text;
+}
+
 const docs = {
   commandPlan: {
     path: 'skills/ow-plan/SKILL.md',
-    text: readRelative('skills/ow-plan/SKILL.md'),
+    text: readSkillResolved('skills/ow-plan'),
   },
   skillPlan: {
     path: 'skills/ow-plan/SKILL.md',
-    text: readRelative('skills/ow-plan/SKILL.md'),
+    text: readSkillResolved('skills/ow-plan'),
   },
   commandWork: {
     path: 'skills/ow-work/SKILL.md',
-    text: readRelative('skills/ow-work/SKILL.md'),
+    text: readSkillResolved('skills/ow-work'),
   },
   commandCompound: {
     path: 'skills/ow-compound/SKILL.md',
-    text: readRelative('skills/ow-compound/SKILL.md'),
+    text: readSkillResolved('skills/ow-compound'),
   },
   commandReview: {
     path: 'skills/ow-review/SKILL.md',
-    text: readRelative('skills/ow-review/SKILL.md'),
+    text: readSkillResolved('skills/ow-review'),
   },
   skillWork: {
     path: 'skills/ow-work/SKILL.md',
-    text: readRelative('skills/ow-work/SKILL.md'),
+    text: readSkillResolved('skills/ow-work'),
   },
   scanCommand: {
     path: 'commands/write-scan.md',
@@ -135,16 +150,15 @@ function validateNoStalePatterns(doc) {
 }
 
 function validateHelperPathContract(doc) {
+  // A skill/command may carry the helper-path contract inline (Korean) OR delegate to the
+  // canonical doc. Dedup'd skills point at docs/contracts/helper-script-path.md instead of
+  // repeating the contract; either form satisfies the reachability check. The canonical doc
+  // itself is verified once below to carry the contract that delegates rely on.
+  const delegatesToCanonical = doc.text.includes('docs/contracts/helper-script-path.md');
+  const inlineContract = doc.text.includes('현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다');
   check(
-    `${doc.path} forbids cwd-relative src helper execution`,
-    doc.text.includes('현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다.')
-      || doc.text.includes('현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다'),
-    doc.path,
-  );
-
-  check(
-    `${doc.path} requires plugin/repo root resolution before helper scripts`,
-    doc.text.includes('plugin/repo root') || doc.text.includes('plugin/repo root를 해석'),
+    `${doc.path} carries the helper-path contract (inline or via docs/contracts/helper-script-path.md)`,
+    delegatesToCanonical || inlineContract,
     doc.path,
   );
 }
@@ -180,6 +194,14 @@ validateHelperPathContract(docs.commandWork);
 validateHelperPathContract(docs.commandCompound);
 validateHelperPathContract(docs.commandReview);
 validateHelperPathContract(docs.scanCommand);
+
+// The canonical helper-path doc must itself express the contract that dedup'd skills delegate to.
+const helperPathDoc = readRelative('docs/contracts/helper-script-path.md');
+check(
+  'docs/contracts/helper-script-path.md carries the canonical helper-path contract',
+  helperPathDoc.includes('plugin/repo root') && helperPathDoc.includes('src/...'),
+  'docs/contracts/helper-script-path.md',
+);
 
 for (const doc of Object.values(docs)) {
   validateNoStalePatterns(doc);

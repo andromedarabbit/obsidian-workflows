@@ -9,31 +9,31 @@ This file is auto-generated from command frontmatter. Do not edit manually.
 
 #### `/obsidian-workflows:ow-compound`
 
-COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다. 완성된 문서에서 학습 포인트를 축적해야 할 때 사용합니다.
+'COMPOUND 트랙 진입점. 완성된 글에서 학습 포인트·반복 패턴·재사용 가능한 문장 전략을 캡처해 SOUL/policy 개선 후보로 누적합니다. "학습 포인트 뽑아줘", "이 글에서 배운 거 정리해줘", "SOUL에 반영하자"처럼 완성본에서 배운 점을 정리할 때 사용합니다.'
 
 **Source:** [`skills/ow-compound/SKILL.md`](skills/ow-compound/SKILL.md)
 
 #### `/obsidian-workflows:ow-plan`
 
-PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
+'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다. "블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
 
 **Source:** [`skills/ow-plan/SKILL.md`](skills/ow-plan/SKILL.md)
 
 #### `/obsidian-workflows:ow-policy`
 
-새 writing policy를 대화형으로 생성하고 확인 후 writing-config.md에 등록합니다. 새 채널/글 유형의 policy를 만들거나 추가해야 할 때 사용합니다.
+'새 writing policy 파일을 대화형으로 생성해 writing-config.md에 등록합니다. "새 채널 policy 만들어줘", "linkedin 정책 추가", "writing-config에 채널 등록"처럼 새 채널이나 글 유형의 policy를 만들거나 추가할 때 사용합니다. 기존 policy 수정이나 맞춤법 검사는 제외입니다.'
 
 **Source:** [`skills/ow-policy/SKILL.md`](skills/ow-policy/SKILL.md)
 
 #### `/obsidian-workflows:ow-review`
 
-'게시·발행 직전의 초안을 정책 검증과 문체 리뷰까지 한 번에 통과시키고 싶을 때 사용합니다. Obsidian vault 초안(블로그·뉴스레터·스레드·데일리 노트)이나 writing-config policy로 검증할 draft가 대상입니다. 채널 정책 게이트(구조·길이·필수 섹션 검증)에 이어 문체·윤문 점검(AI 티·번역투 진단, 필요 시 사람처럼 다듬기)까지 한 번에 수행합니다. 정책 검증하고 문체까지, 발행 전 최종 점검, 리뷰하고 AI 티 있으면 다듬어줘 같은 요청에 적합합니다. 제외 — 맞춤법·오탈자만 교정, policy 신규 생성, 코드·PR 리뷰, 새 글 작성, 정책 검증 없이 문장만 윤문(AI 티만 빼줘)하려는 요청.'
+'발행 직전 초안을 채널 정책 게이트(구조·길이·필수 섹션)와 문체 리뷰(AI 티·번역투 진단, 필요 시 사람처럼 다듬기)로 한 번에 검증합니다. "발행 전 최종 점검", "정책 통과하는지 봐줘", "AI 티 빼줘", "초안 리뷰해줘"처럼 정책과 문체를 함께 점검할 때 사용합니다. 맞춤법만 교정, policy 신규 생성, 코드 리뷰, 새 글 작성, 정책 없이 문장만 윤문하는 건 제외입니다.'
 
 **Source:** [`skills/ow-review/SKILL.md`](skills/ow-review/SKILL.md)
 
 #### `/obsidian-workflows:ow-work`
 
-WORK 트랙 진입점. mode를 명시하거나 파일/상태 신호에서 자동 추론해 active/passive/draft/refine/route 중 하나를 deterministic하게 실행합니다. WORK 트랙 실행이 필요하거나 모드를 판단해야 할 때 사용합니다.
+'WORK 트랙 진입점. mode를 명시하거나 파일·상태 신호에서 active/passive/draft/refine/route 중 하나를 추론해 바로 실행합니다. "draft로 써줘", "이 proposal 진행해줘", "mode 정해줘", "refine 한 번 더"처럼 작성 트랙을 즉시 실행할 때 사용합니다.'
 
 **Source:** [`skills/ow-work/SKILL.md`](skills/ow-work/SKILL.md)
 

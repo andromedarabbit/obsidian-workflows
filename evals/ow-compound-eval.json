@@ -1,0 +1,7 @@
+[
+  {"query": "완성된 글에서 학습 포인트 뽑아줘", "should_trigger": true},
+  {"query": "이 글에서 배운 거 정리해줘", "should_trigger": true},
+  {"query": "SOUL에 반영할 만한 거 정리해줘", "should_trigger": true},
+  {"query": "새 글 써줘", "should_trigger": false},
+  {"query": "초안 리뷰해줘", "should_trigger": false}
+]

@@ -1,11 +1,11 @@
 ---
 name: ow-plan
-description: PLAN 트랙 진입점. 자연어 작성 요청은 active로, 작성 지시 없는 빈 plan은 passive 제안으로 라우팅하고, 종료는 텍스트 명령어가 아니라 AskUserQuestion handoff로 처리합니다. 글쓰기 주제를 계획하거나 초안 작성 여부를 판단해야 할 때 사용합니다.
+description: 'PLAN 트랙 진입점. 글쓰기 주제를 기획하거나 초안 작성 여부를 판단해 active/passive로 라우팅합니다. "블로그 아이디어 3개 제안", "이 주제로 쓸까", "최근 노트에서 쓸 거 있나"처럼 주제를 정하거나 초안 착수 여부를 결정할 때 사용합니다.'
 version: 0.2.0
 context: inline
 language: korean
 created: 2026-03-02T01:34
-updated: 2026-07-07T00:00
+updated: 2026-08-06T00:00
 ---
 
 # PLAN Track Entry Point
@@ -40,64 +40,13 @@ updated: 2026-07-07T00:00
 4. 생성된 proposal 파일을 읽어 아이디어 제목, 핵심 논지, 추천 policy를 추출합니다.
 5. proposal 요약 출력 후 텍스트 명령어를 안내하지 말고 `AskUserQuestion` 4옵션 handoff 메뉴를 표시합니다.
 
-## Active Handoff Menu
+### Handoff Menus
 
-Active 분기 종료 직후 `AskUserQuestion` 도구를 즉시 fire합니다. 메뉴를 텍스트로 설명하고 멈추면 완료가 아닙니다.
-
-- stem: `Active plan 완료 (topic="<topic>", policy=<policy>). 다음에 무엇을 할까요?`
-- options:
-  1. `바로 실행` (recommended)
-  2. `계획 다듬기`
-  3. `다른 정책으로`
-  4. `나중에`
-
-옵션별 동작:
-
-1. **바로 실행**
-   - plan에서 받은 active 분기용 추가 인자(`--source`, `--window-days`, `--skip` 등)를 `extra_args`로 묶습니다.
-   - `.claude/state/obsidian-write-active-handoff.json`을 `status: consumed`로 사전 기록합니다.
-   - 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow-work`를 즉시 fire합니다. Claude Code에서는 `Skill` 도구를 사용합니다.
-2. **계획 다듬기**
-   - 사용자에게 다듬을 부분을 묻고 active 분기를 다시 실행합니다. 이후 이 메뉴를 다시 표시합니다.
-3. **다른 정책으로**
-   - enabled policy 후보를 제시하고 선택을 받아 active 분기를 다시 실행합니다. 이후 이 메뉴를 다시 표시합니다.
-4. **나중에**
-   - `.claude/state/obsidian-write-active-handoff.json`을 `status: pending`으로 저장하고 종료합니다. 이후 mode 없는 `obsidian-workflows:ow-work`가 이를 감지합니다.
-
-Completion check:
-
-1. `AskUserQuestion` 도구로 위 4옵션 메뉴를 fire합니다.
-2. 사용자 선택을 수신합니다.
-3. 선택에 따른 인라인 routing을 즉시 실행합니다.
-
-## Passive Handoff Menu
-
-Passive 분기 종료 직후 proposal 요약을 출력하고 `AskUserQuestion` 도구를 즉시 fire합니다. proposal만 만들고 텍스트 명령어를 안내하면 완료가 아닙니다.
-
-- stem: `Passive proposal 생성 완료 (<N>개 아이디어). 다음에 무엇을 할까요?`
-- options:
-  1. `Idea 선택해서 draft` (recommended)
-  2. `proposal 다듬기`
-  3. `다른 정책으로`
-  4. `나중에`
-
-옵션별 동작:
-
-1. **Idea 선택해서 draft**
-   - 사용자에게 idea 번호를 묻고 proposal frontmatter의 `status`를 `in-progress`, `selected_idea`를 선택 번호로 갱신합니다.
-   - 플랫폼의 skill-invocation primitive로 `obsidian-workflows:ow-work`를 즉시 fire합니다. Claude Code에서는 `Skill` 도구를 사용합니다.
-2. **proposal 다듬기**
-   - 아이디어 추가/교체 요청을 받아 propose를 다시 실행합니다. 이후 이 메뉴를 다시 표시합니다.
-3. **다른 정책으로**
-   - policy 후보를 제시하고 선택을 받아 propose를 다시 실행합니다. 이후 이 메뉴를 다시 표시합니다.
-4. **나중에**
-   - proposal frontmatter를 `status: pending`으로 유지하고 종료합니다.
-
-Completion check: Active Handoff Menu의 Completion check와 동일한 절차(`AskUserQuestion` fire → 선택 수신 → 인라인 routing)를 따릅니다.
+각 분기 종료 시 텍스트 명령어 안내가 아닌 `AskUserQuestion` 4옵션 메뉴를 즉시 fire한다. Active/Passive 메뉴의 stem·옵션 라벨·옵션별 동작·Completion check 상세는 `references/handoff-menu.md`를 읽어 적용한다.
 
 ## Helper Script Path Resolution
 
-Helper script는 항상 `obsidian-workflows` plugin/repo root 기준 절대 경로로 실행합니다 — 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다. root 해석 실패 시 추측하지 않고, optional 단계는 경고 후 건너뜁니다. 상세: `docs/contracts/helper-script-path.md`.
+Helper script는 `docs/contracts/helper-script-path.md`의 경로 규칙을 따른다(plugin/repo root 기준 절대 경로, vault cwd 상대 `src/...` 실행 금지, 해석 실패 시 추측 금지).
 
 ## Status/Output Rules
 

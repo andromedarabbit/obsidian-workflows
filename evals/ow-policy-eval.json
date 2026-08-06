@@ -1,0 +1,8 @@
+[
+  {"query": "새 linkedin policy 만들어줘", "should_trigger": true},
+  {"query": "writing-config에 새 채널 등록해줘", "should_trigger": true},
+  {"query": "뉴스레터용 policy 추가해줘", "should_trigger": true},
+  {"query": "기존 blog policy 수정해줘", "should_trigger": false},
+  {"query": "이 초안 정책 검증해줘", "should_trigger": false},
+  {"query": "맞춤법 검사해줘", "should_trigger": false}
+]

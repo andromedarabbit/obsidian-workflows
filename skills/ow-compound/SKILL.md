@@ -1,11 +1,11 @@
 ---
 name: ow-compound
-description: COMPOUND 트랙 진입점. 완성본에서 학습 포인트를 축적합니다. 완성된 문서에서 학습 포인트를 축적해야 할 때 사용합니다.
+description: 'COMPOUND 트랙 진입점. 완성된 글에서 학습 포인트·반복 패턴·재사용 가능한 문장 전략을 캡처해 SOUL/policy 개선 후보로 누적합니다. "학습 포인트 뽑아줘", "이 글에서 배운 거 정리해줘", "SOUL에 반영하자"처럼 완성본에서 배운 점을 정리할 때 사용합니다.'
 version: 0.2.0
 context: inline
 language: korean
 created: 2026-03-02T14:58
-updated: 2026-07-07T00:00
+updated: 2026-08-06T00:00
 ---
 
 # COMPOUND Track Entry Point
@@ -24,7 +24,7 @@ updated: 2026-07-07T00:00
 
 ## Helper Script Path Resolution
 
-Helper script는 항상 `obsidian-workflows` plugin/repo root 기준 절대 경로로 실행합니다 — 현재 vault cwd 기준의 `src/...` 경로로 실행하지 않습니다. root 해석 실패 시 추측하지 않고, optional 단계는 경고 후 건너뜁니다. 상세: `docs/contracts/helper-script-path.md`.
+Helper script는 `docs/contracts/helper-script-path.md`의 경로 규칙을 따른다(plugin/repo root 기준 절대 경로, vault cwd 상대 `src/...` 실행 금지, 해석 실패 시 추측 금지).
 
 ## Rules
 

@@ -5,9 +5,14 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const commandPath = path.join(root, 'skills/ow-plan/SKILL.md');
+const handoffMenuPath = path.join(root, 'skills/ow-plan/references/handoff-menu.md');
 const fixturePath = path.join(root, 'tests/migration/fixtures/plan-passive-default.json');
 
 const commandText = fs.readFileSync(commandPath, 'utf8');
+// The handoff menu detail is progressively disclosed in references/handoff-menu.md. Merge it
+// into the branch-rules text so the pinned menu labels (바로 실행, Idea 선택해서 draft, …) stay
+// enforced after the split — the behavioral contract follows content into references/.
+const handoffMenuText = fs.existsSync(handoffMenuPath) ? fs.readFileSync(handoffMenuPath, 'utf8') : '';
 const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
 
 function getSection(text, heading, nextHeadingCandidates = []) {
@@ -37,10 +42,12 @@ function getOrderedSection(text, heading) {
   return getSection(text, heading, nextCandidates);
 }
 
+const branchRulesSection = getOrderedSection(commandText, '## Branch Execution Rules');
+
 const sections = {
   externalTools: '',
   intentGate: getOrderedSection(commandText, '## Intent Gate'),
-  branchRules: getOrderedSection(commandText, '## Branch Execution Rules'),
+  branchRules: branchRulesSection + '\n' + handoffMenuText,
   statusRules: getOrderedSection(commandText, '## Status/Output Rules'),
 };
 

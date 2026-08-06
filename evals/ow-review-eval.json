@@ -1,0 +1,10 @@
+[
+  {"query": "이 블로그 초안 발행 전에 정책 통과하는지 한 번만 봐줘", "should_trigger": true},
+  {"query": "뉴스레터 원고 쓴 거 구조랑 길이 맞는지 검토해주고 AI 티도 좀 빼줘", "should_trigger": true},
+  {"query": "데일리 노트인데 채널 정책 게이트랑 문체 리뷰 둘 다 돌리고 싶어", "should_trigger": true},
+  {"query": "초안 리뷰해줘 policy=blog", "should_trigger": true},
+  {"query": "AI 티만 좀 빼줘, 정책 검사는 필요없어", "should_trigger": false},
+  {"query": "이 글 맞춤법 오탈자만 교정해줘", "should_trigger": false},
+  {"query": "새 linkedin policy 하나 만들어줘", "should_trigger": false},
+  {"query": "이 PR 코드 리뷰해줘", "should_trigger": false}
+]

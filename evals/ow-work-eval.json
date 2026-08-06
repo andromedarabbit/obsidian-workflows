@@ -1,0 +1,8 @@
+[
+  {"query": "draft로 써줘", "should_trigger": true},
+  {"query": "이 proposal 진행해줘", "should_trigger": true},
+  {"query": "이번 작업 mode 정해줘", "should_trigger": true},
+  {"query": "refine 한 번 더 해줘", "should_trigger": true},
+  {"query": "블로그 아이디어 3개 제안해줘", "should_trigger": false},
+  {"query": "발행 전 정책 점검해줘", "should_trigger": false}
+]

@@ -1,0 +1,9 @@
+[
+  {"query": "블로그 아이디어 3개 제안해줘", "should_trigger": true},
+  {"query": "이 주제로 쓸까 말까 결정해줘", "should_trigger": true},
+  {"query": "최근 노트에서 쓸 만한 거 있나 봐줘", "should_trigger": true},
+  {"query": "팀 스탠드업 문서 작성하자", "should_trigger": true},
+  {"query": "방금 쓴 글 맞춤법 검사해줘", "should_trigger": false},
+  {"query": "새 linkedin policy 만들어줘", "should_trigger": false},
+  {"query": "완성된 글에서 학습 포인트 정리해줘", "should_trigger": false}
+]
