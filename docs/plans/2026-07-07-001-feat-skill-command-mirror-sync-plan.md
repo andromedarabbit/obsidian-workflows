@@ -1,6 +1,7 @@
 ---
 date: 2026-07-07
 type: feat
+status: superseded
 artifact_contract: ce-unified-plan/v1
 artifact_readiness: implementation-ready
 product_contract_source: ce-plan-bootstrap
