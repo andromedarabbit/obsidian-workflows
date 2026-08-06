@@ -217,6 +217,50 @@ HCMD_DOTTED=$(printf 'cat <<true.foo\n<< EOF\ntrue.foo\nobsidian create path=/et
 run "a punctuated heredoc delimiter does not drop a later obsidian call" 0 \
   "$(jq -nc --arg c "$HCMD_DOTTED" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
 
+# --- Quoted command-substitution heredoc regression. Bash re-enters shell syntax
+# inside an unescaped $() even when the substitution itself is inside double
+# quotes. The old flat quote scanner treated the whole double-quoted region as
+# literal, missed the heredoc, and let bashlex turn valid Bash into parse_error ->
+# a spurious ask whenever the body merely mentioned obsidian-workflows. ---
+HCMD_QUOTED_SUB=$(printf "orca automations edit id --prompt \"\$(cat <<'EOF'\nobsidian-workflows ow-work\nEOF\n)\"")
+
+run "quoted command-substitution heredoc mentioning obsidian-workflows is allowed" 0 \
+  "$(jq -nc --arg c "$HCMD_QUOTED_SUB" '{tool_name:"Bash",tool_input:{command:$c}}')" no
+
+HCMD_QUOTED_SUB_DOT=$(printf "orca automations edit id --prompt \"\$(cat <<'EOF'\np = '.obsidian/plugins/x/data.json'\nEOF\n)\"")
+
+run "quoted command-substitution heredoc mentioning .obsidian is allowed" 0 \
+  "$(jq -nc --arg c "$HCMD_QUOTED_SUB_DOT" '{tool_name:"Bash",tool_input:{command:$c}}')" no
+
+# Ordinary double-quoted text that resembles a heredoc must stay opaque. If it
+# were stripped as a phantom heredoc, it could consume the genuine obsidian call
+# below and create a silent pass.
+HCMD_QUOTED_LITERAL=$(printf "printf '%s\\n' \"cat <<'EOF'\"\nobsidian create path=/etc/evil/x.md\nEOF")
+
+run "heredoc-looking text in an ordinary double-quoted string stays literal" 0 \
+  "$(jq -nc --arg c "$HCMD_QUOTED_LITERAL" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
+# An escaped `$(` remains literal inside double quotes. Treating it as command
+# substitution would create a phantom heredoc and could hide the real call.
+HCMD_ESCAPED_SUB=$(printf "printf '%s\\n' \"\\\$(cat <<'EOF'\"\nobsidian create path=/etc/evil/x.md\nEOF")
+
+run "escaped command-substitution text is not scanned as shell syntax" 0 \
+  "$(jq -nc --arg c "$HCMD_ESCAPED_SUB" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
+# A heredoc attached to a shell runner inside the quoted substitution contains
+# executable shell source. It must never be stripped into a harmless outer echo.
+HCMD_QUOTED_RUNNER=$(printf "echo \"\$(bash <<'EOF'\nobsidian create path=/etc/evil/x.md\nEOF\n)\"")
+
+run "shell-runner heredoc inside a quoted command substitution still asks" 0 \
+  "$(jq -nc --arg c "$HCMD_QUOTED_RUNNER" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
+# Stripping the harmless quoted-substitution heredoc must preserve subsequent
+# commands, including a real out-of-root obsidian invocation.
+HCMD_AFTER_QUOTED_SUB=$(printf "orca automations edit id --prompt \"\$(cat <<'EOF'\nobsidian-workflows ow-work\nEOF\n)\"\nobsidian create path=/etc/evil/x.md")
+
+run "an out-of-root obsidian call after a quoted-substitution heredoc still asks" 0 \
+  "$(jq -nc --arg c "$HCMD_AFTER_QUOTED_SUB" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
 # --- Fix for finding #6/#7: missing dependency hard-blocks (deny) rather than silently allowing ---
 
 MINIMAL_BIN_DIR=$(mktemp -d)

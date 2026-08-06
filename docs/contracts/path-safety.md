@@ -77,14 +77,20 @@ quoted-delimiter heredocs (`<< 'EOF'`), which previously turned any command
 containing one into a `parse_error` → `ask` — a false positive whenever the
 body merely mentioned "obsidian" (e.g. a `.obsidian/plugins/...` path). The
 analyzer now strips heredoc redirection operators and their bodies before
-parsing, so only the command structure reaches bashlex. This is safe by the
-same scope rule above — a heredoc body is stdin for another command, not a
-shell command word the hook keys on — with one acknowledged narrowing: when
-the feeding command is itself a shell/script runner (`bash`/`sh`/`eval`/
-`source`), the body is executed as shell, so an `obsidian` invocation inside
-it is no longer caught here (pre-fix it was caught only accidentally, via the
-parse_error). That is accepted under this layer's threat model (accidental,
-not adversarial, writes; command-level Required Checks still apply).
+parsing, so only the command structure reaches bashlex. Ordinary single- and
+double-quoted strings remain opaque, but an unescaped command substitution
+(`$()`) inside double quotes opens a nested shell-syntax context; this lets
+commands such as `"$(cat <<'EOF' ... EOF)"` strip their real heredoc without
+mistaking a literal `"cat <<'EOF'"` or escaped `\$(` for shell syntax.
+
+A heredoc body is normally stdin data for another command, not a shell command
+word the hook keys on. The exception is a heredoc fed to a shell/script runner
+(`bash`/`sh`/`eval`/`source`/`.`), whose body is executable shell source. The
+analyzer identifies the feeder in its local command-substitution context and
+preserves the original command whenever that feeder is a shell runner. The
+quoted heredoc then follows the conservative `parse_error` → `ask` path rather
+than being stripped into a silent allow. Ambiguous delimiters, unterminated
+heredocs, and uncertain nesting likewise preserve the original command.
 
 ## Error Handling
 

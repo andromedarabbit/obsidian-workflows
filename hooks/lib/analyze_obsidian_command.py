@@ -74,16 +74,12 @@ from bashlex.errors import ParsingError
 # references: those paths are arguments on the command word's own line, which
 # is preserved.)
 #
-# Acknowledged narrowing vs the pre-fix behavior: when the feeding command is a
-# shell/script runner itself (`bash`/`sh`/`eval`/`source`/`.`), the heredoc
-# body IS executed as shell commands, so an `obsidian ... /etc/x` line inside
-# such a body is a real direct invocation. Pre-fix, bashlex's parse_error on
-# quoted-delimiter heredocs accidentally prompted on that shape; after this
-# strip it is no longer caught here. This is an accepted tradeoff under the
-# hook's threat model (guard-absolute-path.sh:17 -- the agent is the caller,
-# not an attacker; this layer is a backstop against accidental out-of-vault
-# writes, and the command-level Required Checks in path-safety.md still
-# apply), not a defense against adversarial command crafting.
+# Shell-runner exception: when the feeding command is itself a shell/script
+# runner (`bash`/`sh`/`eval`/`source`/`.`), the heredoc body IS executable shell
+# source. In that case we preserve the original command instead of stripping
+# it, so quoted-heredoc parsing takes the conservative parse_error -> ask path.
+# This applies inside command substitutions too: in `echo "$(bash <<'EOF' ...)"`
+# the feeder is the nested `bash`, not the outer `echo`.
 #
 # Best-effort: if anything is uncertain -- an internal error, an operator
 # shape we don't recognize, or an unterminated heredoc we can't confidently
@@ -128,10 +124,9 @@ _SHELL_RUNNERS = {
 }
 
 
-def _line_feeds_shell_runner(cleaned_line):
-    """True if the first command word of `cleaned_line` (heredoc operators
-    already removed) is a shell/script runner."""
-    stripped = cleaned_line.strip()
+def _text_feeds_shell_runner(command_text):
+    """True if the first command word of `command_text` is a shell runner."""
+    stripped = command_text.strip()
     if not stripped:
         return False
     first = stripped.split()[0].strip("'\"")
@@ -140,77 +135,110 @@ def _line_feeds_shell_runner(cleaned_line):
 
 
 def _find_heredoc_ops(line):
-    """Find heredoc redirection operators in the UNQUOTED regions of one line.
+    """Find heredoc operators in shell syntax regions of one physical line.
 
-    Returns a list of (start, end, tabstripped, delim) tuples, left to right.
-    Operators inside single/double-quoted strings (e.g. ``echo "<< EOF"``) are
-    skipped so a literal ``<<`` in an argument is not mistaken for a heredoc.
+    Ordinary quoted text stays opaque, but an unescaped ``$(`` inside double
+    quotes opens a nested shell-syntax context. Each result is
+    ``(start, end, tabstripped, delim, feeds_shell_runner)``. Source offsets
+    always refer to the original line so `_remove_ops()` can rewrite it safely.
     """
     ops = []
-    i, n = 0, len(line)
-    in_single = in_double = False
-    while i < n:
-        c = line[i]
-        if in_single:
-            if c == "'":
-                in_single = False
-            i += 1
-        elif in_double:
-            if c == "\\" and i + 1 < n:  # escaped char inside double quotes
+    n = len(line)
+
+    def scan_double(i, depth):
+        while i < n:
+            c = line[i]
+            if c == "\\" and i + 1 < n:
                 i += 2
-            else:
-                if c == '"':
-                    in_double = False
+                continue
+            if c == '"':
+                return i + 1, True
+            if c == "$" and i + 1 < n and line[i + 1] == "(":
+                # `$((...))` is arithmetic expansion, not command substitution.
+                # It remains opaque like the surrounding double-quoted text.
+                if i + 2 < n and line[i + 2] == "(":
+                    i += 3
+                    continue
+                i, closed = scan_shell(i + 2, True, depth + 1)
+                if not closed:
+                    return i, False
+                continue
+            i += 1
+        return i, False
+
+    def scan_shell(i, stop_on_rparen, depth):
+        if depth > 32:
+            raise _HeredocAmbiguous()
+
+        command_start = i
+        while i < n:
+            c = line[i]
+            if c == "\\" and i + 1 < n:
+                i += 2
+                continue
+            if c == "'":
+                end = line.find("'", i + 1)
+                if end < 0:
+                    return n, False
+                i = end + 1
+                continue
+            if c == '"':
+                i, closed = scan_double(i + 1, depth)
+                if not closed:
+                    return i, False
+                continue
+            if c == "$" and i + 1 < n and line[i + 1] == "(":
+                if i + 2 < n and line[i + 2] == "(":
+                    i += 3
+                    continue
+                i, closed = scan_shell(i + 2, True, depth + 1)
+                if not closed:
+                    return i, False
+                continue
+            if c == ")" and stop_on_rparen:
+                return i + 1, True
+            if c == "#" and (i == 0 or line[i - 1] in " \t;|&()<>"):
+                # An unquoted `#` at a shell word boundary starts a comment.
+                # Ignoring the remainder prevents comment text such as
+                # `# use << EOF` from consuming later real commands.
+                return n, not stop_on_rparen
+            if c in ";|&":
+                command_start = i + 1
                 i += 1
-        elif c == "'":
-            in_single = True
-            i += 1
-        elif c == '"':
-            in_double = True
-            i += 1
-        elif c == "\\" and i + 1 < n:  # escaped char in unquoted text
-            i += 2
-        elif c == "#" and (i == 0 or line[i - 1] in " \t;|&()<>"):
-            # Unquoted `#` at a bash word boundary (start of line, or after
-            # whitespace / a shell metacharacter) starts a comment, so the rest
-            # of the line carries no heredoc operators. Stop scanning this line
-            # so a `<< DELIM` written inside a comment is never mistaken for a
-            # real heredoc -- otherwise the lines after it (which can include a
-            # genuine `obsidian ... /etc/x` invocation) would be silently
-            # dropped as the comment's "body", a silent-pass regression. The
-            # terminator set matches bash's real word boundaries, so `a#b`,
-            # `-#foo`, `.#x` (mid-word `#`) do NOT start a comment and keep
-            # scanning. Safe-bias: when unsure, the worst case is leaving a real
-            # heredoc un-stripped -> bashlex (parse_error -> ask), never a
-            # silent allow; command-substitution nesting (`$( ... # ... )`) is a
-            # known residual this best-effort scan does not track.
-            break
-        elif (
-            c == "<"
-            and i + 1 < n
-            and line[i + 1] == "<"
-            and (i == 0 or line[i - 1] != "<")
-        ):
-            # The trailing `line[i - 1] != "<"` guard avoids mis-reading bash's
-            # here-string operator `<<<` as a heredoc `<<` matched against its
-            # 2nd+3rd `<`, which would consume following lines as a phantom body.
-            m = _HEREDOC_OP.match(line, i)
-            if m:
+                continue
+            if (
+                c == "<"
+                and i + 1 < n
+                and line[i + 1] == "<"
+                and (i == 0 or line[i - 1] != "<")
+            ):
+                # The previous-character guard avoids matching the second and
+                # third `<` of Bash's here-string operator `<<<`.
+                m = _HEREDOC_OP.match(line, i)
+                if not m:
+                    i += 1
+                    continue
                 if m.end() < n and line[m.end()] not in _HEREDOC_DELIM_TERMINATORS:
-                    # The delimiter continues past what we captured (e.g.
-                    # `<<true.foo` -- real bash delimiter `true.foo`, we captured
-                    # only `true`). Stripping on the wrong delimiter could drop a
-                    # later real command as a phantom body -> silent-pass. Bail
-                    # for the whole command.
+                    # The real delimiter continues beyond the identifier prefix
+                    # we captured (for example `<<true.foo`). Rewriting against
+                    # the wrong delimiter could silently drop a later command.
                     raise _HeredocAmbiguous()
+                feeder = line[command_start:m.start()]
                 ops.append(
-                    (m.start(), m.end(), m.group("dash") == "-", m.group("delim"))
+                    (
+                        m.start(),
+                        m.end(),
+                        m.group("dash") == "-",
+                        m.group("delim"),
+                        _text_feeds_shell_runner(feeder),
+                    )
                 )
                 i = m.end()
-            else:
-                i += 1
-        else:
+                continue
             i += 1
+        return i, not stop_on_rparen
+
+    scan_shell(0, False, 0)
     return ops
 
 
@@ -218,7 +246,7 @@ def _remove_ops(line, ops):
     """Return ``line`` with each operator span in ``ops`` deleted."""
     parts = []
     prev = 0
-    for start, end, _tab, _delim in ops:
+    for start, end, _tab, _delim, _feeds_shell_runner in ops:
         parts.append(line[prev:start])
         prev = end
     parts.append(line[prev:])
@@ -252,14 +280,14 @@ def strip_heredoc_bodies(command):
             # -> ask backstop. (Tradeoff: a `.obsidian/...` path in a
             # shell-runner heredoc body prompts again -- accepted, because the
             # alternative is a silent allow of an in-body obsidian call.)
-            if _line_feeds_shell_runner(_remove_ops(line, ops)):
+            if any(feeds_shell_runner for *_, feeds_shell_runner in ops):
                 return command
             # Drop the operators from this line (they carry no obsidian/path
             # information), then consume each operator's body up to and
             # including its closing delimiter line.
             out.append(_remove_ops(line, ops))
             i += 1
-            for _start, _end, tabstripped, delim in ops:
+            for _start, _end, tabstripped, delim, _feeds_shell_runner in ops:
                 closed = False
                 while i < n:
                     cand = lines[i]
