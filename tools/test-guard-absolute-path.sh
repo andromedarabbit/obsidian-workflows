@@ -197,6 +197,26 @@ HCMD_POST=$(printf "cat << 'EOF'\nbody\nEOF\nobsidian create path=/etc/evil/x.md
 run "an obsidian out-of-root call after a closed heredoc still asks" 0 \
   "$(jq -nc --arg c "$HCMD_POST" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
 
+# --- Silent-pass guards found by the independent cross-model adversarial pass
+# (ce-code-review run 20260806-012212-f7258825, Codex). Both dropped a real
+# `obsidian ... /etc/x` invocation as a phantom heredoc body before the fix. ---
+
+# F1: a heredoc fed to a shell/script runner (bash/sh/eval/...) executes its
+# body as shell, so an obsidian call inside it is real. The stripper must
+# preserve the original (-> parse_error -> ask) instead of dropping the body.
+HCMD_RUNNER=$(printf "bash << 'EOF'\nobsidian create path=/etc/evil/x.md\nEOF")
+
+run "an obsidian call inside a bash-fed heredoc body is not silently allowed" 0 \
+  "$(jq -nc --arg c "$HCMD_RUNNER" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
+# F2: a delimiter with punctuation (<<true.foo; real bash delimiter is
+# `true.foo`) must not be prefix-matched (only `true`) and then consume a later
+# real command as a phantom body. Ambiguous delimiter -> preserve original.
+HCMD_DOTTED=$(printf 'cat <<true.foo\n<< EOF\ntrue.foo\nobsidian create path=/etc/evil/x.md\ntrue')
+
+run "a punctuated heredoc delimiter does not drop a later obsidian call" 0 \
+  "$(jq -nc --arg c "$HCMD_DOTTED" '{tool_name:"Bash",tool_input:{command:$c}}')" 1
+
 # --- Fix for finding #6/#7: missing dependency hard-blocks (deny) rather than silently allowing ---
 
 MINIMAL_BIN_DIR=$(mktemp -d)

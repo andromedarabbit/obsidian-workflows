@@ -94,12 +94,49 @@ from bashlex.errors import ParsingError
 # optional single-or-double quote around the delimiter, an identifier-like
 # delimiter, and a matching closing quote. The delimiter is restricted to
 # `[A-Za-z_][A-Za-z0-9_-]*` -- this covers virtually every real-world heredoc
-# delimiter (EOF, PYEOF, END, ...). Exotic delimiters outside this set are
-# left in place; the command then parses as-is (or hits parse_error -> ask if
-# it genuinely has a heredoc), the safe fallback.
+# delimiter (EOF, PYEOF, END, ...). A `<<` whose delimiter is NOT cleanly
+# terminated by whitespace / a shell metachar / end-of-line (e.g. `<<true.foo`,
+# where the real bash delimiter is the dotted `true.foo` but this regex would
+# capture only the `true` prefix) is treated as ambiguous and aborts stripping
+# for the whole command via _HeredocAmbiguous -> the caller parses the original
+# (parse_error -> ask), never a silent allow.
 _HEREDOC_OP = re.compile(
     r"<<(?P<dash>-)?\s*(?P<q>['\"]?)(?P<delim>[A-Za-z_][A-Za-z0-9_-]*)(?P=q)"
 )
+
+# Characters that may legitimately follow a heredoc delimiter on the same line
+# (end of line, more redirections, a pipe, a comment, ...). If the character
+# right after a matched delimiter is anything else, the real delimiter is
+# longer/different than the identifier we captured -> ambiguous -> bail.
+_HEREDOC_DELIM_TERMINATORS = " \t|&;<>#"
+
+# Raised internally to signal "this command has a heredoc shape we cannot
+# confidently strip" (ambiguous delimiter, etc.). strip_heredoc_bodies's
+# existing broad except catches it and returns the original command.
+class _HeredocAmbiguous(Exception):
+    pass
+
+# Commands whose heredoc body is executed as shell (so an `obsidian ...` line
+# inside the body IS a real direct invocation). We cannot analyze the body as
+# data the way we can for python/cat/..., so for these we preserve the original
+# command (-> the quoted-heredoc parse_error -> ask behavior) instead of
+# stripping. Covers the common direct forms; `env bash`, `xargs -0 bash`, etc.
+# are accepted residuals (documented).
+_SHELL_RUNNERS = {
+    "bash", "sh", "dash", "rbash", "zsh", "ksh", "ash",
+    "eval", "source", ".", "exec",
+}
+
+
+def _line_feeds_shell_runner(cleaned_line):
+    """True if the first command word of `cleaned_line` (heredoc operators
+    already removed) is a shell/script runner."""
+    stripped = cleaned_line.strip()
+    if not stripped:
+        return False
+    first = stripped.split()[0].strip("'\"")
+    first = first.rsplit("/", 1)[-1]  # /bin/bash -> bash
+    return first in _SHELL_RUNNERS
 
 
 def _find_heredoc_ops(line):
@@ -133,18 +170,20 @@ def _find_heredoc_ops(line):
             i += 1
         elif c == "\\" and i + 1 < n:  # escaped char in unquoted text
             i += 2
-        elif c == "#" and (i == 0 or not (line[i - 1].isalnum() or line[i - 1] == "_")):
-            # Unquoted `#` at a word boundary starts a bash comment, so the rest
+        elif c == "#" and (i == 0 or line[i - 1] in " \t;|&()<>"):
+            # Unquoted `#` at a bash word boundary (start of line, or after
+            # whitespace / a shell metacharacter) starts a comment, so the rest
             # of the line carries no heredoc operators. Stop scanning this line
             # so a `<< DELIM` written inside a comment is never mistaken for a
             # real heredoc -- otherwise the lines after it (which can include a
             # genuine `obsidian ... /etc/x` invocation) would be silently
-            # dropped as the comment's "body", a silent-pass regression.
-            # Safe-bias: treat `#` as a comment whenever it is not clearly
-            # mid-word. The worst case is leaving a real heredoc un-stripped,
-            # which falls back to bashlex (parse_error -> ask), never a silent
-            # allow; command-substitution nesting (`$( ... # ... )`) is a known
-            # residual this best-effort scan does not track.
+            # dropped as the comment's "body", a silent-pass regression. The
+            # terminator set matches bash's real word boundaries, so `a#b`,
+            # `-#foo`, `.#x` (mid-word `#`) do NOT start a comment and keep
+            # scanning. Safe-bias: when unsure, the worst case is leaving a real
+            # heredoc un-stripped -> bashlex (parse_error -> ask), never a
+            # silent allow; command-substitution nesting (`$( ... # ... )`) is a
+            # known residual this best-effort scan does not track.
             break
         elif (
             c == "<"
@@ -157,6 +196,13 @@ def _find_heredoc_ops(line):
             # 2nd+3rd `<`, which would consume following lines as a phantom body.
             m = _HEREDOC_OP.match(line, i)
             if m:
+                if m.end() < n and line[m.end()] not in _HEREDOC_DELIM_TERMINATORS:
+                    # The delimiter continues past what we captured (e.g.
+                    # `<<true.foo` -- real bash delimiter `true.foo`, we captured
+                    # only `true`). Stripping on the wrong delimiter could drop a
+                    # later real command as a phantom body -> silent-pass. Bail
+                    # for the whole command.
+                    raise _HeredocAmbiguous()
                 ops.append(
                     (m.start(), m.end(), m.group("dash") == "-", m.group("delim"))
                 )
@@ -198,6 +244,16 @@ def strip_heredoc_bodies(command):
                 out.append(line)
                 i += 1
                 continue
+            # If the heredoc feeds a shell/script runner (bash/sh/eval/...),
+            # its body is executed as shell -- an `obsidian ...` line inside it
+            # is a real direct invocation we would hide by stripping. We cannot
+            # analyze that body as data, so preserve the ORIGINAL command: the
+            # caller parses it as-is, restoring the quoted-heredoc parse_error
+            # -> ask backstop. (Tradeoff: a `.obsidian/...` path in a
+            # shell-runner heredoc body prompts again -- accepted, because the
+            # alternative is a silent allow of an in-body obsidian call.)
+            if _line_feeds_shell_runner(_remove_ops(line, ops)):
+                return command
             # Drop the operators from this line (they carry no obsidian/path
             # information), then consume each operator's body up to and
             # including its closing delimiter line.
