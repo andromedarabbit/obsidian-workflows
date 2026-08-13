@@ -122,7 +122,23 @@ analysis=$(uv run --quiet "$SCRIPT_DIR/lib/analyze_obsidian_command.py" "$comman
 status=$(printf '%s' "$analysis" | jq -r '.status // empty') || deny "분석 결과를 읽지 못했습니다."
 
 if [ "$status" = "parse_error" ]; then
-  ask "obsidian CLI 호출이 포함된 명령어를 유효한 bash 구문으로 파싱할 수 없습니다. 절대 경로 여부를 확인할 수 없어 확인이 필요합니다. 계속할까요?"
+  # bashlex's ParsingError conflates two cases this hook must treat differently:
+  #   (1) bashlex can't parse VALID bash (a bashlex limitation -- quoted heredocs,
+  #       some compounds). The command WOULD run, so an obsidian out-of-vault write
+  #       is possible -> ask, as designed.
+  #   (2) Genuinely invalid bash (`<` then newline, unbalanced quote, ...). bash
+  #       itself rejects the syntax, so the command can't run at all -> there is no
+  #       path-safety decision to make. Deferring to bash lets the Bash tool surface
+  #       the real syntax error instead of a misleading obsidian-themed prompt for a
+  #       command that could never have executed either way.
+  # `bash -n` is bash's own parser run parse-only (no execution), so it is
+  # authoritative on whether the syntax can run. Non-adversarial threat model: a
+  # command bash -n rejects cannot execute, so deferring it is safe.
+  if bash -n <<<"$command" 2>/dev/null; then
+    ask "obsidian CLI 호출이 포함된 명령어를 유효한 bash 구문으로 파싱할 수 없습니다. 절대 경로 여부를 확인할 수 없어 확인이 필요합니다. 계속할까요?"
+  else
+    exit 0
+  fi
 fi
 [ "$status" = "ok" ] || deny "명령어 분석 결과를 이해할 수 없습니다: $analysis"
 

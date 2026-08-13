@@ -115,10 +115,28 @@ run "tilde-prefixed token is allowed" 0 \
 run "for-loop variable path is allowed" 0 \
   '{"tool_name":"Bash","tool_input":{"command":"for p in Daily Notes/x.md; do obsidian create path=\"$p\"; done"}}' no
 
-# --- Fix for finding #9: unparseable (unbalanced-quote) commands ask rather than mis-tokenizing ---
+# --- parse_error cross-check (bash -n): genuinely-invalid bash -- syntax bash ITSELF
+# rejects -- defers to bash's own error instead of a misleading obsidian path-safety
+# ask. The hook can't make the command run (bash aborts at parse time), so there is no
+# path-safety decision to prompt for. bashlex raises ParsingError on these; the cross-
+# check distinguishes "bashlex can't parse VALID bash" (ask -- the command would run)
+# from "genuinely invalid bash" (defer -- it can't). See guard-absolute-path.sh's
+# parse_error branch.
 
-run "unbalanced quote in command triggers ask" 0 \
-  "{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"obsidian create path=\\\"/etc/unclosed\"}}" 1
+# Real-world trigger: a generated command placed the `<` redirection target on the next
+# line (`<` then newline). That is invalid bash -- the newline terminates the command
+# before the target word is supplied. The substring "obsidian" appears only in a
+# filename, yet the old parse_error -> ask path interrupted with an obsidian-themed
+# prompt for a command that could not have run either way.
+HCMD_LT_NEWLINE=$(printf 'python3 scripts/extract-skeleton.py --output "$SCRATCH/obsidian-x.skeleton.txt" <\n"/Users/keaton/.claude/projects/p/file.jsonl"\n>/dev/null 2>&1\nwait\n')
+
+run "genuinely-invalid bash (< then newline) defers to bash error, no ask" 0 \
+  "$(jq -nc --arg c "$HCMD_LT_NEWLINE" '{tool_name:"Bash",tool_input:{command:$c}}')" no
+
+# An unbalanced quote is a real syntax error too. bash -n rejects it, so the cross-check
+# lets bash surface the real error rather than asking. (Previously this asked.)
+run "unbalanced quote (genuinely invalid bash) defers to bash error, no ask" 0 \
+  "{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"obsidian create path=\\\"/etc/unclosed\"}}" no
 
 # --- Real-usage false positive: a piped command's unrelated argument must not be treated
 # as an obsidian path candidate just because it starts with `/` and "obsidian" appears
