@@ -51,3 +51,10 @@ repos:
         entry: bash -c 'find . -name "*.sh" -exec chmod +x {} \;'
         language: system
         pass_filenames: false
+
+      - id: check-version-bump
+        name: Check plugin version bump
+        entry: tools/check-version-bump.sh
+        language: script
+        pass_filenames: false
+        files: '^(hooks|skills|commands|assets|config|\.claude-plugin)/'

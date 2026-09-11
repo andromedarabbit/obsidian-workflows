@@ -42,6 +42,7 @@ Run validators before committing:
 ./tools/check-skill-frontmatter.sh    # Validate skill frontmatter fields
 ./tools/validate-command.sh           # Validate command structure
 ./tools/validate-hook-paths.sh        # Verify hook paths
+./tools/check-version-bump.sh         # Require plugin version bump when shipped files change
 
 # Node.js validators
 npm run validate:all              # Run all validations

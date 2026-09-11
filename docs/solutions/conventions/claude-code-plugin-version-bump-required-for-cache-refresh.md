@@ -94,3 +94,20 @@ git push origin main
 ## Related
 
 - 마켓플레이스 매니페스트와 플러그인 매니페스트가 같은 repo에 공존하는 구조(`.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json`)이므로 두 버전 필드를 반드시 함께 관리한다.
+
+## 재발 기록
+
+- **2026-09-11 (세 번째 재발)**: 훅 오탐 수정 두 커밋(`92c8b60` quoted heredoc 스트리핑, `caf45b1` `bash -n` 게이트)이 버전 bump 없이 `0.3.7`에 push돼 설치 캐시(`cache/andromedarabbit/obsidian-workflows/0.3.7`)가 갱신되지 않았다. 그 결과 vault 세션에서 obsidian CLI를 전혀 호출하지 않는 명령어에도 가드 훅이 "유효한 bash 구문으로 파싱할 수 없다"는 확인 프롬프트를 띄우는 오탐이 계속 발생했다. 당시 `marketplace.json`(0.3.6)과 `plugin.json`(0.3.7)도 어긋나 있었다. `0.3.8` bump(`5dbac3c`) + `claude plugin marketplace update` + `claude plugin update`로 해소.
+
+## 기계적 보장
+
+세 번째 재발에서 반복 패턴으로 판정하고 커밋 게이트를 추가했다 (2026-09-11):
+
+- `tools/check-version-bump.sh` — 배포 대상 파일(`hooks/ skills/ commands/ assets/ config/`)이 변경됐는데 `plugin.json` 버전이 base(origin/main 또는 CI base)와 같으면 커밋을 막는다. 두 매니페스트의 버전 어긋남(drift)도 함께 검사한다. base를 확인할 수 없으면(최초 push 전, CI zero-SHA) 건너뛴다.
+- `.pre-commit-config.yaml` local hook `check-version-bump` — 커밋 시 자동 실행(스테이지 기준).
+- `.github/workflows/version-bump.yml` — `--no-verify` 우회 대비 CI 백스톱. push는 `github.event.before`, PR은 base SHA 대비.
+
+```bash
+# 수동 실행 (스테이지된 내용을 origin/main 대비 검사)
+./tools/check-version-bump.sh
+```
