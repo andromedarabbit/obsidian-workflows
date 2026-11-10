@@ -25,19 +25,19 @@ updated: 2026-08-06T00:00
 
 ### Without mode parameter
 
-`mode`가 없으면 파일 기반 신호 > PLAN 대화 문맥 > 이번 턴 지시 순으로 우선해 active/passive/draft/refine 중 하나를 추론한다. pending active handoff 상태 파일(`.claude/state/obsidian-write-active-handoff.json`)이 있으면 이를 소비해 `write-active`로 즉시 연결한다. 추론 7단계와 신호 부족 시 `AskUserQuestion` 모드 질문 형식의 상세는 `references/mode-inference.md`를 읽어 적용한다.
+`mode`가 없으면 이번 턴의 명시적 요청을 우선하고, 요청이 대상을 특정하지 않을 때만 PLAN 문맥과 대기 파일로 active/passive/draft/refine 중 하나를 추론한다. 요청과 무관한 pending handoff나 proposal은 실행하거나 소비하지 않는다. 상세와 모드 질문 형식은 `references/mode-inference.md`를 읽어 적용한다.
 
 ## Active Handoff from PLAN
 
 `obsidian-workflows:ow-plan`의 active handoff는 사용자가 명령어를 복사해 실행하는 흐름이 아닙니다.
 
 - 사용자가 PLAN 메뉴에서 `바로 실행`을 선택하면 PLAN이 상태 파일을 `consumed`로 사전 기록한 뒤 `Skill` 도구로 `obsidian-workflows:ow-work`를 즉시 fire합니다.
-- 사용자가 PLAN 메뉴에서 `나중에`를 선택하면 PLAN이 `.claude/state/obsidian-write-active-handoff.json`을 `status: pending`으로 저장합니다. 이후 mode 없이 WORK가 호출되면 위 자동 추론 #2가 이 상태를 소비합니다.
+- 사용자가 PLAN 메뉴에서 `나중에`를 선택하면 PLAN이 `.claude/state/obsidian-write-active-handoff.json`을 `status: pending`으로 저장합니다. 이후 WORK가 해당 작업을 이어받을 때만 이 상태를 소비합니다.
 - WORK는 pending 상태를 소비한 뒤 active 실행이 실패하더라도 같은 handoff를 다음 호출에서 무한 재실행하지 않도록 해야 합니다.
 
 ## Proposal Auto-Detection
 
-When `mode=draft` and `proposal` parameter is not provided:
+When `mode=draft` and `proposal` parameter is not provided, auto-detect only a proposal relevant to the explicitly requested topic. If the request names a topic but no relevant proposal or idea can be identified, ask the user instead of selecting an unrelated proposal. When no topic is specified:
 
 1. Read `proposal_path` from `writing-config.md`.
 2. Scan for Markdown files in `proposal_path`.
@@ -55,7 +55,7 @@ When `mode=draft` and `proposal` parameter is not provided:
 
 1. Validate `mode` if provided.
 2. If `mode` is invalid, immediately terminate with `FAIL`.
-3. If `mode` is missing, infer mode with the file-first rules above.
+3. If `mode` is missing, infer mode using the request-first rules above.
 4. Route to the appropriate command based on mode.
 5. Pass through all additional parameters (`topic`, `policy`, `file`, `proposal`, `idea`, etc.).
 6. Do not end by telling the user to copy and run another slash command. If routing can be performed in the current session, use the platform skill-invocation primitive.

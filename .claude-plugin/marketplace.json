@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "obsidian-workflows",
-      "version": "0.3.8",
+      "version": "0.3.9",
       "description": "Obsidian writing workflows for Claude Code",
       "source": "./"
     }
